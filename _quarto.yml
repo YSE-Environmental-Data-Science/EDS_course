@@ -1,0 +1,43 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - section: "Introduction to R"
+        contents:
+          - text: "Data Basics"
+            href: data_basics.qmd
+          - text: "Vector Data"
+            href: sf.qmd
+          - text: "Raster Data"
+            href: terra.qmd
+      - section: "Data Integration in R"
+        contents:
+          - text: "Data Integration"
+            href: data_integration.qmd
+      - section: "Machine Learning in R"
+        contents:
+          - text: "Random Forest"
+            href: random_forest.qmd
+          - text: "Sensitivity Analysis"
+            href: sensitivity.qmd
+      - section: "Dynamic Models in R"
+        contents:
+          - text: "Spatial Model Visualization"
+            href: spatial_projections.qmd
+          
+
+format:
+  html:
+    theme: yeti
+    css: styles.css
+    toc: true
+
+editor: visual
+

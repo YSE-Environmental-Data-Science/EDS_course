@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data Basics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./data_basics.html">Data Basics</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Introduction to R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_basics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Data Basics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Vector Data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./terra.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Raster Data</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Integration in R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Integration</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Machine Learning in R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./random_forest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Random Forest</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./sensitivity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Sensitivity Analysis</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Dynamic Models in R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./spatial_projections.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spatial Model Visualization</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#learn-the-basics-of-manipulating-data-in-r" id="toc-learn-the-basics-of-manipulating-data-in-r" class="nav-link active" data-scroll-target="#learn-the-basics-of-manipulating-data-in-r">Learn the basics of manipulating data in R</a></li>
+  <li><a href="#data-manipulation-with-tidyverse" id="toc-data-manipulation-with-tidyverse" class="nav-link" data-scroll-target="#data-manipulation-with-tidyverse">Data manipulation with tidyverse</a>
+  <ul class="collapse">
+  <li><a href="#load-the-required-libraries" id="toc-load-the-required-libraries" class="nav-link" data-scroll-target="#load-the-required-libraries">Load the required libraries</a></li>
+  <li><a href="#what-is-the-climate-of-yale-myers-forest" id="toc-what-is-the-climate-of-yale-myers-forest" class="nav-link" data-scroll-target="#what-is-the-climate-of-yale-myers-forest">What is the climate of Yale-Myers Forest?</a></li>
+  <li><a href="#its-a-date" id="toc-its-a-date" class="nav-link" data-scroll-target="#its-a-date">It’s a Date</a></li>
+  <li><a href="#mutate" id="toc-mutate" class="nav-link" data-scroll-target="#mutate">mutate()</a></li>
+  <li><a href="#rename" id="toc-rename" class="nav-link" data-scroll-target="#rename">rename()</a></li>
+  <li><a href="#subset" id="toc-subset" class="nav-link" data-scroll-target="#subset">subset()</a></li>
+  <li><a href="#goup_by-and-summarise" id="toc-goup_by-and-summarise" class="nav-link" data-scroll-target="#goup_by-and-summarise">goup_by() and summarise()</a></li>
+  <li><a href="#select" id="toc-select" class="nav-link" data-scroll-target="#select">select()</a></li>
+  <li><a href="#save" id="toc-save" class="nav-link" data-scroll-target="#save">save()</a></li>
+  </ul></li>
+  <li><a href="#introduction-to-ggplot2" id="toc-introduction-to-ggplot2" class="nav-link" data-scroll-target="#introduction-to-ggplot2">Introduction to ggplot2</a>
+  <ul class="collapse">
+  <li><a href="#building-blocks-of-layers-with-the-grammar-of-graphics" id="toc-building-blocks-of-layers-with-the-grammar-of-graphics" class="nav-link" data-scroll-target="#building-blocks-of-layers-with-the-grammar-of-graphics">Building blocks of layers with the grammar of graphics:</a></li>
+  <li><a href="#data-layer" id="toc-data-layer" class="nav-link" data-scroll-target="#data-layer">Data Layer:</a></li>
+  <li><a href="#aesthetic-layer" id="toc-aesthetic-layer" class="nav-link" data-scroll-target="#aesthetic-layer">Aesthetic Layer:</a></li>
+  <li><a href="#geometric-layer" id="toc-geometric-layer" class="nav-link" data-scroll-target="#geometric-layer">Geometric layer:</a></li>
+  <li><a href="#facet-layer" id="toc-facet-layer" class="nav-link" data-scroll-target="#facet-layer">Facet Layer:</a></li>
+  <li><a href="#statistics-layer" id="toc-statistics-layer" class="nav-link" data-scroll-target="#statistics-layer">Statistics layer:</a></li>
+  <li><a href="#coordinates-layer" id="toc-coordinates-layer" class="nav-link" data-scroll-target="#coordinates-layer">Coordinates layer:</a></li>
+  <li><a href="#theme-layer" id="toc-theme-layer" class="nav-link" data-scroll-target="#theme-layer">Theme Layer:</a></li>
+  </ul></li>
+  <li><a href="#introduction-to-writing-functions-in-r" id="toc-introduction-to-writing-functions-in-r" class="nav-link" data-scroll-target="#introduction-to-writing-functions-in-r">Introduction to Writing Functions in R</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-function-in-r" id="toc-what-is-a-function-in-r" class="nav-link" data-scroll-target="#what-is-a-function-in-r">What Is a function in R?</a></li>
+  <li><a href="#built-in-functions-in-r" id="toc-built-in-functions-in-r" class="nav-link" data-scroll-target="#built-in-functions-in-r">Built-in Functions in R</a></li>
+  <li><a href="#creating-a-function-in-r" id="toc-creating-a-function-in-r" class="nav-link" data-scroll-target="#creating-a-function-in-r">Creating a Function in R</a></li>
+  <li><a href="#function-name" id="toc-function-name" class="nav-link" data-scroll-target="#function-name">1. Function Name</a></li>
+  <li><a href="#function-parameters" id="toc-function-parameters" class="nav-link" data-scroll-target="#function-parameters">2. Function Parameters</a></li>
+  <li><a href="#function-body" id="toc-function-body" class="nav-link" data-scroll-target="#function-body">3. Function Body</a></li>
+  <li><a href="#return" id="toc-return" class="nav-link" data-scroll-target="#return">return()</a></li>
+  <li><a href="#calling-a-function-in-r" id="toc-calling-a-function-in-r" class="nav-link" data-scroll-target="#calling-a-function-in-r">Calling a Function in R</a></li>
+  </ul></li>
+  <li><a href="#post-workshop-assessment" id="toc-post-workshop-assessment" class="nav-link" data-scroll-target="#post-workshop-assessment">Post-Workshop Assessment:</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./data_basics.html">Data Basics</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Data Basics</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="learn-the-basics-of-manipulating-data-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="learn-the-basics-of-manipulating-data-in-r">Learn the basics of manipulating data in R</h2>
+<p>In this workshop you will:</p>
+<ol type="1">
+<li>Download climate data with daymetr</li>
+<li>Manipulate data with tidyverse:
+<ul>
+<li>Format date elements</li>
+<li>Use <code>select()</code> to choose variables from a data frame.</li>
+<li>Use <code>filter()</code> to choose data based on values.</li>
+<li>Use <code>mutate()</code> to create new variables.</li>
+<li>Use <code>group_by()</code> and <code>summarize()</code> to work with subsets of data.</li>
+<li>Use <code>full_join()</code> to merge datasets</li>
+</ul></li>
+<li>Visualize data with ggplot2</li>
+<li>Learn to write basic functions</li>
+</ol>
+</section>
+<section id="data-manipulation-with-tidyverse" class="level1">
+<h1>Data manipulation with tidyverse</h1>
+<section id="load-the-required-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="load-the-required-libraries">Load the required libraries</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(daymetr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="what-is-the-climate-of-yale-myers-forest" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-the-climate-of-yale-myers-forest">What is the climate of Yale-Myers Forest?</h3>
+<p>Yale-Myers Forest is a 7,840 acre research forest in Connecticut. It is a hub for education, research, and harvesting operations within the Yale Forest School system. The forest primarily consists of mixed hardwoods on glacial till soils, featuring a significant presence of hemlock, scattered white pine stands from old field origins, and red pine plantations established in the 1940s.</p>
+<p>To explore the climate of the area, download daily daymet data for (41.952909, -72.123859). Review the arguments for the <code>download_daymet()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">download_daymet</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To use the <code>download_daymet()</code> function you need the latitude, longitude, start (1990), and end (2018) years.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.daymet <span class="ot">&lt;-</span> <span class="fu">download_daymet</span>( <span class="at">lat =</span>  <span class="fl">41.952909</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">lon =</span> <span class="sc">-</span><span class="fl">72.123859</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">start =</span> <span class="dv">1990</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">end =</span> <span class="dv">2018</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Downloading DAYMET data for: Daymet at 41.952909/-72.123859 latitude/longitude !</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Done !</code></pre>
+</div>
+</div>
+<p>You now have a nested list that includes information on the site location. The true climate data is stored in the “data” part of the nested list. Pull the data out of the list and create a dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(Yale.Myers.daymet<span class="sc">$</span>data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at the dataframe:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  year yday dayl..s. prcp..mm.day. srad..W.m.2. swe..kg.m.2. tmax..deg.c.
+1 1990    1 32422.37          0.00       179.64        15.20         5.15
+2 1990    2 32467.03          0.00       200.25        14.94         3.11
+3 1990    3 32515.34          0.00       242.26        14.37         7.38
+4 1990    4 32567.27          2.22       184.50        13.49         8.79
+5 1990    5 32622.77          0.00       194.86        12.06         5.58
+6 1990    6 32681.80          0.00       218.59        11.97         3.72
+  tmin..deg.c. vp..Pa.
+1        -2.31  515.41
+2        -5.39  408.97
+3        -4.64  432.86
+4        -3.91  457.55
+5        -2.59  504.75
+6        -5.77  397.13</code></pre>
+</div>
+</div>
+<p>Evaluate the data types:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( Yale.Myers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      year           yday        dayl..s.     prcp..mm.day.    
+ Min.   :1990   Min.   :  1   Min.   :32180   Min.   :  0.000  
+ 1st Qu.:1997   1st Qu.: 92   1st Qu.:35763   1st Qu.:  0.000  
+ Median :2004   Median :183   Median :43200   Median :  0.000  
+ Mean   :2004   Mean   :183   Mean   :43200   Mean   :  3.726  
+ 3rd Qu.:2011   3rd Qu.:274   3rd Qu.:50638   3rd Qu.:  3.560  
+ Max.   :2018   Max.   :365   Max.   :54220   Max.   :110.330  
+  srad..W.m.2.     swe..kg.m.2.     tmax..deg.c.     tmin..deg.c.    
+ Min.   : 38.95   Min.   :  0.00   Min.   :-13.53   Min.   :-25.980  
+ 1st Qu.:210.89   1st Qu.:  0.00   1st Qu.:  6.07   1st Qu.: -3.330  
+ Median :306.97   Median :  0.00   Median : 15.14   Median :  3.490  
+ Mean   :313.20   Mean   : 26.99   Mean   : 14.48   Mean   :  3.555  
+ 3rd Qu.:414.61   3rd Qu.: 35.57   3rd Qu.: 23.54   3rd Qu.: 11.820  
+ Max.   :678.41   Max.   :245.38   Max.   : 35.51   Max.   : 22.950  
+    vp..Pa.       
+ Min.   :  73.32  
+ 1st Qu.: 477.75  
+ Median : 783.27  
+ Mean   : 945.93  
+ 3rd Qu.:1382.58  
+ Max.   :2800.24  </code></pre>
+</div>
+</div>
+</section>
+<section id="its-a-date" class="level3">
+<h3 class="anchored" data-anchor-id="its-a-date">It’s a Date</h3>
+<p>Format the date variables and create a date in the format YYYY-mm-dd :</p>
+<p>Step 1. Use the year and day of the year to create a year.day variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers<span class="sc">$</span>year.day <span class="ot">&lt;-</span> <span class="fu">paste</span>( Yale.Myers<span class="sc">$</span>year, Yale.Myers<span class="sc">$</span>yday, <span class="at">sep=</span><span class="st">"-"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.Date</span>(<span class="at">format=</span><span class="st">"%Y-%j"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers<span class="sc">$</span>year.day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1990-01-01" "1990-01-02" "1990-01-03" "1990-01-04" "1990-01-05"
+[6] "1990-01-06"</code></pre>
+</div>
+</div>
+<p>Step 2. Format the year.day as YYYY-mm-dd and convert to a date.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers<span class="sc">$</span>date <span class="ot">&lt;-</span> <span class="fu">format</span>( Yale.Myers<span class="sc">$</span>year.day, <span class="st">"%Y-%m-%d"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.Date</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers<span class="sc">$</span>date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "1990-01-01" "1990-01-02" "1990-01-03" "1990-01-04" "1990-01-05"
+[6] "1990-01-06"</code></pre>
+</div>
+</div>
+<p>Check the class:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Yale.Myers<span class="sc">$</span>date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Date"</code></pre>
+</div>
+</div>
+</section>
+<section id="mutate" class="level3">
+<h3 class="anchored" data-anchor-id="mutate">mutate()</h3>
+<p>The function <code>mutate()</code> creates new columns that are a function of existing variables. Use <code>mutate()</code> to create a month (month) and Julian day (JulianD) from the formatted date.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers <span class="ot">&lt;-</span> Yale.Myers <span class="sc">%&gt;%</span> <span class="fu">mutate</span>( <span class="at">month =</span> <span class="fu">format</span>( Yale.Myers<span class="sc">$</span>date, <span class="at">format=</span><span class="st">"%m"</span> ),</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">julianD =</span> <span class="fu">format</span>( Yale.Myers<span class="sc">$</span>date, <span class="at">format=</span><span class="st">"%j"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With daymet data you have to calculate the mean temperature using tmax and tmin:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers<span class="sc">$</span>tmean <span class="ot">=</span> (<span class="fl">0.606</span> <span class="sc">*</span><span class="fu">as.numeric</span>(Yale.Myers<span class="sc">$</span>tmax..deg.c.)) <span class="sc">+</span> <span class="fl">0.394</span> <span class="sc">*</span> <span class="fu">as.numeric</span>(Yale.Myers<span class="sc">$</span>tmin..deg.c.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Yale.Myers<span class="sc">$</span>tmean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-18.411   2.316  10.573  10.176  18.877  30.297 </code></pre>
+</div>
+</div>
+</section>
+<section id="rename" class="level3">
+<h3 class="anchored" data-anchor-id="rename">rename()</h3>
+<p>Use the function <code>rename()</code> to rename tmax..deg.c to tmax, tmin..deg.c to tmin, and prcp..mm.day. to prcp:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.rn <span class="ot">&lt;-</span>Yale.Myers <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">tmax=</span>tmax..deg.c., <span class="at">tmin=</span>tmin..deg.c., <span class="at">prcp =</span> prcp..mm.day.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers.rn )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  year yday dayl..s. prcp srad..W.m.2. swe..kg.m.2. tmax  tmin vp..Pa.
+1 1990    1 32422.37 0.00       179.64        15.20 5.15 -2.31  515.41
+2 1990    2 32467.03 0.00       200.25        14.94 3.11 -5.39  408.97
+3 1990    3 32515.34 0.00       242.26        14.37 7.38 -4.64  432.86
+4 1990    4 32567.27 2.22       184.50        13.49 8.79 -3.91  457.55
+5 1990    5 32622.77 0.00       194.86        12.06 5.58 -2.59  504.75
+6 1990    6 32681.80 0.00       218.59        11.97 3.72 -5.77  397.13
+    year.day       date month julianD    tmean
+1 1990-01-01 1990-01-01    01     001  2.21076
+2 1990-01-02 1990-01-02    01     002 -0.23900
+3 1990-01-03 1990-01-03    01     003  2.64412
+4 1990-01-04 1990-01-04    01     004  3.78620
+5 1990-01-05 1990-01-05    01     005  2.36102
+6 1990-01-06 1990-01-06    01     006 -0.01906</code></pre>
+</div>
+</div>
+</section>
+<section id="subset" class="level3">
+<h3 class="anchored" data-anchor-id="subset">subset()</h3>
+<p>Subset the dataset to include only [date, month, year, julianD, tmax, tmin, tmean, and prcp] :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.sub <span class="ot">&lt;-</span>Yale.Myers.rn <span class="sc">%&gt;%</span> <span class="fu">select</span>(date, month, year, julianD, tmax, tmin, tmean, prcp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers.sub )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        date month year julianD tmax  tmin    tmean prcp
+1 1990-01-01    01 1990     001 5.15 -2.31  2.21076 0.00
+2 1990-01-02    01 1990     002 3.11 -5.39 -0.23900 0.00
+3 1990-01-03    01 1990     003 7.38 -4.64  2.64412 0.00
+4 1990-01-04    01 1990     004 8.79 -3.91  3.78620 2.22
+5 1990-01-05    01 1990     005 5.58 -2.59  2.36102 0.00
+6 1990-01-06    01 1990     006 3.72 -5.77 -0.01906 0.00</code></pre>
+</div>
+</div>
+</section>
+<section id="goup_by-and-summarise" class="level3">
+<h3 class="anchored" data-anchor-id="goup_by-and-summarise">goup_by() and summarise()</h3>
+<p>Create an annual summary of conditions using <code>group_by()</code> and <code>summarise()</code> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.annual <span class="ot">&lt;-</span>Yale.Myers.sub <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>( <span class="at">tmax =</span> <span class="fu">max</span>(tmax), <span class="at">tmin =</span> <span class="fu">min</span>(tmin), <span class="at">tmean =</span> <span class="fu">mean</span>(tmean), <span class="at">prcp =</span> <span class="fu">sum</span>(prcp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers.annual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+   year  tmax  tmin tmean  prcp
+  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  1990  32.4 -19.7 10.9  1419.
+2  1991  35.0 -19.8 10.7  1493.
+3  1992  32.8 -19.3  8.84 1390.
+4  1993  33.0 -21.6  9.43 1252.
+5  1994  32.7 -24.7  9.72 1307.
+6  1995  34.6 -21.2  9.69 1263.</code></pre>
+</div>
+</div>
+<p>Determine the average monthly conditions using <code>group_by()</code> and <code>summarise()</code> :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.monthly <span class="ot">&lt;-</span>Yale.Myers.sub <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(month) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>( <span class="at">tmax =</span> <span class="fu">max</span>(tmax), <span class="at">tmin =</span> <span class="fu">min</span>(tmin), <span class="at">tmean =</span> <span class="fu">mean</span>(tmean), <span class="at">prcp =</span> <span class="fu">sum</span>(prcp)<span class="sc">/</span><span class="dv">29</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers.monthly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  month  tmax   tmin tmean  prcp
+  &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 01     19.0 -24.7  -2.74 103. 
+2 02     20.8 -26.0  -1.62  94.5
+3 03     28.8 -20.4   2.74 127. 
+4 04     33.8  -9.78  9.18 115. 
+5 05     33.6  -2.08 15.0  109. 
+6 06     34.3   3.22 19.6  116. </code></pre>
+</div>
+</div>
+<p>Determine the average conditions using <code>group_by()</code> and <code>summarise()</code> by both year and month:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.yearmon <span class="ot">&lt;-</span>Yale.Myers.sub <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(month, year) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>( <span class="at">tmax =</span> <span class="fu">max</span>(tmax), <span class="at">tmin =</span> <span class="fu">min</span>(tmin), <span class="at">tmean =</span> <span class="fu">mean</span>(tmean), <span class="at">prcp =</span> <span class="fu">sum</span>(prcp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'month'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers.yearmon )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 6
+# Groups:   month [1]
+  month  year  tmax   tmin   tmean  prcp
+  &lt;chr&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 01     1990 15.6   -9.41  1.23   125. 
+2 01     1991  8.05 -19.8  -3.23    82.6
+3 01     1992 13.0  -19.2  -2.34    77.9
+4 01     1993 13.9  -13.9  -2.00    81.6
+5 01     1994  8.57 -24.7  -7.50   107. 
+6 01     1995 15.7  -13.5   0.0155 131. </code></pre>
+</div>
+</div>
+</section>
+<section id="select" class="level3">
+<h3 class="anchored" data-anchor-id="select">select()</h3>
+<p>Subset the mean annual temperate and year from the annual summary. Then rename tmean with “Yale-Myers” :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>Yale.Myers.annual.tmean <span class="ot">&lt;-</span> Yale.Myers.annual <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Yale.Myers =</span> tmean) <span class="sc">%&gt;%</span> <span class="fu">select</span>(year, Yale.Myers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at your work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Yale.Myers.annual.tmean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+   year Yale.Myers
+  &lt;int&gt;      &lt;dbl&gt;
+1  1990      10.9 
+2  1991      10.7 
+3  1992       8.84
+4  1993       9.43
+5  1994       9.72
+6  1995       9.69</code></pre>
+</div>
+</div>
+</section>
+<section id="save" class="level3">
+<h3 class="anchored" data-anchor-id="save">save()</h3>
+<p>Save the two files, Yale.Myers and Yale.Myers.sub, in a .RDTAT object. You will need this for the post workshop assessment:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(Yale.Myers, Yale.Myers.sub,Yale.Myers.annual.tmean, <span class="at">file=</span><span class="st">"DataBasics.RDATA"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="introduction-to-ggplot2" class="level1">
+<h1>Introduction to ggplot2</h1>
+<p>ggplot2 is a plotting package in R. Graphics are built layer by layer by adding new elements. This approach allows for extensive flexibility and customization of plots.</p>
+<p>Load the library:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="building-blocks-of-layers-with-the-grammar-of-graphics" class="level3">
+<h3 class="anchored" data-anchor-id="building-blocks-of-layers-with-the-grammar-of-graphics">Building blocks of layers with the grammar of graphics:</h3>
+<ul>
+<li>Data: The element is the dataset itself</li>
+<li>Aesthetics: The data is used to map onto the aesthetics attributes such as x-axis, y-axis, color, fill, size, labels, alpha, shape, line width, line type</li>
+<li>Geometrics: How the data being displayed using point, line, histogram, bar, boxplot</li>
+<li>Facets: Display the subset of the data using columns and rows</li>
+<li>Statistics: Binning, smoothing, descriptive, intermediate</li>
+<li>Coordinates: the space between data and display using Cartesian, fixed, polar, limits</li>
+<li>Themes: Non-data link</li>
+</ul>
+</section>
+<section id="data-layer" class="level3">
+<h3 class="anchored" data-anchor-id="data-layer">Data Layer:</h3>
+<p>We first need to define the source of the information to be visualized. The function <code>ggplot()</code> is used to generate the plots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.sub) <span class="sc">+</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Climate of Yale Myers Forest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="aesthetic-layer" class="level3">
+<h3 class="anchored" data-anchor-id="aesthetic-layer">Aesthetic Layer:</h3>
+<p>The data is used to map onto the aesthetics attributes such as x-axis, y-axis, color, fill, size, labels, alpha, shape, line width, line type.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.sub, <span class="fu">aes</span>(<span class="at">x =</span> date , <span class="at">y =</span> tmean)) <span class="sc">+</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Climate of Yale Myers Forest"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="geometric-layer" class="level3">
+<h3 class="anchored" data-anchor-id="geometric-layer">Geometric layer:</h3>
+<p>The geometric layer controls the essential elements. Display the data using point, line, histogram, bar, or boxplot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.sub, <span class="fu">aes</span>(<span class="at">x =</span> date , <span class="at">y =</span> tmean))<span class="sc">+</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Climate of Yale Myers Forest"</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Air Temperature (Degrees Celcius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Geometric layer: Adding size, color, and shape.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding size</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.sub, <span class="fu">aes</span>(<span class="at">x =</span> date , <span class="at">y =</span> tmean, <span class="at">size=</span>year))<span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Air Temperature (Degrees Celcius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding shape and color</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.sub, <span class="fu">aes</span>(<span class="at">x =</span> date , <span class="at">y =</span> tmean, <span class="at">col=</span>month))<span class="sc">+</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Air Temperature (Degrees Celcius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram plot</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span>  Yale.Myers.sub, <span class="fu">aes</span>(<span class="at">x =</span> tmean)) <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean Air Temperature (Degrees Celcius)"</span>,</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-32-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="facet-layer" class="level3">
+<h3 class="anchored" data-anchor-id="facet-layer">Facet Layer:</h3>
+<p>The facet layer is used to split the data into subsets of the entire dataset. It allows the subsets to be visualized on the same plot. Here we separate plots according to month.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset dataset to indlude only months 9-11</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>Yale.Myers.fall <span class="ot">&lt;-</span> Yale.Myers.sub <span class="sc">%&gt;%</span> <span class="fu">filter</span>( month <span class="sc">&gt;</span> <span class="st">'08'</span> <span class="sc">&amp;</span> month <span class="sc">&lt;</span> <span class="st">'12'</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.fall, <span class="fu">aes</span>(<span class="at">x =</span> date , <span class="at">y =</span> tmean)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">facet_grid</span>(month <span class="sc">~</span> .) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean Air Temperature (Degrees Celcius)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="statistics-layer" class="level3">
+<h3 class="anchored" data-anchor-id="statistics-layer">Statistics layer:</h3>
+<p>We can transform our data using binning, smoothing, descriptive, or intermediate. We will explore how February temperatures have changed from 1990 - 2018</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Subset the data:</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>Yale.Myers.feb <span class="ot">&lt;-</span> Yale.Myers.sub <span class="sc">%&gt;%</span> <span class="fu">filter</span>( month <span class="sc">==</span><span class="st">'02'</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.feb, <span class="fu">aes</span>(<span class="at">x =</span> date , <span class="at">y =</span> tmean)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="coordinates-layer" class="level3">
+<h3 class="anchored" data-anchor-id="coordinates-layer">Coordinates layer:</h3>
+<p>Data coordinates are mapped together to the mentioned plane of the graphic and we adjust the axis and change the spacing of the displayed data with control plot dimensions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.fall, <span class="fu">aes</span>(<span class="at">x =</span> tmin , <span class="at">y =</span> tmean)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>) <span class="sc">+</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">40</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">40</span>), <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing non-finite outside the scale range
+(`stat_smooth()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 13 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>coord_cartesian()</code> to proper zoom in:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add coord_cartesian() to proper zoom in</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.fall, <span class="fu">aes</span>(<span class="at">x =</span> tmin , <span class="at">y =</span> tmean)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">'Climate of Yale Myers Forest'</span>)  <span class="sc">+</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="theme-layer" class="level3">
+<h3 class="anchored" data-anchor-id="theme-layer">Theme Layer:</h3>
+<p>Layer controls the finer points of display, like the font size and background color properties.</p>
+<p>Example: Theme layer – <code>element_rect()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> Yale.Myers.fall, <span class="fu">aes</span>(<span class="at">x =</span> tmin , <span class="at">y =</span> tmean)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(. <span class="sc">~</span> month) <span class="sc">+</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">colour =</span> <span class="st">"gray"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_basics_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="introduction-to-writing-functions-in-r" class="level1">
+<h1>Introduction to Writing Functions in R</h1>
+<p>Functions are essential tools in R. Functions eliminate repetition from your code, which can reduce your workload, and help you to avoid errors. Here’s what you need to know about creating and calling them. It is very important to understand the purpose and syntax of R functions and knowing how to create or use them. In this tutorial, we’ll learn what an R function is, what types of functions exist in R, when we should use a function, how to create and call a user-defined function.</p>
+<section id="what-is-a-function-in-r" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-function-in-r">What Is a function in R?</h3>
+<p>In R, a function is a set of instructions that performs a specific task. Functions are essential for code organization, reusability, and efficiency. R comes with a variety of built-in functions, and you can also create your own custom functions. The main purpose of creating a user-defined function is to optimize scripts and avoid repetition. A good practice is creating a function whenever you need to run a certain set of commands more than twice.</p>
+</section>
+<section id="built-in-functions-in-r" class="level3">
+<h3 class="anchored" data-anchor-id="built-in-functions-in-r">Built-in Functions in R</h3>
+<p>Some of the most popular built in function are:</p>
+<ul>
+<li><code>min()</code>, <code>max()</code>, <code>mean()</code>, <code>median()</code>: returns the minimum / maximum / mean / median value of a numeric vector</li>
+<li><code>sum()</code>: returns the sum of a numeric vector</li>
+<li><code>range()</code>: returns the minimum and maximum values of a numeric vector</li>
+<li><code>abs()</code>: returns the absolute value of a number</li>
+<li><code>str()</code>: shows the structure of an R object</li>
+<li><code>print()</code>: displays an R object on the console</li>
+<li><code>ncol()</code>: returns the number of columns of a matrix or a dataframe</li>
+<li><code>length()</code>: returns the number of items in an R object (a vector, a list, etc.)</li>
+<li><code>nchar()</code>: returns the number of characters in a character object</li>
+<li><code>sort()</code>: sorts a vector in ascending or descending (decreasing=TRUE) order</li>
+<li><code>exists()</code>:returns TRUE or FALSE depending on whether or not a variable is defined in the R environment</li>
+</ul>
+</section>
+<section id="creating-a-function-in-r" class="level3">
+<h3 class="anchored" data-anchor-id="creating-a-function-in-r">Creating a Function in R</h3>
+<p>To create a user-defined function in R, we use the keyword function. The syntax is as follows:</p>
+<p>function_name &lt;- function(parameters){ function body }</p>
+</section>
+<section id="function-name" class="level3">
+<h3 class="anchored" data-anchor-id="function-name">1. Function Name</h3>
+<p>This is the name of the function object that will be stored in the R environment. After the function is defined, the function name is used for calling that function. It should be concise but clear and meaningful. It is common to use verbs in function names and it is also ok to use a noun if that noun is very descriptive and unambiguous.</p>
+</section>
+<section id="function-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="function-parameters">2. Function Parameters</h3>
+<p>Function parameters are the variables in the function definition placed inside the parentheses and separated with a comma that will be set to actual values (called arguments) each time we call the function.</p>
+</section>
+<section id="function-body" class="level3">
+<h3 class="anchored" data-anchor-id="function-body">3. Function Body</h3>
+<p>The function body is a set of commands inside the curly braces that are run in a predefined order every time we call the function. In the function body, we place what exactly we need the function to do. For example, we can create a function to sum two numbers listed as parameters x and y:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>sum_two_nums <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y){</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">+</span> y</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">sum_two_nums</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>Next, lets create a function to calculate the circumference of a circle with a known radius. The function has only one parameter r.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>  circumference <span class="ot">&lt;-</span> <span class="cf">function</span>(radius){</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>radius</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After defining the function, call it with the radius equal to 2:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">circumference</span>( <span class="at">r=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12.56637</code></pre>
+</div>
+</div>
+<p>It’s possible, for a function to have no parameters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>hello_world <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Hello, World!'</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">hello_world</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Hello, World!"</code></pre>
+</div>
+</div>
+<p>Also, some parameters can be set to default values inside the function definition, which then can be reset when calling the function. In the circumference function, we can set the default radius of a circle to 1. If we call the function with no argument passed, it will calculate the circumference of a circle with a radius of 1. Otherwise, it will calculate the circumference of a circle with the provided radius:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>circumference <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">r=</span><span class="dv">1</span>){</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span><span class="sc">*</span>pi<span class="sc">*</span>r</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">circumference</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6.283185</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">circumference</span>( <span class="at">r=</span><span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12.56637</code></pre>
+</div>
+</div>
+<p>Note that the statements in the function body should be indented by 2 or 4 spaces, depending on the IDE where we run the code. The important thing is to be consistent with the indentation throughout the program. While it doesn’t affect the code performance, it makes the code easier to read.</p>
+</section>
+<section id="return" class="level3">
+<h3 class="anchored" data-anchor-id="return">return()</h3>
+<p>As we saw from all the above examples, in R, it usually isn’t necessary to explicitly include the return statement when defining a function since an R function just automatically returns the last evaluated expression in the function body. However, we still can add the return statement inside the function body using the syntax return(expression_to_be_returned). This becomes important if we need to return more than one result from a function. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>mean_median <span class="ot">&lt;-</span> <span class="cf">function</span>(vector){</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(vector)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    median <span class="ot">&lt;-</span> <span class="fu">median</span>(vector)</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(mean, median))</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">mean_median</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.6 1.0</code></pre>
+</div>
+</div>
+<p>Note that in the return statement above, we actually return a vector containing the necessary results, and not just the variables separated by a comma. The <code>return()</code> function can return only a single R object. Instead of a vector, we could also return a list, especially if the results to be returned are supposed to be of different data types.</p>
+</section>
+<section id="calling-a-function-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="calling-a-function-in-r">Calling a Function in R</h2>
+<p>In all the above examples, we called the created functions by using the function name and adding the necessary arguments inside the parenthesis. In R, function arguments can be passed by position, by name (so-called named arguments), by mixing position-based and name-based matching, or by omitting the arguments altogether.</p>
+<p>If we pass the arguments by position, we need to follow the same sequence of arguments as defined in the function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>subtract_two_nums <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y){</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>    x <span class="sc">-</span> y</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">subtract_two_nums</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>In the above example, x is equal to 3 and y to 1, and not vice versa.</p>
+<p>If we pass the arguments by name, i.e., explicitly specify what value each parameter defined in the function takes, the order of the arguments doesn’t matter:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>subtract_two_nums <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y){</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">-</span> y</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">subtract_two_nums</span>(<span class="at">x=</span><span class="dv">3</span>, <span class="at">y=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">subtract_two_nums</span>(<span class="at">y=</span><span class="dv">1</span>, <span class="at">x=</span><span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>Things to remember when using functions inside other functions: - Functions can have default values for arguments. - Functions can return multiple values using a list or other data structures. - You can use the <code>return()</code> statement to specify the value to be returned by the function. - If you want to be able to use the function independent of another function, it should be created outside a function instead of nesting the functions.</p>
+</section>
+</section>
+<section id="post-workshop-assessment" class="level1">
+<h1>Post-Workshop Assessment:</h1>
+<p>The standard error measures the precision of the estimate of the sample mean. Write a function to calculate the standard error. Use this function when comparing mean monthly temperature values between Yale-Myers and a chosen location.</p>
+<p>Find a location of interest within the USA in google earth (<a href="https://earth.google.com/" class="uri">https://earth.google.com/</a>) and record the latitude and longitude in decimal degrees. Next, download Daymet data for that location. subset tmean in both datasets, calculate the mean monthly and standard error of tmean (SE) for both locations. Create a figure comparing mean monthly and the standard error of tmean at both locations.</p>
+<p>Create figures and text to show the following:</p>
+<ol type="1">
+<li>Differences in monthly tmean, and standard error in tmean for both locations.</li>
+<li>Differences in monthly precipitation (prcp), and standard error in prcp for both locations.</li>
+<li>Differences in monthly minimum temperature (tmin), and standard error in tmin for both locations.</li>
+<li>Differences in monthly maximim temperature (tmax), and standard error in tmax for both locations.</li>
+<li>Why are the two locations similar or different?</li>
+</ol>
+<ul>
+<li>Create an Rmarkdown report to upload to canvas (save as a pdf): <a href="https://hbctraining.github.io/Training-modules/Rmarkdown/lesson.html" class="uri">https://hbctraining.github.io/Training-modules/Rmarkdown/lesson.html</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
