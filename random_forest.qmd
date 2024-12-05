@@ -2,8 +2,6 @@
 title: "Introduction to Machine Learning with RandomForest"
 editor: 
   mode: source
-execute:
-  eval: false
 ---
 
 ### Install Packages:
@@ -20,15 +18,20 @@ library(GGally)
 ```
 Boosted regression trees (BRT) represent a versatile machine learning technique applicable to both classification and regression tasks. This approach facilitates the assessment of the relative significance of numerous variables associated with a target response variable. In this workshop, our focus will be on utilizing BRT to develop a model for monthly methane fluxes originating from natural ecosystems. We'll leverage climate and moisture conditions within these ecosystems to enhance predictive accuracy and understanding.
 
-Read in the data:
-```{r, include=T}
+Read in the [data](https://yale.instructure.com/courses/101353/files/10186091?wrap=1):
+```{r, include=F}
+load('data/RANDOMFOREST_DATASET.RDATA' )
+
+```
+
+```{r, include=T, eval=F}
 load('RANDOMFOREST_DATASET.RDATA' )
 
 ```
 
 Our ultimate interest is in predicting monthly methane fluxes using both dynamic and static attribute of ecosystems. Before we start modeling with the data, it is a good practice to first visualize the variables. The `ggpairs()` function from the GGally package is a useful tool that visualizes the distribution and correlation between variables:
 
-```{r, include=T}
+```{r, include=T, message=F}
 ggpairs(fluxnet, columns = c(3:7, 12:13))
 ```
 Next we need to divide the data into testing (20%) and training (80%) sets in a reproducible way:
