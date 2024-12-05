@@ -2,8 +2,6 @@
 title: "Spatial Projections of a randomForest model"
 editor: 
   mode: source
-execute:
-  eval: false
 ---
 In this workshop, we will create a spatial projection of our random forest model for monthly methane exchange from natural ecosystems. 
 
@@ -23,6 +21,8 @@ To date, we have completed model calibration, validation, and sensitivity analys
 
 
 # (1) Make a list of the variables, their units, the exact name and class of each variable in your model. 
+
+<b>Datasets:</b> [data.zip](https://yale.instructure.com/courses/101353/files/10270118?wrap=1)
 
 Load the datasets and the model. 
 ```{r}
@@ -67,7 +67,7 @@ We will spatialize the model for Connecticut in the year 2021.
 
 #(3) Format each spatial layer. 
 Download the climate layers needed for P_F and T_F using `getTerraClim()`.
-```{r}
+```{r, output=F}
 library(AOI)
 library(climateR)
 library(terra)
@@ -101,7 +101,7 @@ Remove the layers you no longer need.
 rm(global.clim.tmin, global.clim.tmax)
 ```
 Save the layers.
-```{r}
+```{r, eval=F}
 writeRaster(global.clim.tmean, "data/TERRA_TMEAN_2021_CT.tif", overwrite=TRUE )
 writeRaster(global.clim.ppt, "data/TERRA_PPT_2021_CT.tif", overwrite=TRUE )
 ```
@@ -204,7 +204,7 @@ global.clim.tmean.resample <- resample( global.clim.tmean, igbp.ct.r.2021)
 global.clim.ppt.resample <- resample( global.clim.ppt, igbp.ct.r.2021)
 ```
 Now, export the files to save a version processed as needed.
-```{r}
+```{r, eval=F}
 writeRaster(global.clim.tmean.resample, "data/TERRA_TMEAN_2021_CT_rs.tif", overwrite=TRUE )
 writeRaster(global.clim.ppt.resample, "data/TERRA_PPT_2021_CT_rs.tif", overwrite=TRUE )
 writeRaster(igbp.ct.r.2021, "data/MODIS_Upland_2021_CT.tif", overwrite=TRUE )
@@ -240,7 +240,7 @@ plot(model.rasters.m1.pred)
 We can do this in a for loop to get all 12 months.
 
 First, determine where you want to export the files to, and make a new folder there called predictions.
-```{r}
+```{r, eval=F}
 setwd('data') # sets the working directory to your data folder
 directory <- getwd() # saves the path to directory
 subDir <- 'predictions' # You will use this to make the folder called predictions
@@ -250,7 +250,7 @@ dir.create(file.path(directory , subDir)) # this makes the new folder in data ca
 setwd(subDir) # sets the working directory to your new folder
 ```
 Make the forloop to make predictions for all 12 months.
-```{r}
+```{r, eval=F}
 for ( i in 1:12){
  
   print(i)
@@ -266,7 +266,7 @@ for ( i in 1:12){
 }
 ```
 Delete the json files created:
-```{r}
+```{r, output=F}
 delete <- list.files( pattern=".json")
 file.remove(delete)
 ```
