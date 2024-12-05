@@ -127,6 +127,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">ENV 730</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/YSE-Environmental-Data-Science/EDS_course" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
@@ -137,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Home</span></a>
+ <span class="menu-text">Syllabus</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -284,7 +292,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">'RANDOMFOREST_DATASET.RDATA'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Our ultimate interest is in predicting monthly methane fluxes using both dynamic and static attribute of ecosystems. Before we start modeling with the data, it is a good practice to first visualize the variables. The ggpairs() function from the GGally package is a useful tool that visualizes the distribution and correlation between variables:</p>
+<p>Our ultimate interest is in predicting monthly methane fluxes using both dynamic and static attribute of ecosystems. Before we start modeling with the data, it is a good practice to first visualize the variables. The <code>ggpairs()</code> function from the GGally package is a useful tool that visualizes the distribution and correlation between variables:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(fluxnet, <span class="at">columns =</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>, <span class="dv">12</span><span class="sc">:</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -299,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> fluxnet <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">sample_frac</span>(<span class="fl">0.80</span>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>test  <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">anti_join</span>(fluxnet, train, <span class="at">by =</span> <span class="st">'id'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We will use the randomForest() function to predict monthly natural methane efflux using several variables in the dataset. A few other key statements to use in the randomForest() function are:</p>
+<p>We will use the <code>randomForest()</code> function to predict monthly natural methane efflux using several variables in the dataset. A few other key statements to use in the <code>randomForest()</code> function are:</p>
 <ol type="1">
 <li>keep.forest = T: This will save the random forest output, which will be helpful in summarizing the results.</li>
 <li>importance = TRUE: This will assess the importance of each of the predictors, essential output in random forests.</li>
@@ -318,19 +326,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>FCH4_F_gC.rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Note the mean of squared residuals and the percent variation explained (analogous to R-squared) provided in the output.</p>
-<p>Visualize the out-of-bag error rates of the random forests models using the plot() function. In this application, although we specified 500 trees, the out-of-bag error generally stabilizes after 100 trees:</p>
+<p>Visualize the out-of-bag error rates of the random forests models using the <code>plot()</code> function. In this application, although we specified 500 trees, the out-of-bag error generally stabilizes after 100 trees:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Some of the most helpful output in random forests is the importance of each of the predictor variables. The importance score is calculated by evaluating the regression tree with and without that variable. When evaluating the regression tree, the mean square error (MSE) will go up, down, or stay the same.</p>
 <p>If the percent increase in MSE after removing the variable is large, it indicates an important variable. If the percent increase in MSE after removing the variable is small, it’s less important.</p>
-<p>The importance() function prints the importance scores for each variable and the varImpPlot() function plots them:</p>
+<p>The <code>importance()</code> function prints the importance scores for each variable and the <code>varImpPlot()</code> function plots them:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(FCH4_F_gC.rf)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Another aspect of model evaluation is comparing predictions. Although random forests models are often considered a “black box” method because their results are not easily interpreted, the predict() function provides predictions of total tree mass:</p>
+<p>Another aspect of model evaluation is comparing predictions. Although random forests models are often considered a “black box” method because their results are not easily interpreted, the <code>predict()</code> function provides predictions of total tree mass:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>PRED.TPVPD <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf, train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -363,7 +371,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </section>
 
-</main> <!-- /main -->
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -785,6 +793,19 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Copyright 2024, Sparkle L. Malone</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 
 
 
