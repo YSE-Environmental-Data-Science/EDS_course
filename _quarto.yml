@@ -3,11 +3,17 @@ project:
   output-dir: docs
 
 website:
+  back-to-top-navigation: true
+  page-footer: "Copyright 2024, Sparkle L. Malone" 
   sidebar:
     style: "docked"
     search: true
+    title: "ENV 730" 
+    tools:
+      - icon: github
+        href: https://github.com/YSE-Environmental-Data-Science/EDS_course
     contents:
-      - text: "Home"
+      - text: "Syllabus"
         href: index.qmd
       - section: "Introduction to R"
         contents:
