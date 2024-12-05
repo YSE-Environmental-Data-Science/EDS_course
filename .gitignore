@@ -6,3 +6,4 @@
 /.quarto/
 /data
 *.tif
+.DS_Store
