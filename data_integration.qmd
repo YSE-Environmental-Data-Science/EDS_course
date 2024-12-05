@@ -2,8 +2,6 @@
 title: "Introduction to Data Integration in R"
 editor: 
   mode: source
-execute:
-  eval: false
 ---
 Data analysis often requires combining data from multiple sources, such as files, databases, APIs, or web scraping. R is a powerful and flexible tool for data integration, but it can also pose some challenges and pitfalls. In this workshop, you will learn some of the best ways to integrate data from multiple sources in R.
 
@@ -13,7 +11,7 @@ Data analysis often requires combining data from multiple sources, such as files
 2. Combine information from tabular data sources.
 3. Combine tabular and vector data.
 4. Combine tabular and raster data. 
-4. Combine tabular data by an ID and time.
+5. Combine tabular data by an ID and time.
 
 #### Choose the right package
 R has many packages that can help you import, merge, and manipulate data from different sources. Some of the most popular and useful ones for tables include readr, dplyr, tidyr, and purrr. These packages are part of the tidyverse, a collection of packages that share a consistent and coherent syntax and philosophy for data analysis. For spatial data, the sf and terra packages are useful.
@@ -43,6 +41,8 @@ library(AOI)
 ```
 
 # Integrating information from simple features
+
+<b>Dataset:</b> [Data.zip](https://yale.instructure.com/courses/101353/files/10087646?wrap=1)
 
 Import the file FluxNet_Sites_2024.csv and call it FluxNet
 
@@ -185,7 +185,7 @@ Make the FLUXNET.CH4.shp vector a dataframe:
 FLUXNET_CH4 <- as.data.frame( FLUXNET.CH4.shp)
 ```
 Identify the column that you should use to join the datasets FLUXNET_CH4 and FLUXNET.sub:
-```{r, include=T}
+```{r, include=T, output=F}
 FLUXNET_CH4$SITE_ID
 FLUXNET.sub$SITE_ID
 ```
@@ -207,7 +207,9 @@ Look at the flux file "FLUXNET.flux":
 ```{r, include=T}
 summary( FLUXNET.flux)
 names(FLUXNET.flux)
+```
 
+```{r, include=T, output=F}
 # Make SITE ID:
 FLUXNET.flux$SITE_ID <- FLUXNET.flux$SITE
 
@@ -220,8 +222,13 @@ In your site file, convert the date to Year-Month and use this column to join it
 ```{r, include=T}
 names(FLUXNET_CH4_final)
 summary( FLUXNET_CH4_final$Date)
-FLUXNET_CH4_final$Date
+```
 
+```{r, include=F, output=F}
+FLUXNET_CH4_final$Date
+```
+
+```{r}
 # Format as a Date:
 FLUXNET_CH4_final$Date.f <-FLUXNET_CH4_final$Date %>% as.Date(format='%Y-%m-%d')
 
