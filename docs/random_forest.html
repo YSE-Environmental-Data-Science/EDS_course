@@ -288,13 +288,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Boosted regression trees (BRT) represent a versatile machine learning technique applicable to both classification and regression tasks. This approach facilitates the assessment of the relative significance of numerous variables associated with a target response variable. In this workshop, our focus will be on utilizing BRT to develop a model for monthly methane fluxes originating from natural ecosystems. We’ll leverage climate and moisture conditions within these ecosystems to enhance predictive accuracy and understanding.</p>
-<p>Read in the data:</p>
+<p>Read in the <a href="https://yale.instructure.com/courses/101353/files/10186091?wrap=1">data</a>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">'RANDOMFOREST_DATASET.RDATA'</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Our ultimate interest is in predicting monthly methane fluxes using both dynamic and static attribute of ecosystems. Before we start modeling with the data, it is a good practice to first visualize the variables. The <code>ggpairs()</code> function from the GGally package is a useful tool that visualizes the distribution and correlation between variables:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(fluxnet, <span class="at">columns =</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>, <span class="dv">12</span><span class="sc">:</span><span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="random_forest_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Next we need to divide the data into testing (20%) and training (80%) sets in a reproducible way:</p>
 <div class="cell">
@@ -324,39 +331,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ntree =</span> <span class="dv">500</span>,</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">keep.inbag=</span><span class="cn">TRUE</span>)</span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>FCH4_F_gC.rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(formula = FCH4_F_gC ~ P_F + TA_F + VPD_F, data = train,      keep.forest = T, importance = TRUE, mtry = 1, ntree = 500,      keep.inbag = TRUE) 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 1
+
+          Mean of squared residuals: 4.887725
+                    % Var explained: 22.83</code></pre>
+</div>
 </div>
 <p>Note the mean of squared residuals and the percent variation explained (analogous to R-squared) provided in the output.</p>
 <p>Visualize the out-of-bag error rates of the random forests models using the <code>plot()</code> function. In this application, although we specified 500 trees, the out-of-bag error generally stabilizes after 100 trees:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="random_forest_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Some of the most helpful output in random forests is the importance of each of the predictor variables. The importance score is calculated by evaluating the regression tree with and without that variable. When evaluating the regression tree, the mean square error (MSE) will go up, down, or stay the same.</p>
 <p>If the percent increase in MSE after removing the variable is large, it indicates an important variable. If the percent increase in MSE after removing the variable is small, it’s less important.</p>
 <p>The <code>importance()</code> function prints the importance scores for each variable and the <code>varImpPlot()</code> function plots them:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(FCH4_F_gC.rf)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         %IncMSE IncNodePurity
+P_F   11.7269452      2762.568
+TA_F  29.1106456      4454.298
+VPD_F -0.7084245      3396.256</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">varImpPlot</span>(FCH4_F_gC.rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="random_forest_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Another aspect of model evaluation is comparing predictions. Although random forests models are often considered a “black box” method because their results are not easily interpreted, the <code>predict()</code> function provides predictions of total tree mass:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>PRED.TPVPD <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf, train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>train<span class="sc">$</span>PRED.TPVPD <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf, train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Compare the observed (FCH4_F_gC) versus predicted (PRED.TPVPD):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="at">data =</span> train, <span class="fu">aes</span>( <span class="at">x=</span>FCH4_F_gC, <span class="at">y=</span> PRED.TPVPD )) <span class="sc">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">data=</span>train,  PRED.TPVPD<span class="sc">~</span>FCH4_F_gC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="at">data =</span> train, <span class="fu">aes</span>( <span class="at">x=</span>FCH4_F_gC, <span class="at">y=</span> PRED.TPVPD )) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="random_forest_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">data=</span>train,  PRED.TPVPD<span class="sc">~</span>FCH4_F_gC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = PRED.TPVPD ~ FCH4_F_gC, data = train)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.8501 -0.3881 -0.2159  0.2347  4.1151 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 0.519090   0.015808   32.84   &lt;2e-16 ***
+FCH4_F_gC   0.639029   0.005478  116.65   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.6003 on 1894 degrees of freedom
+Multiple R-squared:  0.8778,    Adjusted R-squared:  0.8777 
+F-statistic: 1.361e+04 on 1 and 1894 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
 </div>
 <p>See how well the model performs on data that was not used to train the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>PRED.TPVPD <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf, test)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="at">data =</span> test, <span class="fu">aes</span>( <span class="at">x=</span>FCH4_F_gC, <span class="at">y=</span> PRED.TPVPD )) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">data=</span>test,  PRED.TPVPD<span class="sc">~</span>FCH4_F_gC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">$</span>PRED.TPVPD <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf, test)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="at">data =</span> test, <span class="fu">aes</span>( <span class="at">x=</span>FCH4_F_gC, <span class="at">y=</span> PRED.TPVPD )) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="random_forest_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(<span class="at">data=</span>test,  PRED.TPVPD<span class="sc">~</span>FCH4_F_gC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = PRED.TPVPD ~ FCH4_F_gC, data = test)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.6482 -0.8116 -0.4033  0.4567  5.9730 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.06617    0.06553   16.27   &lt;2e-16 ***
+FCH4_F_gC    0.32516    0.02412   13.48   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.235 on 464 degrees of freedom
+Multiple R-squared:  0.2814,    Adjusted R-squared:  0.2799 
+F-statistic: 181.7 on 1 and 464 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
 </div>
 </section>
 <section id="final-model-development" class="level1">
@@ -365,7 +454,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The forward selection approach starts with no variables and adds each new variable incrementally, testing for statistical significance, while the backward elimination method begins with a full model and then removes the least statistically significant variables one at a time.</p>
 <p>Save your final model and datasets in a .Rdata object for next class where we will perform sensitivity analyses on the models.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>( FCH4_F_gC.rf , <span class="at">file=</span><span class="st">"FinalModel.RDATA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>( FCH4_F_gC.rf , <span class="at">file=</span><span class="st">"FinalModel.RDATA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

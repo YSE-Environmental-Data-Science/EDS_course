@@ -331,6 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="integrating-information-from-simple-features" class="level1">
 <h1>Integrating information from simple features</h1>
+<p><b>Dataset:</b> <a href="https://yale.instructure.com/courses/101353/files/10087646?wrap=1">Data.zip</a></p>
 <p>Import the file FluxNet_Sites_2024.csv and call it FluxNet</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'Data/FluxNet_Sites_2024.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -364,88 +365,193 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>FLUXNET.CH4.shp ) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_integration_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>check the class and that the geometry is valid:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.CH4.shp)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "sf"         "data.frame"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[31] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[46] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[61] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[76] TRUE TRUE TRUE TRUE</code></pre>
+</div>
 </div>
 <p>Create a global sf and extract the country into the sf</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>global <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>))</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(global)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>global <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(global)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [13] FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [25]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [37]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [49]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [61]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [73]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [85]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [97]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[109]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[121]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[133]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[145]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[157]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[169]  TRUE  TRUE  TRUE</code></pre>
+</div>
 </div>
 <p>Make the CRS match:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="st">'+init=epsg:4087'</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>global <span class="ot">=</span> <span class="fu">st_transform</span>(global, <span class="at">crs=</span> <span class="st">'+init=epsg:4087'</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> global) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="st">'+init=epsg:4087'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is
+deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>global <span class="ot">=</span> <span class="fu">st_transform</span>(global, <span class="at">crs=</span> <span class="st">'+init=epsg:4087'</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> global) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_integration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Use the st_intersect to extract the country of each tower site:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>( global, FLUXNET.CH4.shp)<span class="sc">$</span>name</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>( global, FLUXNET.CH4.shp)<span class="sc">$</span>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
+all geometries</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Austria"                  "Brazil"                  
+ [3] "Botswana"                 "Botswana"                
+ [5] "Canada"                   "Canada"                  
+ [7] "Switzerland"              "Switzerland"             
+ [9] "Switzerland"              "China"                   
+[11] "Germany"                  "Germany"                 
+[13] "Germany"                  "Germany"                 
+[15] "Finland"                  "Finland"                 
+[17] "Finland"                  "Finland"                 
+[19] "France"                   "China"                   
+[21] "Indonesia"                "Italy"                   
+[23] "Italy"                    "Japan"                   
+[25] "Japan"                    "Japan"                   
+[27] "South Korea"              "Malaysia"                
+[29] "Netherlands"              "New Zealand"             
+[31] "Philippines"              "Russia"                  
+[33] "Russia"                   "Russia"                  
+[35] "Russia"                   "Sweden"                  
+[37] "United Kingdom"           "United States of America"
+[39] "United States of America" "United States of America"
+[41] "United States of America" "United States of America"
+[43] "United States of America" "United States of America"
+[45] "United States of America" "United States of America"
+[47] "United States of America" "United States of America"
+[49] "United States of America" "United States of America"
+[51] "United States of America" "United States of America"
+[53] "United States of America" "United States of America"
+[55] "United States of America" "United States of America"
+[57] "United States of America" "United States of America"
+[59] "United States of America" "United States of America"
+[61] "United States of America" "United States of America"
+[63] "United States of America" "United States of America"
+[65] "United States of America" "United States of America"
+[67] "United States of America" "United States of America"
+[69] "United States of America" "United States of America"
+[71] "United States of America" "United States of America"
+[73] "United States of America" "United States of America"
+[75] "United States of America" "United States of America"
+[77] "United States of America" "United States of America"
+[79] "United States of America"</code></pre>
+</div>
 </div>
 </section>
 <section id="integrating-information-from-rasters" class="level1">
 <h1>Integrating information from rasters</h1>
 <p>Import the file GlobalSoil_grids.tif :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>soil <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"Data/GlobalSoil_grids.tif"</span> )</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(soil)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>soil <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"Data/GlobalSoil_grids.tif"</span> )</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(soil)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "GEOGCRS[\"WGS 84\",\n    ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n        MEMBER[\"World Geodetic System 1984 (Transit)\"],\n        MEMBER[\"World Geodetic System 1984 (G730)\"],\n        MEMBER[\"World Geodetic System 1984 (G873)\"],\n        MEMBER[\"World Geodetic System 1984 (G1150)\"],\n        MEMBER[\"World Geodetic System 1984 (G1674)\"],\n        MEMBER[\"World Geodetic System 1984 (G1762)\"],\n        MEMBER[\"World Geodetic System 1984 (G2139)\"],\n        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n            LENGTHUNIT[\"metre\",1]],\n        ENSEMBLEACCURACY[2.0]],\n    PRIMEM[\"Greenwich\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433]],\n    CS[ellipsoidal,2],\n        AXIS[\"geodetic latitude (Lat)\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        AXIS[\"geodetic longitude (Lon)\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n    USAGE[\n        SCOPE[\"Horizontal component of 3D system.\"],\n        AREA[\"World.\"],\n        BBOX[-90,-180,90,180]],\n    ID[\"EPSG\",4326]]"</code></pre>
+</div>
 </div>
 <p>Transform FLUXNET.CH4.shp to the same CRS as soils:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(soil))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(soil))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Extract soil information to FLUXNET.CH4.shp:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_BulkDensity <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>BulkDensity</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_PH <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>PH</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_Nitrogen <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>Nitrogen</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_BulkDensity <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>BulkDensity</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_PH <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>PH</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_Nitrogen <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>Nitrogen</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Import the climate information (GlobalClimate.tif) :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>climate <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"Data/GlobalClimate.tif"</span> )</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>climate <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"Data/GlobalClimate.tif"</span> )</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "GEOGCRS[\"unknown\",\n    DATUM[\"unknown\",\n        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]]],\n    PRIMEM[\"unknown\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433,\n            ID[\"EPSG\",9122]]],\n    CS[ellipsoidal,2],\n        AXIS[\"latitude\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433,\n                ID[\"EPSG\",9122]]],\n        AXIS[\"longitude\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433,\n                ID[\"EPSG\",9122]]]]"</code></pre>
+</div>
 </div>
 <p>Transform FLUXNET.CH4.shp to the same CRS as climate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(climate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(climate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Look at the data that is available in climate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "MAP"  "TMIN" "TMAX" "MAT" </code></pre>
+</div>
 </div>
 <p>Extract climate information to FLUXNET.CH4.shp:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAP <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>MAP</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMIN <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>TMIN</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMAX <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>TMAX</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAT <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>MAT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAP <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>MAP</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMIN <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>TMIN</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMAX <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>TMAX</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAT <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>MAT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Import elevation information (Elevation.tif):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>elevation <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"Data/Elevation.tif"</span> )</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(elevation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>elevation <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"Data/Elevation.tif"</span> )</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crs</span>(elevation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "GEOGCRS[\"WGS 84\",\n    ENSEMBLE[\"World Geodetic System 1984 ensemble\",\n        MEMBER[\"World Geodetic System 1984 (Transit)\"],\n        MEMBER[\"World Geodetic System 1984 (G730)\"],\n        MEMBER[\"World Geodetic System 1984 (G873)\"],\n        MEMBER[\"World Geodetic System 1984 (G1150)\"],\n        MEMBER[\"World Geodetic System 1984 (G1674)\"],\n        MEMBER[\"World Geodetic System 1984 (G1762)\"],\n        MEMBER[\"World Geodetic System 1984 (G2139)\"],\n        ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n            LENGTHUNIT[\"metre\",1]],\n        ENSEMBLEACCURACY[2.0]],\n    PRIMEM[\"Greenwich\",0,\n        ANGLEUNIT[\"degree\",0.0174532925199433]],\n    CS[ellipsoidal,2],\n        AXIS[\"geodetic latitude (Lat)\",north,\n            ORDER[1],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n        AXIS[\"geodetic longitude (Lon)\",east,\n            ORDER[2],\n            ANGLEUNIT[\"degree\",0.0174532925199433]],\n    USAGE[\n        SCOPE[\"Horizontal component of 3D system.\"],\n        AREA[\"World.\"],\n        BBOX[-90,-180,90,180]],\n    ID[\"EPSG\",4326]]"</code></pre>
+</div>
 </div>
 <p>Transform FLUXNET.CH4.shp to the same CRS as elevation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(elevation))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(elevation))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Look at the data that is available in elevation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(elevation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(elevation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "wc2.1_2.5m_elev"</code></pre>
+</div>
 </div>
 <p>Extract elevation information to FLUXNET.CH4.shp:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>ELEVATION <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(elevation, FLUXNET.CH4.shp)<span class="sc">$</span>wc2<span class="fl">.1</span>_2<span class="fl">.5</span>m_elev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>ELEVATION <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(elevation, FLUXNET.CH4.shp)<span class="sc">$</span>wc2<span class="fl">.1</span>_2<span class="fl">.5</span>m_elev</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="joining-tables" class="level1">
@@ -455,76 +561,165 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>left_join()</code> returns all rows from x based on matching rows on shared columns in y. <code>right_join()</code> is the companion to <code>left_join()</code>, but returns all rows included in y based on matching rows on shared columns in x.</p>
 <p>Import APPEEARS file where I requested MODIS NDVI and EVI data for all FLUXNET_sites (Data/ENV720-MOD13A3-061-results.csv):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>FLUXNET <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Data/ENV720-MOD13A3-061-results.csv"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>FLUXNET <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Data/ENV720-MOD13A3-061-results.csv"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "ID"                                                                         
+ [2] "Latitude"                                                                   
+ [3] "Longitude"                                                                  
+ [4] "Date"                                                                       
+ [5] "MODIS_Tile"                                                                 
+ [6] "MOD13A3_061_Line_Y_1km"                                                     
+ [7] "MOD13A3_061_Sample_X_1km"                                                   
+ [8] "MOD13A3_061__1_km_monthly_EVI"                                              
+ [9] "MOD13A3_061__1_km_monthly_NDVI"                                             
+[10] "MOD13A3_061__1_km_monthly_VI_Quality"                                       
+[11] "MOD13A3_061__1_km_monthly_VI_Quality_bitmask"                               
+[12] "MOD13A3_061__1_km_monthly_VI_Quality_MODLAND"                               
+[13] "MOD13A3_061__1_km_monthly_VI_Quality_MODLAND_Description"                   
+[14] "MOD13A3_061__1_km_monthly_VI_Quality_VI_Usefulness"                         
+[15] "MOD13A3_061__1_km_monthly_VI_Quality_VI_Usefulness_Description"             
+[16] "MOD13A3_061__1_km_monthly_VI_Quality_Aerosol_Quantity"                      
+[17] "MOD13A3_061__1_km_monthly_VI_Quality_Aerosol_Quantity_Description"          
+[18] "MOD13A3_061__1_km_monthly_VI_Quality_Adjacent_cloud_detected"               
+[19] "MOD13A3_061__1_km_monthly_VI_Quality_Adjacent_cloud_detected_Description"   
+[20] "MOD13A3_061__1_km_monthly_VI_Quality_Atmosphere_BRDF_Correction"            
+[21] "MOD13A3_061__1_km_monthly_VI_Quality_Atmosphere_BRDF_Correction_Description"
+[22] "MOD13A3_061__1_km_monthly_VI_Quality_Mixed_Clouds"                          
+[23] "MOD13A3_061__1_km_monthly_VI_Quality_Mixed_Clouds_Description"              
+[24] "MOD13A3_061__1_km_monthly_VI_Quality_Land.Water_Mask"                       
+[25] "MOD13A3_061__1_km_monthly_VI_Quality_Land.Water_Mask_Description"           
+[26] "MOD13A3_061__1_km_monthly_VI_Quality_Possible_snow.ice"                     
+[27] "MOD13A3_061__1_km_monthly_VI_Quality_Possible_snow.ice_Description"         
+[28] "MOD13A3_061__1_km_monthly_VI_Quality_Possible_shadow"                       
+[29] "MOD13A3_061__1_km_monthly_VI_Quality_Possible_shadow_Description"           </code></pre>
+</div>
 </div>
 <p>Subset the FLUXNET dataset to include only the columns of interest and rename them:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.sub <span class="ot">&lt;-</span> FLUXNET <span class="sc">%&gt;%</span> <span class="fu">select</span>( <span class="st">"ID"</span>,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="st">"Date"</span>,</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">"MOD13A3_061__1_km_monthly_EVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_NDVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_VI_Quality"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>( <span class="at">SITE_ID =</span> ID,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="at">EVI =</span> MOD13A3_061__1_km_monthly_EVI,</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="at">NDVI =</span> MOD13A3_061__1_km_monthly_NDVI, </span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="at">QAQC =</span> MOD13A3_061__1_km_monthly_VI_Quality ) <span class="sc">%&gt;%</span> <span class="fu">filter</span>( QAQC <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.sub <span class="ot">&lt;-</span> FLUXNET <span class="sc">%&gt;%</span> <span class="fu">select</span>( <span class="st">"ID"</span>,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="st">"Date"</span>,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="st">"MOD13A3_061__1_km_monthly_EVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_NDVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_VI_Quality"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>( <span class="at">SITE_ID =</span> ID,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="at">EVI =</span> MOD13A3_061__1_km_monthly_EVI,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="at">NDVI =</span> MOD13A3_061__1_km_monthly_NDVI, </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="at">QAQC =</span> MOD13A3_061__1_km_monthly_VI_Quality ) <span class="sc">%&gt;%</span> <span class="fu">filter</span>( QAQC <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "SITE_ID" "Date"    "EVI"     "NDVI"    "QAQC"   </code></pre>
+</div>
 </div>
 <p>Make the FLUXNET.CH4.shp vector a dataframe:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>( FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>( FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Identify the column that you should use to join the datasets FLUXNET_CH4 and FLUXNET.sub:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4<span class="sc">$</span>SITE_ID</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.sub<span class="sc">$</span>SITE_ID</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4<span class="sc">$</span>SITE_ID</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.sub<span class="sc">$</span>SITE_ID</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Use left_join because you want to keep all the data from FLUXNET_CH4 and only the sites in FLUXNET.sub that match the sites in FLUXNET_CH4:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final <span class="ot">&lt;-</span> FLUXNET_CH4 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>( FLUXNET.sub, <span class="at">by=</span> <span class="st">'SITE_ID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final <span class="ot">&lt;-</span> FLUXNET_CH4 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>( FLUXNET.sub, <span class="at">by=</span> <span class="st">'SITE_ID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check to make sure the list of sites matches:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>( <span class="fu">unique</span>(FLUXNET_CH4<span class="sc">$</span>SITE_ID))</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(FLUXNET_CH4_final<span class="sc">$</span>SITE_ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>( <span class="fu">unique</span>(FLUXNET_CH4<span class="sc">$</span>SITE_ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 79</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(FLUXNET_CH4_final<span class="sc">$</span>SITE_ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 79</code></pre>
+</div>
 </div>
 <p>Import the monthly FLUX data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>( <span class="st">"Data/FLUXNET_FLUXES.RDATA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>( <span class="st">"Data/FLUXNET_FLUXES.RDATA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Look at the flux file “FLUXNET.flux”:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( FLUXNET.flux)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.flux)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make SITE ID:</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>SITE_ID <span class="ot">&lt;-</span> FLUXNET.flux<span class="sc">$</span>SITE</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a good column to join based on:</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>YearMon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( FLUXNET.flux)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    YearMon         SITE                P_F               TA_F        
+ Min.   :2006   Length:2370        Min.   :   0.00   Min.   :-37.188  
+ 1st Qu.:2014   Class :character   1st Qu.:  14.42   1st Qu.:  2.863  
+ Median :2015   Mode  :character   Median :  43.10   Median : 11.123  
+ Mean   :2015                      Mean   :  69.08   Mean   :  9.543  
+ 3rd Qu.:2017                      3rd Qu.:  84.12   3rd Qu.: 17.540  
+ Max.   :2019                      Max.   :1094.02   Max.   : 31.280  
+     VPD_F           NEE_F_gC          FCH4_F_gC      
+ Min.   : 0.000   Min.   :-383.426   Min.   :-1.8194  
+ 1st Qu.: 1.635   1st Qu.: -24.661   1st Qu.: 0.1008  
+ Median : 3.982   Median :   2.918   Median : 0.4034  
+ Mean   : 4.763   Mean   :   3.815   Mean   : 1.3906  
+ 3rd Qu.: 6.722   3rd Qu.:  19.432   3rd Qu.: 1.4318  
+ Max.   :29.075   Max.   :1251.787   Max.   :28.3012  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.flux)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "YearMon"   "SITE"      "P_F"       "TA_F"      "VPD_F"     "NEE_F_gC" 
+[7] "FCH4_F_gC"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make SITE ID:</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>SITE_ID <span class="ot">&lt;-</span> FLUXNET.flux<span class="sc">$</span>SITE</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a good column to join based on:</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>YearMon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In your site file, convert the date to Year-Month and use this column to join it with the flux file “FLUXNET.flux”:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET_CH4_final)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( FLUXNET_CH4_final<span class="sc">$</span>Date)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>Date</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Date:</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>Date.f <span class="ot">&lt;-</span>FLUXNET_CH4_final<span class="sc">$</span>Date <span class="sc">%&gt;%</span> <span class="fu">as.Date</span>(<span class="at">format=</span><span class="st">'%Y-%m-%d'</span>)</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Yearmon:</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>YearMon <span class="ot">&lt;-</span> FLUXNET_CH4_final<span class="sc">$</span>Date.f <span class="sc">%&gt;%</span> zoo<span class="sc">::</span><span class="fu">as.yearmon</span>( <span class="st">"%m-%Y"</span>)</span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET_CH4_final<span class="sc">$</span>YearMon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET_CH4_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "SITE_ID"          "SITE_NAME"        "FLUXNET2015"      "geometry"        
+ [5] "Country"          "SOIL_BulkDensity" "SOIL_PH"          "SOIL_Nitrogen"   
+ [9] "MAP"              "TMIN"             "TMAX"             "MAT"             
+[13] "ELEVATION"        "Date"             "EVI"              "NDVI"            
+[17] "QAQC"            </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( FLUXNET_CH4_final<span class="sc">$</span>Date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Length     Class      Mode 
+    12264 character character </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Date:</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>Date.f <span class="ot">&lt;-</span>FLUXNET_CH4_final<span class="sc">$</span>Date <span class="sc">%&gt;%</span> <span class="fu">as.Date</span>(<span class="at">format=</span><span class="st">'%Y-%m-%d'</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Yearmon:</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'zoo'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:terra':
+
+    time&lt;-</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>YearMon <span class="ot">&lt;-</span> FLUXNET_CH4_final<span class="sc">$</span>Date.f <span class="sc">%&gt;%</span> zoo<span class="sc">::</span><span class="fu">as.yearmon</span>( <span class="st">"%m-%Y"</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET_CH4_final<span class="sc">$</span>YearMon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "yearmon"</code></pre>
+</div>
 </div>
 <p>Join the two files:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>fluxes_month <span class="ot">&lt;-</span> FLUXNET.flux <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(FLUXNET_CH4_final , <span class="at">by =</span> <span class="fu">c</span> (<span class="st">'YearMon'</span>, <span class="st">'SITE_ID'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>fluxes_month <span class="ot">&lt;-</span> FLUXNET.flux <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(FLUXNET_CH4_final , <span class="at">by =</span> <span class="fu">c</span> (<span class="st">'YearMon'</span>, <span class="st">'SITE_ID'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Save your file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fluxes_month, <span class="at">file=</span><span class="st">"Monthly_Fluxes.RDATA"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fluxes_month, <span class="at">file=</span><span class="st">"Monthly_Fluxes.RDATA"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure.</p>
 

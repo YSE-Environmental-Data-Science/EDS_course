@@ -265,111 +265,211 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>A sensitivity analysis is a technique used to understand how changes in the inputs of a mathematical model or system affect the output. In the context of a model, such as a simulation or a statistical model, sensitivity analysis helps to identify which input parameters have the most significant influence on the results.</p>
-<p>To begin load the model and dataset we will use for this workshop:</p>
+<p>To begin load the model and <a href="https://yale.instructure.com/courses/101353/files/10231469?wrap=1">dataset</a> we will use for this workshop:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>( <span class="st">'SensitivityProducts.RDATA'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We will use the following packages:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtools)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>randomForest 4.7-1.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type rfNews() to see new features/changes/bug fixes.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::combine()  masks randomForest::combine()
+✖ dplyr::filter()   masks stats::filter()
+✖ dplyr::lag()      masks stats::lag()
+✖ ggplot2::margin() masks randomForest::margin()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtools)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In this workshop, we will prepare a sensitivity analysis for the model FCH4_F_gC.rf. Take a look at the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FCH4_F_gC.rf </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>FCH4_F_gC.rf </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(formula = FCH4_F_gC ~ P_F + TA_F + Upland, data = train,      keep.forest = T, importance = TRUE, mtry = 1, ntree = 500,      keep.inbag = TRUE) 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 1
+
+          Mean of squared residuals: 4.321792
+                    % Var explained: 35.76</code></pre>
+</div>
 </div>
 <p>The model includes monthly precipitation (P_f), mean temperature (TA_F), and a binary indicator for upland (1= upland ecosystem and 0 = aquatic ecosystem).</p>
 <p>Explore the conditions present within the dataset (fluxnet.new) used to build the model. First subset only the variables used in the final model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model.vars <span class="ot">&lt;-</span> fluxnet.new <span class="sc">%&gt;%</span> as.data.frame <span class="sc">%&gt;%</span>  <span class="fu">select</span>( P_F, TA_F,Upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model.vars <span class="ot">&lt;-</span> fluxnet.new <span class="sc">%&gt;%</span> as.data.frame <span class="sc">%&gt;%</span>  <span class="fu">select</span>( P_F, TA_F,Upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we will summarise the conditions within the dataset by quantiles (0.25, 0.5, 0.75): NOTE THAT YOUR CATEGORICAL VARIABLE WILL NEED TO BE IN THE <code>group_by()</code> FUNCTION!</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model.vars.lower <span class="ot">&lt;-</span> model.vars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Upland) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">P_F =</span> <span class="fu">quantile</span>(P_F, <span class="fl">0.25</span>),</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="at">TA_F =</span> <span class="fu">quantile</span>(TA_F, <span class="fl">0.25</span> ),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="at">Quantile =</span> <span class="fu">as.factor</span>(<span class="fl">0.25</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>model.vars.median <span class="ot">&lt;-</span> model.vars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Upland) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">P_F =</span> <span class="fu">quantile</span>(P_F, <span class="fl">0.5</span>),</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">TA_F =</span> <span class="fu">quantile</span>(TA_F, <span class="fl">0.5</span> ),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">Quantile =</span> <span class="fu">as.factor</span>(<span class="fl">0.5</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>model.vars.upper <span class="ot">&lt;-</span> model.vars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Upland) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">P_F =</span> <span class="fu">quantile</span>(P_F, <span class="fl">0.75</span>),</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">TA_F =</span> <span class="fu">quantile</span>(TA_F, <span class="fl">0.75</span> ),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">Quantile =</span> <span class="fu">as.factor</span>(<span class="fl">0.75</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model.vars.lower <span class="ot">&lt;-</span> model.vars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Upland) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">P_F =</span> <span class="fu">quantile</span>(P_F, <span class="fl">0.25</span>),</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="at">TA_F =</span> <span class="fu">quantile</span>(TA_F, <span class="fl">0.25</span> ),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                                                      <span class="at">Quantile =</span> <span class="fu">as.factor</span>(<span class="fl">0.25</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>model.vars.median <span class="ot">&lt;-</span> model.vars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Upland) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">P_F =</span> <span class="fu">quantile</span>(P_F, <span class="fl">0.5</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">TA_F =</span> <span class="fu">quantile</span>(TA_F, <span class="fl">0.5</span> ),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">Quantile =</span> <span class="fu">as.factor</span>(<span class="fl">0.5</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>model.vars.upper <span class="ot">&lt;-</span> model.vars <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Upland) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">P_F =</span> <span class="fu">quantile</span>(P_F, <span class="fl">0.75</span>),</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">TA_F =</span> <span class="fu">quantile</span>(TA_F, <span class="fl">0.75</span> ),</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                                                                   <span class="at">Quantile =</span> <span class="fu">as.factor</span>(<span class="fl">0.75</span>)) <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Combine the individual Summaries into one dataframe:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> <span class="fu">smartbind</span>( model.vars.lower, model.vars.median, model.vars.upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> <span class="fu">smartbind</span>( model.vars.lower, model.vars.median, model.vars.upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, choose the variable you want to explore: TA_F</p>
 <p>Look at the conditions present witing the dataset for TA_F</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet.new<span class="sc">$</span>TA_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet.new<span class="sc">$</span>TA_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-37.188   1.814  10.595   8.874  17.124  31.280 </code></pre>
+</div>
 </div>
 <p>Look at the range in values for TA_F:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -37.18842  31.28010</code></pre>
+</div>
 </div>
 <p>Access each individual range value:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">1</span>]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -37.18842</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 31.2801</code></pre>
+</div>
 </div>
 <p>Use the range to generate a sequence of values going from the highest to lowest:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>TA_F.seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">1</span>], <span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">2</span>], <span class="at">by=</span><span class="dv">5</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>TA_F.seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">1</span>], <span class="fu">range</span>(fluxnet.new<span class="sc">$</span>TA_F)[<span class="dv">2</span>], <span class="at">by=</span><span class="dv">5</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Create a dataframe:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>TA_F.seq.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TA_F =</span> TA_F.seq )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>TA_F.seq.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">TA_F =</span> TA_F.seq )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next we will take the summary, remove the values for TA_F and replace is with the generated range:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>TA_F_1AT <span class="ot">&lt;-</span> summary <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>TA_F) <span class="sc">%&gt;%</span> <span class="fu">cross_join</span>(TA_F.seq.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>TA_F_1AT <span class="ot">&lt;-</span> summary <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>TA_F) <span class="sc">%&gt;%</span> <span class="fu">cross_join</span>(TA_F.seq.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In this dataframe, all other variables in the model are held at their quantile values and only temperature varies across the range of values observed. This approach is “one-at-a-time”. We choose one variable to vary and hold all others at a specific value. Often the mean is chosen but using the 0.25 , 0.5, and 0.75 quantile helps to visualize what the model would predict across conditions.</p>
 <p>Next, use the <code>predict()</code> function to predict values into the dataframe (TA_F_1AT) with the simulated conditions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>TA_F_1AT<span class="sc">$</span>PRED <span class="ot">&lt;-</span><span class="fu">predict</span>(FCH4_F_gC.rf , <span class="at">newdata =</span>  TA_F_1AT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>TA_F_1AT<span class="sc">$</span>PRED <span class="ot">&lt;-</span><span class="fu">predict</span>(FCH4_F_gC.rf , <span class="at">newdata =</span>  TA_F_1AT)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lets look at the predictions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span>TA_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>TA_F, <span class="at">y=</span>PRED) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span>TA_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>TA_F, <span class="at">y=</span>PRED) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sensitivity_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Use geom_smooth to visualize the general relationship:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">data =</span>TA_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>TA_F, <span class="at">y=</span>PRED) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">data =</span>TA_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>TA_F, <span class="at">y=</span>PRED) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sensitivity_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Look at the predictions by Quantile and by the Upland indicator:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span>TA_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>TA_F, <span class="at">y=</span>PRED, <span class="at">color=</span>Quantile, <span class="at">group=</span><span class="fu">interaction</span>(Quantile, Upland), <span class="at">linetype =</span>Upland)  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span>TA_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>TA_F, <span class="at">y=</span>PRED, <span class="at">color=</span>Quantile, <span class="at">group=</span><span class="fu">interaction</span>(Quantile, Upland), <span class="at">linetype =</span>Upland)  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sensitivity_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Now explore the next variable: PA_f</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet.new<span class="sc">$</span>P_F)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">1</span>]</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">2</span>]</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>P_F.seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">1</span>], <span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">2</span>], <span class="at">by=</span><span class="dv">100</span> )</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>P_F.seq.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">P_F =</span> P_F.seq )</span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>P_F_1AT <span class="ot">&lt;-</span> summary <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>P_F) <span class="sc">%&gt;%</span> <span class="fu">cross_join</span>(P_F.seq.df)</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>P_F_1AT<span class="sc">$</span>PRED <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf , <span class="at">newdata =</span>  P_F_1AT)</span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span>P_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>P_F, <span class="at">y=</span>PRED) )</span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">data =</span>P_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>P_F, <span class="at">y=</span>PRED) )</span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span>P_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>P_F, <span class="at">y=</span>PRED, <span class="at">color=</span>Quantile, <span class="at">group=</span><span class="fu">interaction</span>(Quantile, Upland), <span class="at">linetype =</span>Upland)  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet.new<span class="sc">$</span>P_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   15.49   43.31   69.37   82.85 1094.02 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]    0.000 1094.017</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1094.017</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>P_F.seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">1</span>], <span class="fu">range</span>(fluxnet.new<span class="sc">$</span>P_F)[<span class="dv">2</span>], <span class="at">by=</span><span class="dv">100</span> )</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>P_F.seq.df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">P_F =</span> P_F.seq )</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>P_F_1AT <span class="ot">&lt;-</span> summary <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>P_F) <span class="sc">%&gt;%</span> <span class="fu">cross_join</span>(P_F.seq.df)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>P_F_1AT<span class="sc">$</span>PRED <span class="ot">&lt;-</span> <span class="fu">predict</span>(FCH4_F_gC.rf , <span class="at">newdata =</span>  P_F_1AT)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data =</span>P_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>P_F, <span class="at">y=</span>PRED) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sensitivity_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">data =</span>P_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>P_F, <span class="at">y=</span>PRED) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sensitivity_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">data =</span>P_F_1AT , <span class="fu">aes</span>( <span class="at">x=</span>P_F, <span class="at">y=</span>PRED, <span class="at">color=</span>Quantile, <span class="at">group=</span><span class="fu">interaction</span>(Quantile, Upland), <span class="at">linetype =</span>Upland)  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sensitivity_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>Use this same workflow to explore the sensitivity of your groups project’s model. Please provide a presentation explaining how you fit your model (mtry?, ntree?) and how variables where selected (forward versus backward selection). Describe your final model results (variables in the final model, their importance, the %Var, observed versus predicted for testing and training data), including a correlation plot, variance importance plots, and sensitivity analyses. This report will develop into the methods and results portion of your final project.</p>
 
