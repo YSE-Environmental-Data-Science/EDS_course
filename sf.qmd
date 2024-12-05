@@ -28,9 +28,13 @@ The goals of this workshop are to: 1. Become familiar with simple features 2. Ma
 
 # Data
 
-Import FluxNet_Sites_2024.csv. This table was created from the FLUXNET site list found at <https://fluxnet.org/sites/site-list-and-pages/?view=table>.
+Import [FluxNet_Sites_2024.csv](https://yale.instructure.com/courses/101353/files/9857764?wrap=1). This table was created from the FLUXNET site list found at <https://fluxnet.org/sites/site-list-and-pages/?view=table>.
 
-```{r, include=T}
+```{r, include=F}
+FluxNet <- read.csv('data/sf/FluxNet_Sites_2024.csv')
+```
+
+```{r, include=T, eval=F}
 FluxNet <- read.csv('data/FluxNet_Sites_2024.csv')
 
 ```
