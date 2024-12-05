@@ -3,12 +3,12 @@ project:
   output-dir: docs
 
 website:
-  back-to-top-navigation: true
   page-footer: "Copyright 2024, Sparkle L. Malone" 
   sidebar:
     style: "docked"
     search: true
-    title: "ENV 730" 
+    title: "ENV 730"
+    logo: images/YSEwordmark2L_RGB-KO.png
     tools:
       - icon: github
         href: https://github.com/YSE-Environmental-Data-Science/EDS_course
@@ -41,8 +41,9 @@ website:
 
 format:
   html:
-    theme: yeti
-    css: styles.css
+    theme: 
+      - yeti
+      - styles.scss
     toc: true
 
 editor: visual

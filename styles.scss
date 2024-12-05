@@ -1,0 +1,27 @@
+/*-- scss:defaults --*/
+
+// Colors
+$yale-blue: #00356B;
+$yale-lightblue: #286DC0;
+$yale-gray: #968C84;
+$cream: #F4F3EE;
+$gray: #191919;
+$dark-green: #234022;
+$cool-gray: #fafafa;
+
+// Base document colors
+$sidebar-bg: $yale-blue; // sidebar
+$sidebar-fg: $cream; // sidebar foreground elements
+$headings-color: $yale-lightblue; // color of all headings
+
+/*-- scss:rules --*/
+
+// Sidebar customization
+.sidebar-title {
+    color: $cream;
+}
+
+.sidebar-logo {
+    max-width: 100%;
+    padding-bottom: .5rem;
+}
