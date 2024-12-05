@@ -1,6 +1,8 @@
 .Rproj.user
 .Rhistory
-.RData
+*.RData
 .Ruserdata
 *.Rproj
 /.quarto/
+/data
+*.tif
