@@ -36,9 +36,11 @@ There are four items in this.RDATA file.
 (4) the testing data.  
 
 ### Look at the model to determine which variables are in it:
-```{r}
+```{r, output=F}
 library(randomForest)
+```
 
+```{r}
 FCH4_F_gC.rf
 ```
 The model includes precipitation in mm (P_F), mean air temperature in degrees Celsius (TA_F), and an indicator for upland ecosystems (Upland).
