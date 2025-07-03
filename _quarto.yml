@@ -3,6 +3,7 @@ project:
   output-dir: docs
 
 website:
+  favicon: images/favicon.png
   page-footer: "Copyright 2024, Sparkle L. Malone" 
   sidebar:
     style: "docked"
@@ -37,6 +38,8 @@ website:
         contents:
           - text: "Spatial Model Visualization"
             href: spatial_projections.qmd
+      - text: "Resources"
+        href: resources.qmd
           
 
 format:
@@ -45,6 +48,4 @@ format:
       - yeti
       - styles.scss
     toc: true
-
-editor: visual
 

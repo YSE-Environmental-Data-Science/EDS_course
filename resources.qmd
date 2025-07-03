@@ -1,0 +1,39 @@
+---
+title: "Additional Resources"
+editor: 
+  mode: source
+---
+
+Here are some additional resources that serve as a good starting point to learning more about the different types of tools involved in environmental data science. All listed resources are beginner-friendly so please feel free to check them out.  
+
+## Git/GitHub
+
+-   [Collaborative Coding with GitHub](https://lter.github.io/workshop-github/): An introductory workshop on how to use Git with GitHub and RStudio. This workshop was created by the [LTER Network](https://lternet.edu/) for their synthesis working groups but remains a great resource for all beginners, especially those who are hesitant to use the command line. There are also lessons on advanced Git/GitHub topics for those looking to further improve their skills. 
+
+-   [Reproducible Approaches to Arctic Research Using R](https://learning.nceas.ucsb.edu/2024-02-arctic/): A course designed by the [NCEAS Learning Hub](https://www.nceas.ucsb.edu/learning-hub) to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the [Introduction to Git and GitHub](https://learning.nceas.ucsb.edu/2024-02-arctic/session_06.html) and [Collaborating with Git and GitHub](https://learning.nceas.ucsb.edu/2024-02-arctic/session_09.html) lessons, where the Git workflow and Git commands are explained thoroughly. 
+
+-   [Happy Git and GitHub for the userR](https://happygitwithr.com/): A comprehensive guide by [Jenny Bryan](https://jennybryan.org/) on using Git, GitHub, and RStudio that covers everything from the basics to the more intricate topics. This book has a dedicated page for [troubleshooting](https://happygitwithr.com/troubleshooting) common problems a user might run into while setting up their computer. 
+
+## Tidyverse
+
+-   [Coding in the Tidyverse](https://lter.github.io/workshop-tidyverse/): A workshop on using `dplyr`, `tidyr`, and `ggplot2`, which are R packages that are part of the [Tidyverse](https://www.tidyverse.org/). The workshop covers the fundamental tools for tidying data in R, for example, wrangling, summarizing, reshaping, joining, and visualizing data. This workshop was created by the [LTER Network](https://lternet.edu/) for their synthesis working groups.
+
+-   [Reproducible Approaches to Arctic Research Using R](https://learning.nceas.ucsb.edu/2024-02-arctic/): A course designed by the [NCEAS Learning Hub](https://www.nceas.ucsb.edu/learning-hub) to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the [Data Modeling Essentials](https://learning.nceas.ucsb.edu/2024-02-arctic/session_07.html) and [Cleaning and Wrangling Data](https://learning.nceas.ucsb.edu/2024-02-arctic/session_08.html) lessons, where the principles of tidy data and basic Tidyverse functions are explained. 
+
+-   [R for Data Science](https://r4ds.hadley.nz/): An online textbook by written by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund that goes over the entire Tidyverse workflow from start to finish.
+
+-   [Posit Cheatsheets](https://posit.co/resources/cheatsheets/): A collection of cheatsheets created by [Posit](https://posit.co/) (formerly RStudio Inc.) to serve as helpful reminders on how to use the most important functions from a wide array of R packages. Here are the cheatsheets for [dplyr](https://rstudio.github.io/cheatsheets/html/data-transformation.html), [tidyr](https://rstudio.github.io/cheatsheets/html/tidyr.html), and [ggplot2](https://rstudio.github.io/cheatsheets/html/data-visualization.html).
+
+## Spatial Data
+
+-   [Introduction to Geospatial Concepts](https://datacarpentry.github.io/organization-geospatial/): A workshop from the [Data Carpentry](https://datacarpentry.org/) on core geospatial concepts such as raster data, vector data, and coordinate reference systems. This workshop is a prerequisite to their [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.github.io/r-raster-vector-geospatial/) workshop and is a great resource for reviewing the different kinds of geospatial data.
+
+-   [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.github.io/r-raster-vector-geospatial/): A workshop from the [Data Carpentry](https://datacarpentry.org/) that focuses on manipulating and plotting raster and vector data using the `terra`, `sf`, and `ggplot2` R packages. The functions and operations involved in a basic geospatial data workflow are taught in this workshop. 
+
+-   [NCEAS coreR for Delta Science Program](https://learning.nceas.ucsb.edu/2024-06-delta/): A course designed by the [NCEAS Learning Hub](https://www.nceas.ucsb.edu/learning-hub) to teach researchers techniques and tools to make their work more reproducible. Particularly relevant is the [Working with Spatial Data](https://learning.nceas.ucsb.edu/2024-06-delta/session_13.html) lesson that works with the `sf`, `dplyr`,  `ggplot2`, and `leaflet` R packages to manipulate and visualize vector data by following the Tidyverse principles. Interactive maps are also covered.
+
+-   [Spatial manipulation with sf cheatsheet](https://rstudio.github.io/cheatsheets/sf.pdf): A handy cheatsheet that serves as a reminder on how to use common functions from the `sf` R package. 
+
+-   [Spatial data with terra](https://rspatial.org/spatial/1-introduction.html): A tutorial showcasing functions from the `terra` R package to manipulate both raster and vector geospatial data. The tutorial was written by the team behind the development of [terra](https://rspatial.github.io/terra/index.html).
+
+
