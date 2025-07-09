@@ -243,7 +243,7 @@ plot(model.rasters.m1.pred)
 We can do this in a for loop to get all 12 months.
 
 First, determine where you want to export the files to, and make a new folder there called predictions.
-```{r, eval=F}
+```{r}
 setwd('data/products/') # sets the working directory to your products folder
 directory <- getwd() # saves the path to directory
 subDir <- 'predictions' # You will use this to make the folder called predictions
@@ -254,8 +254,6 @@ predictions.dir <- paste(directory,"/",subDir, sep="")
 ```
 Make the forloop to make predictions for all 12 months.
 ```{r, eval=F}
-
-setwd(predictions.dir) # sets the working directory to your new folder
 for ( i in 1:12){
  
   print(i)
@@ -267,19 +265,19 @@ for ( i in 1:12){
   units(pred) <- 'g C m-2 month-1' # Add the units
   names(pred ) <- "F_CH4" # Name the layer
   
-  writeRaster(pred ,paste("MODEL_PRED_m",i,".tif", sep =""), overwrite=TRUE )
+  writeRaster(pred ,paste(predictions.dir,"/","MODEL_PRED_m",i,".tif", sep =""), overwrite=TRUE )
 }
 ```
 Delete the json files created:
-```{r, output=F}
-setwd(predictions.dir) 
-delete <- list.files( pattern=".json")
+```{r, output=T}
+setwd(predictions.dir)
+delete <- list.files( path = predictions.dir, pattern=".json")
 file.remove(delete)
 ```
 Make of list of all the files in a directory that you want to import, and import all the files in the list with `rast()`.
 ```{r}
 setwd(predictions.dir)
-pred <- list.files( pattern="MODEL_PRED_m")
+pred <- list.files( path = predictions.dir, pattern="MODEL_PRED_m")
 predictions <- rast(pred)
 ```
 # (5) Use predictions

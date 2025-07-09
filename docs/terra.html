@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -80,13 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -95,10 +89,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
@@ -111,12 +103,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./terra.html">Raster Data</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./terra.html">Raster Data</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -126,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
@@ -153,9 +145,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Introduction to R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -182,9 +174,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Data Integration in R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -199,9 +191,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
  <span class="menu-text">Machine Learning in R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -222,9 +214,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
  <span class="menu-text">Dynamic Models in R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -239,9 +231,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
  <span class="menu-text">Resources</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -263,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -274,14 +266,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">Load libraries:</a></li>
   <li><a href="#rasters" id="toc-rasters" class="nav-link" data-scroll-target="#rasters">Rasters</a></li>
   <li><a href="#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assessment-23." id="toc-download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assessment-23." class="nav-link" data-scroll-target="#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assessment-23.">Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in Assessment 2/3.</a></li>
-  <li><a href="#assessment-23" id="toc-assessment-23" class="nav-link" data-scroll-target="#assessment-23">Assessment 2/3</a></li>
+  <li><a href="#assessment-2" id="toc-assessment-2" class="nav-link" data-scroll-target="#assessment-2">Assessment 2</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./terra.html">Raster Data</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Introduction to rasters with the terra package</h1>
 </div>
@@ -296,9 +288,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-
 </header>
-
 
 <section id="install-libraries-for-this-workshop" class="level3">
 <h3 class="anchored" data-anchor-id="install-libraries-for-this-workshop">Install libraries for this workshop:</h3>
@@ -370,7 +360,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>normals.ppt<span class="sc">$</span>ppt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class       : SpatRaster 
-dimensions  : 3343, 8640, 12  (nrow, ncol, nlyr)
+size        : 3343, 8640, 12  (nrow, ncol, nlyr)
 resolution  : 0.04166667, 0.04166667  (x, y)
 extent      : -180, 180, -55.625, 83.66667  (xmin, xmax, ymin, ymax)
 coord. ref. : +proj=longlat +ellps=WGS84 +no_defs 
@@ -378,8 +368,8 @@ source(s)   : memory
 names       : ppt_1~12010, ppt_1~12010, ppt_1~12010, ppt_1~12010, ppt_1~12010, ppt_1~12010, ... 
 min values  :         0.0,         0.0,         0.0,         0.0,         0.0,         0.0, ... 
 max values  :       945.8,       994.4,       827.2,       974.5,      2383.5,      2470.6, ... 
-unit        :          mm,          mm,          mm,          mm,          mm,          mm, ... 
-time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
+unit        : mm 
+time        : 1961-01-01 to 1961-12-01 UTC (12 steps) </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>normals.ppt<span class="sc">$</span>ppt <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -396,18 +386,15 @@ time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
  [5] "1961-05-01 UTC" "1961-06-01 UTC" "1961-07-01 UTC" "1961-08-01 UTC"
  [9] "1961-09-01 UTC" "1961-10-01 UTC" "1961-11-01 UTC" "1961-12-01 UTC"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_spatraster</span>(<span class="at">data=</span>normals.ppt<span class="sc">$</span>ppt[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_spatraster</span>(<span class="at">data=</span>normals.ppt<span class="sc">$</span>ppt[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>( <span class="at">na.value =</span> <span class="st">"transparent"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;SpatRaster&gt; resampled to 500280 cells.</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<p><img src="terra_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
+<p>What is the “+ scale_fill_gradient( na.value =”transparent”)” doing?</p>
 </section>
 <section id="raster-algebra" class="level4">
 <h4 class="anchored" data-anchor-id="raster-algebra">Raster algebra</h4>
@@ -419,11 +406,7 @@ time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># look at the object</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>normals.ppt.annual <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="terra_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the name of the layers:</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(normals.ppt.annual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -433,7 +416,7 @@ time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># re-name the layers:</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(normals.ppt.annual) <span class="ot">&lt;-</span> <span class="st">"ppt"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Summary functions (min, max, mean, prod, sum, median, cv, range, any, all) always return a SpatRaster object.</p>
+<p>Summary functions (<code>min()</code>, <code>max()</code>, <code>mean()</code>, <code>prod()</code>, <code>sum()</code>, <code>median()</code>, <code>cv()</code>, <code>range()</code>, <code>any()</code>, <code>all()</code>) always return a SpatRaster object.</p>
 <p>Use global if instead of a SpatRaster you want a single number summarizing the cell values of each layer.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>normals.ppt.annual <span class="sc">%&gt;%</span> <span class="fu">global</span>( <span class="at">na.rm=</span>T, mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -465,11 +448,7 @@ attr(,"package")
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>( <span class="at">data=</span>normals.ppt.annual.country.sf ) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill=</span> ppt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="terra_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -478,10 +457,11 @@ attr(,"package")
 <p>For this exercise you will use your FLUXNET.CH4 vector file you saved last week and the monthly ppt data downloaded (normals.ppt.NAmerica$ppt).</p>
 <p>Import your point file FLUXNET.ch4:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">"Data"</span>, <span class="at">layer=</span><span class="st">"FLUXNET_CH4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4 <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn=</span><span class="st">"data/products"</span>, <span class="at">layer=</span><span class="st">"FLUXNET_CH4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `FLUXNET_CH4' from data source 
-  `/Users/ac3656/GitHub/EDS_course/data' using driver `ESRI Shapefile'
+  `/Users/sm3466/YSE Dropbox/Sparkle Malone/Teaching/EDS_course/data/products' 
+  using driver `ESRI Shapefile'
 Simple feature collection with 81 features and 10 fields
 Geometry type: POINT
 Dimension:     XY
@@ -525,7 +505,7 @@ First 10 features:
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>normals.ppt<span class="sc">$</span>ppt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>class       : SpatRaster 
-dimensions  : 3343, 8640, 12  (nrow, ncol, nlyr)
+size        : 3343, 8640, 12  (nrow, ncol, nlyr)
 resolution  : 0.04166667, 0.04166667  (x, y)
 extent      : -180, 180, -55.625, 83.66667  (xmin, xmax, ymin, ymax)
 coord. ref. : +proj=longlat +ellps=WGS84 +no_defs 
@@ -533,8 +513,8 @@ source(s)   : memory
 names       : ppt_1~12010, ppt_1~12010, ppt_1~12010, ppt_1~12010, ppt_1~12010, ppt_1~12010, ... 
 min values  :         0.0,         0.0,         0.0,         0.0,         0.0,         0.0, ... 
 max values  :       945.8,       994.4,       827.2,       974.5,      2383.5,      2470.6, ... 
-unit        :          mm,          mm,          mm,          mm,          mm,          mm, ... 
-time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
+unit        : mm 
+time        : 1961-01-01 to 1961-12-01 UTC (12 steps) </code></pre>
 </div>
 </div>
 <p>You can transform one of the files if they dont match. Here I transform th vector:</p>
@@ -543,42 +523,365 @@ time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
 </div>
 <p>To check to see if everything lines up, I plot the files together:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_spatraster</span>( <span class="at">data=</span>normals.ppt<span class="sc">$</span>ppt[[<span class="dv">1</span>]]) <span class="sc">+</span><span class="fu">geom_sf</span>( <span class="at">data =</span>FLUXNET.ch4 )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_spatraster</span>( <span class="at">data=</span>normals.ppt<span class="sc">$</span>ppt[[<span class="dv">1</span>]]) <span class="sc">+</span><span class="fu">geom_sf</span>( <span class="at">data =</span>FLUXNET.ch4 ) <span class="sc">+</span>  <span class="fu">scale_fill_gradient</span>( <span class="at">na.value =</span> <span class="st">"transparent"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;SpatRaster&gt; resampled to 500280 cells.</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<p><img src="terra_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</div>
-<p>Extract information from your raster stack using terra::extract()</p>
+<p>Extract information from your raster stack using <code>terra::extract()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4.ppt <span class="ot">&lt;-</span>terra<span class="sc">::</span><span class="fu">extract</span>( normals.ppt<span class="sc">$</span>ppt, FLUXNET.ch4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4.ppt <span class="ot">&lt;-</span>terra<span class="sc">::</span><span class="fu">extract</span>( normals.ppt<span class="sc">$</span>ppt, FLUXNET.ch4)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4.ppt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   ID ppt_1961-01-01_19812010 ppt_1961-02-01_19812010 ppt_1961-03-01_19812010
+1   1                    43.3                    41.4                    64.0
+2   2                   231.2                   194.3                   170.2
+3   3                   111.7                    92.6                    66.1
+4   4                   106.9                    82.1                    64.0
+5   5                    20.4                    16.9                    16.2
+6   6                    20.4                    16.9                    16.2
+7   7                    76.8                    77.7                    84.1
+8   8                    68.1                    58.3                    67.4
+9   9                    76.5                    69.1                    82.1
+10 10                     5.2                     8.5                    21.1
+11 11                    46.2                    34.1                    37.8
+12 12                    47.5                    36.3                    40.8
+13 13                    56.2                    52.7                    70.7
+14 14                    45.4                    42.0                    40.6
+15 15                    49.6                    33.0                    36.2
+16 16                    31.0                    27.3                    26.0
+17 17                    49.6                    33.0                    36.2
+18 18                    49.7                    34.1                    37.2
+19 19                    56.7                    51.2                    51.7
+20 20                    23.7                    48.0                    76.0
+21 21                   253.0                   263.0                   286.6
+22 22                   138.9                    94.9                    85.4
+23 23                    44.1                    37.8                    49.7
+24 24                    94.9                    71.2                    53.7
+25 25                    38.9                    52.0                    90.6
+26 26                    33.9                    44.3                    83.6
+27 27                    16.6                    19.7                    37.8
+28 28                   420.8                   282.9                   276.3
+29 29                    74.0                    59.3                    66.8
+30 30                    85.1                    98.8                    99.3
+31 31                    49.6                    29.3                    31.6
+32 32                     8.1                     7.3                     8.9
+33 33                     8.1                     7.3                     8.9
+34 34                    10.4                     9.3                    10.6
+35 35                    47.5                    37.4                    36.0
+36 36                    35.9                    29.9                    33.4
+37 37                    41.7                    32.8                    37.0
+38 38                    31.6                    23.0                    19.0
+39 39                    62.5                    43.4                    47.1
+40 40                     4.8                     3.3                     3.3
+41 41                     2.9                     3.6                     3.0
+42 42                     4.0                     6.0                     8.0
+43 43                    15.1                    12.6                     8.3
+44 44                    15.1                    12.6                     8.3
+45 45                    15.1                    12.6                     8.3
+46 46                     2.9                     3.6                     4.0
+47 47                     2.9                     3.6                     4.0
+48 48                    75.3                    71.0                    56.5
+49 49                    73.4                    70.1                    54.6
+50 50                    47.0                    45.2                    60.7
+51 51                    49.3                    69.8                    84.1
+52 52                    75.7                    71.1                    61.1
+53 53                    18.0                    15.8                    19.9
+54 54                    91.0                   109.2                   118.8
+55 55                    91.0                   109.2                   118.8
+56 56                    68.8                    67.6                    71.3
+57 57                     6.4                    10.1                     9.2
+58 58                    10.2                    15.5                    18.3
+59 59                   116.3                   131.6                   108.5
+60 60                   121.2                   142.0                   115.1
+61 61                    29.1                    24.8                    40.6
+62 62                    43.2                    61.1                    76.4
+63 63                    86.6                    71.8                   103.2
+64 64                    73.3                    65.6                    44.1
+65 65                   100.5                    90.8                    99.7
+66 66                     2.9                     3.6                     4.0
+67 67                    24.2                    24.0                    18.1
+68 68                    59.6                    53.7                    74.2
+69 69                    55.4                    48.3                    64.3
+70 70                    28.9                    23.9                    41.5
+71 71                    69.7                    60.4                    40.2
+72 72                    69.7                    60.4                    40.2
+73 73                   109.6                   105.0                    73.4
+74 74                    83.3                    73.0                   105.2
+75 75                    74.2                    68.4                    49.9
+76 76                    74.2                    68.4                    49.9
+77 77                    74.2                    68.4                    49.9
+78 78                    74.2                    68.4                    49.9
+79 79                    74.2                    68.4                    49.9
+80 80                    16.1                    13.5                     8.3
+81 81                    49.9                    45.6                    63.0
+   ppt_1961-04-01_19812010 ppt_1961-05-01_19812010 ppt_1961-06-01_19812010
+1                     62.9                    98.5                   130.3
+2                    103.4                    48.3                    22.5
+3                     27.3                     1.4                     0.2
+4                     24.1                     1.4                     2.1
+5                     20.0                    38.6                    59.8
+6                     20.0                    38.6                    59.8
+7                     86.5                   119.2                   125.3
+8                     64.4                   100.0                   124.7
+9                     88.9                   120.5                   111.6
+10                    44.4                    88.9                   119.4
+11                    34.7                    63.6                    58.8
+12                    33.5                    51.8                    67.4
+13                    71.6                   114.3                   141.5
+14                    30.8                    60.2                    67.9
+15                    32.7                    43.1                    69.1
+16                    28.4                    37.3                    67.6
+17                    33.6                    44.2                    69.0
+18                    33.5                    44.2                    69.1
+19                    59.2                    72.5                    54.5
+20                   155.7                   252.3                   314.7
+21                   274.7                   195.1                   139.3
+22                    78.0                    44.3                    32.8
+23                    73.5                    77.0                    47.6
+24                    56.5                    68.1                    67.1
+25                   108.4                   125.5                   160.2
+26                    92.8                   112.9                   167.8
+27                    61.9                    96.5                   119.0
+28                   257.4                   251.9                   178.7
+29                    44.5                    61.7                    68.2
+30                    85.2                   120.3                   123.8
+31                    45.1                   152.3                   240.4
+32                     6.2                     6.6                    17.9
+33                     6.2                     6.6                    17.9
+34                     7.2                    11.2                    22.0
+35                    31.6                    64.9                    86.4
+36                    29.3                    40.3                    56.0
+37                    26.6                    45.5                    56.4
+38                    15.5                    23.1                    34.8
+39                    45.7                    52.5                    52.7
+40                     6.8                     5.2                    14.4
+41                     5.0                     4.4                     6.7
+42                     6.3                     7.3                     7.7
+43                     7.5                    16.3                    37.2
+44                     7.5                    16.3                    37.2
+45                     7.5                    16.3                    37.2
+46                     5.0                     4.4                     6.7
+47                     5.0                     4.4                     6.7
+48                    25.0                    12.1                     3.0
+49                    23.8                    12.2                     3.0
+50                    75.8                    89.7                    91.1
+51                    47.8                    82.2                   203.2
+52                    26.5                    10.4                     2.9
+53                    15.5                    19.2                    57.5
+54                   124.0                   128.1                    85.4
+55                   124.0                   128.1                    85.4
+56                    83.2                    93.0                    97.4
+57                     6.7                     7.9                    27.2
+58                    16.2                     9.7                    22.4
+59                    92.2                   112.2                   163.8
+60                   102.3                   112.0                   167.0
+61                    64.6                    93.9                    98.5
+62                    48.0                    85.1                   215.7
+63                   106.8                   104.7                   104.6
+64                    22.6                     8.7                     3.1
+65                    86.0                   100.4                   123.5
+66                     5.0                     4.4                     6.7
+67                    19.7                    18.7                    22.5
+68                    85.6                   109.8                    99.1
+69                    81.5                    94.9                    98.9
+70                    65.8                    91.2                    97.6
+71                    23.7                     8.7                     3.0
+72                    23.7                     8.7                     3.0
+73                    29.6                    15.2                     3.1
+74                    93.5                   101.0                    92.2
+75                    23.8                    11.1                     3.0
+76                    23.8                    11.1                     3.0
+77                    23.8                    11.1                     3.0
+78                    23.8                    11.1                     3.0
+79                    23.8                    11.1                     3.0
+80                     7.6                    18.1                    36.4
+81                    79.2                    93.2                    96.0
+   ppt_1961-07-01_19812010 ppt_1961-08-01_19812010 ppt_1961-09-01_19812010
+1                    139.1                   134.5                    92.3
+2                     19.2                    26.4                    45.7
+3                      0.0                     0.0                     4.2
+4                      0.0                     0.0                     3.9
+5                     75.9                    66.8                    36.9
+6                     75.9                    66.8                    36.9
+7                    127.4                   132.3                   101.7
+8                    140.7                   143.7                   105.2
+9                    112.0                   112.3                    97.7
+10                   117.9                   104.8                   113.2
+11                    67.8                    62.5                    46.4
+12                    63.5                    67.6                    56.5
+13                   148.7                   143.1                    97.1
+14                    67.1                    76.0                    52.3
+15                    89.5                    81.4                    60.1
+16                    95.6                    76.8                    46.1
+17                    88.6                    81.5                    61.1
+18                    88.5                    81.6                    61.1
+19                    57.9                    50.5                    55.5
+20                   309.8                   320.9                   228.9
+21                    92.5                    89.3                   122.0
+22                    24.9                    33.6                    86.8
+23                    37.0                    57.8                    69.6
+24                   113.3                   141.2                   128.6
+25                   141.9                   145.6                   185.9
+26                   160.9                   130.2                   173.4
+27                   367.8                   293.4                   161.6
+28                   183.2                   280.3                   269.7
+29                    76.4                    75.5                    82.9
+30                   127.1                   123.3                   127.4
+31                   287.3                   241.9                   268.3
+32                    29.7                    30.1                    22.2
+33                    29.7                    30.1                    22.2
+34                    27.8                    29.3                    22.9
+35                    88.1                    83.4                    65.3
+36                    68.3                    70.4                    59.0
+37                    83.5                    85.5                    59.9
+38                    67.7                    51.0                    32.6
+39                    50.8                    54.6                    54.2
+40                    23.9                    33.5                    18.7
+41                    24.1                    27.7                    19.2
+42                    27.4                    32.0                    21.3
+43                    58.9                    51.1                    32.2
+44                    58.9                    51.1                    32.2
+45                    58.9                    51.1                    32.2
+46                    24.1                    27.7                    20.3
+47                    24.1                    27.7                    20.3
+48                     0.2                     1.4                     5.8
+49                     0.2                     1.4                     5.8
+50                    90.8                    83.7                    80.8
+51                   188.2                   195.1                   151.8
+52                     0.2                     1.3                     3.9
+53                    89.9                    74.0                    45.1
+54                    93.0                    72.5                    81.1
+55                    93.0                    72.5                    81.1
+56                    96.1                    94.0                    98.7
+57                    48.2                    46.5                    19.1
+58                    43.4                    60.4                    27.2
+59                   193.3                   183.1                   147.8
+60                   179.4                   175.2                   139.5
+61                    98.2                   102.9                   102.1
+62                   182.5                   194.0                   157.1
+63                   116.9                   104.0                   106.1
+64                     0.2                     1.4                     4.1
+65                   143.6                   160.5                   135.0
+66                    24.1                    27.7                    20.3
+67                    49.9                    91.1                    65.3
+68                   109.3                    81.5                    74.6
+69                    95.3                    88.0                    81.2
+70                    96.2                   101.5                   102.1
+71                     0.2                     1.4                     4.1
+72                     0.2                     1.4                     4.1
+73                     0.3                     1.5                     5.4
+74                   106.0                   102.0                   107.1
+75                     0.2                     1.4                     4.9
+76                     0.2                     1.4                     4.9
+77                     0.2                     1.4                     4.9
+78                     0.2                     1.4                     4.9
+79                     0.2                     1.4                     4.9
+80                    53.2                    47.8                    33.2
+81                    94.0                    87.6                    81.8
+   ppt_1961-10-01_19812010 ppt_1961-11-01_19812010 ppt_1961-12-01_19812010
+1                     71.6                    66.2                    56.2
+2                    105.8                   155.4                   200.1
+3                     24.7                    46.1                    73.6
+4                     19.6                    42.8                    71.4
+5                     32.6                    25.4                    20.5
+6                     32.6                    25.4                    20.5
+7                     94.3                    89.5                    93.9
+8                     73.9                    74.9                    72.6
+9                     98.3                    88.2                    94.5
+10                    59.4                    10.6                     3.1
+11                    40.8                    51.1                    48.0
+12                    46.7                    48.2                    48.2
+13                    69.5                    70.7                    68.8
+14                    44.0                    48.3                    46.3
+15                    70.0                    60.5                    51.4
+16                    46.0                    36.0                    32.9
+17                    67.9                    58.6                    50.4
+18                    68.9                    59.6                    51.4
+19                    70.7                    64.2                    64.5
+20                    64.6                    36.5                    23.8
+21                   157.7                   248.8                   266.6
+22                   122.5                   155.2                   150.1
+23                    91.2                    78.4                    51.3
+24                    99.9                   113.8                   120.2
+25                   180.1                    76.7                    47.6
+26                   108.4                    53.8                    29.7
+27                    48.3                    45.4                    21.0
+28                   291.7                   349.9                   433.0
+29                    87.6                    84.8                    84.1
+30                    95.0                    94.7                   119.9
+31                   276.4                   224.3                   156.2
+32                    16.1                    12.4                    10.1
+33                    16.1                    12.4                    10.1
+34                    22.2                    15.5                    11.3
+35                    71.3                    52.3                    51.0
+36                    60.8                    42.9                    41.9
+37                    61.0                    54.1                    43.6
+38                    35.4                    27.9                    30.2
+39                    69.5                    63.8                    60.7
+40                    12.9                     9.3                     6.8
+41                    11.1                     4.8                     3.4
+42                    12.8                     5.9                     5.7
+43                    19.6                    15.2                    16.0
+44                    19.6                    15.2                    16.0
+45                    19.6                    15.2                    16.0
+46                    11.1                     4.8                     3.4
+47                    11.1                     4.8                     3.4
+48                    23.4                    49.5                    69.6
+49                    23.4                    48.6                    69.6
+50                    64.6                    75.1                    67.9
+51                    65.2                    50.1                    46.8
+52                    25.9                    52.8                    74.7
+53                    24.4                    20.8                    21.4
+54                   111.1                   123.3                   138.1
+55                   111.1                   123.3                   138.1
+56                    96.0                   124.1                   100.8
+57                     1.1                     9.8                     1.1
+58                     8.8                    12.6                    14.8
+59                   101.7                    94.6                   122.9
+60                    97.6                   100.2                   126.2
+61                    82.6                    50.0                    42.0
+62                    73.1                    45.4                    40.6
+63                   102.7                    99.1                    98.4
+64                    23.2                    49.3                    67.3
+65                    97.3                    94.8                    90.3
+66                    11.1                     4.8                     3.4
+67                    36.2                    29.4                    28.0
+68                    66.4                    81.8                    72.9
+69                    65.9                    79.0                    69.1
+70                    84.7                    48.2                    41.0
+71                    23.2                    47.5                    64.7
+72                    23.2                    47.5                    64.7
+73                    28.0                    69.0                   102.9
+74                    90.4                    83.6                    92.7
+75                    23.3                    48.5                    68.4
+76                    23.3                    48.5                    68.4
+77                    23.3                    48.5                    68.4
+78                    23.3                    48.5                    68.4
+79                    23.3                    48.5                    68.4
+80                    22.4                    18.3                    18.6
+81                    64.2                    78.0                    69.5</code></pre>
+</div>
 </div>
 <p>What did the extract function return?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.ch4.ppt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.ch4.ppt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
 </div>
 <p>Combine extracted information to the simple feature:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4.ppt.sf <span class="ot">&lt;-</span> FLUXNET.ch4 <span class="sc">%&gt;%</span> <span class="fu">cbind</span>(FLUXNET.ch4.ppt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.ch4.ppt.sf <span class="ot">&lt;-</span> FLUXNET.ch4 <span class="sc">%&gt;%</span> <span class="fu">cbind</span>(FLUXNET.ch4.ppt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Visualize your work:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span>  <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi.global) <span class="sc">+</span> <span class="fu">geom_sf</span>( <span class="at">data =</span> FLUXNET.ch4.ppt.sf, <span class="fu">aes</span>( <span class="at">col=</span> ppt_1961.<span class="fl">09.01</span>_19812010)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span>  <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi.global) <span class="sc">+</span> <span class="fu">geom_sf</span>( <span class="at">data =</span> FLUXNET.ch4.ppt.sf, <span class="fu">aes</span>( <span class="at">col=</span> ppt_1961.<span class="fl">09.01</span>_19812010)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="terra_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>FLUXNET data can be used to understand patterns in natural methane fluxes. Evaluating the conditions where measurements are taken is essential to designing a useful model.</p>
@@ -587,8 +890,8 @@ time        : 1961-01-01 to 1961-12-01 UTC </code></pre>
 <section id="download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assessment-23." class="level2">
 <h2 class="anchored" data-anchor-id="download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assessment-23.">Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in Assessment 2/3.</h2>
 </section>
-<section id="assessment-23" class="level2">
-<h2 class="anchored" data-anchor-id="assessment-23">Assessment 2/3</h2>
+<section id="assessment-2" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-2">Assessment 2</h2>
 <p>We will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.</p>
 <section id="references" class="level4">
 <h4 class="anchored" data-anchor-id="references">References</h4>
@@ -634,7 +937,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -666,50 +980,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -719,17 +994,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -741,130 +1007,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
+      return note.innerHTML;
     });
   }
       let selectedAnnoteEl;
@@ -908,7 +1051,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
-            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -934,32 +1076,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1025,15 +1141,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       &nbsp;
     </div>   
-    <div class="nav-footer-center">
-<p>Copyright 2024, Sparkle L. Malone</p>
-</div>
+    <div class="nav-footer-center">Copyright 2024, Sparkle L. Malone</div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
   </div>
 </footer>
-
 
 
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -80,13 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 50,
-  "keyboard-shortcut": [
-    "f",
-    "/",
-    "s"
-  ],
-  "show-item-context": false,
+  "limit": 20,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -95,10 +89,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
-    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
@@ -111,12 +103,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./sf.html">Vector Data</a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-        </a>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./sf.html">Vector Data</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -126,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
       <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
@@ -153,9 +145,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Introduction to R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -182,9 +174,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
  <span class="menu-text">Data Integration in R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -199,9 +191,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
  <span class="menu-text">Machine Learning in R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -222,9 +214,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
  <span class="menu-text">Dynamic Models in R</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -239,9 +231,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
  <span class="menu-text">Resources</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
@@ -263,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -297,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./sf.html">Vector Data</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Introduction to Simple Features in R</h1>
 </div>
@@ -312,9 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-
 </header>
-
 
 <section id="install-libraries-for-this-workshop" class="level3">
 <h3 class="anchored" data-anchor-id="install-libraries-for-this-workshop">Install libraries for this workshop</h3>
@@ -345,7 +335,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'data/FluxNet_Sites_2024.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This dataset includes:</p>
-<table class="caption-top table">
+<table class="table">
 <colgroup>
 <col style="width: 38%">
 <col style="width: 61%">
@@ -411,11 +401,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Look at the elevation, mean annual temperature, and mean annual precipitation for the tower site locations:</p>
@@ -430,11 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 (`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT)) <span class="sc">+</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -446,11 +428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 (`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAP)) <span class="sc">+</span> </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -462,11 +440,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 (`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We are interested in exploring the sites with methane data. Lets subset by FLUXNET-CH4.</p>
@@ -494,11 +468,7 @@ deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>FLUXNET.CH4.shp ) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>check the class:</p>
@@ -625,7 +595,7 @@ see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
 <p>Below we will explore a few methods:</p>
-<p>st_is_valid and st_is_simple return a boolean indicating whether a geometry is valid or simple.</p>
+<p><code>st_is_valid()</code> and <code>st_is_simple()</code> return a boolean indicating whether a geometry is valid or simple.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -637,91 +607,63 @@ see '?methods' for accessing help and source code</code></pre>
 [76] TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
 </div>
 </div>
+<p>If there were any issues with the geometery you can use <code>st_make_valid()</code> to fix. Since this is a point file there will be no issues with the geometry.</p>
 <section id="change-the-crs-to-a-projected-epgs-with-st_transform." class="level3">
 <h3 class="anchored" data-anchor-id="change-the-crs-to-a-projected-epgs-with-st_transform.">Change the CRS to a projected EPGS with st_transform.</h3>
 <p><a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf"> Coordinate reference systems (CRS) </a> are like measurement units for coordinates: they specify which location on Earth a particular coordinate pair refers to. Simple feature have two attributes to store a CRS: epsg and proj4string. This implies that all geometries in a geometry list-column must have the same CRS. Both may be NA, e.g.&nbsp;in case the CRS is unknown, or when we work with local coordinate systems (e.g.&nbsp;inside a building, a body, or an abstract space).</p>
 <p>proj4string is a generic, string-based description of a CRS, understood by the PROJ library. It defines projection types and (often) defines parameter values for particular projections, and hence can cover an infinite amount of different projections. This library (also used by GDAL) provides functions to convert or transform between different CRS. epsg is the integer ID for a particular, known CRS that can be resolved into a proj4string. Some proj4string values can be resolved back into their corresponding epsg ID, but this does not always work.</p>
 <p>The importance of having epsg values stored with data besides proj4string values is that the epsg refers to particular, well-known CRS, whose parameters may change (improve) over time; fixing only the proj4string may remove the possibility to benefit from such improvements, and limit some of the provenance of datasets, but may help reproducibility. Coordinate reference system transformations can be carried out using st_transform</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="st">'+init=epsg:4087'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Check the CRS:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="st">'+init=epsg:4087'</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Coordinate Reference System:
-  User input: +init=epsg:4087 
-  wkt:
-PROJCRS["WGS 84 / World Equidistant Cylindrical",
-    BASEGEOGCRS["WGS 84",
-        ENSEMBLE["World Geodetic System 1984 ensemble",
-            MEMBER["World Geodetic System 1984 (Transit)"],
-            MEMBER["World Geodetic System 1984 (G730)"],
-            MEMBER["World Geodetic System 1984 (G873)"],
-            MEMBER["World Geodetic System 1984 (G1150)"],
-            MEMBER["World Geodetic System 1984 (G1674)"],
-            MEMBER["World Geodetic System 1984 (G1762)"],
-            MEMBER["World Geodetic System 1984 (G2139)"],
-            ELLIPSOID["WGS 84",6378137,298.257223563,
-                LENGTHUNIT["metre",1]],
-            ENSEMBLEACCURACY[2.0]],
-        PRIMEM["Greenwich",0,
-            ANGLEUNIT["degree",0.0174532925199433]],
-        ID["EPSG",4326]],
-    CONVERSION["World Equidistant Cylindrical",
-        METHOD["Equidistant Cylindrical",
-            ID["EPSG",1028]],
-        PARAMETER["Latitude of 1st standard parallel",0,
-            ANGLEUNIT["degree",0.0174532925199433],
-            ID["EPSG",8823]],
-        PARAMETER["Longitude of natural origin",0,
-            ANGLEUNIT["degree",0.0174532925199433],
-            ID["EPSG",8802]],
-        PARAMETER["False easting",0,
-            LENGTHUNIT["metre",1],
-            ID["EPSG",8806]],
-        PARAMETER["False northing",0,
-            LENGTHUNIT["metre",1],
-            ID["EPSG",8807]],
-        ID["EPSG",4085]],
-    CS[Cartesian,2],
-        AXIS["(E)",east,
-            ORDER[1],
-            LENGTHUNIT["metre",1,
-                ID["EPSG",9001]]],
-        AXIS["(N)",north,
-            ORDER[2],
-            LENGTHUNIT["metre",1,
-                ID["EPSG",9001]]],
-    USAGE[
-        SCOPE["unknown"],
-        AREA["World."],
-        BBOX[-90,-180,90,180]]]</code></pre>
+<pre><code>Simple feature collection with 81 features and 8 fields
+Geometry type: POINT
+Dimension:     XY
+Bounding box:  xmin: -18223020 ymin: -4162002 xmax: 19542570 ymax: 7939774
+Projected CRS: WGS 84 / World Equidistant Cylindrical
+First 10 features:
+   SITE_ID                 SITE_NAME FLUXNET2015 FLUXNET.CH4 LOCATION_ELEV IGBP
+1   AT-Neu                  Neustift   CC-BY-4.0   CC-BY-4.0           970  GRA
+2   BR-Npw Northern Pantanal Wetland               CC-BY-4.0           120  WSA
+3   BW-Gum                      Guma               CC-BY-4.0           950  WET
+4   BW-Nxr                   Nxaraga               CC-BY-4.0           950  GRA
+5   CA-SCB          Scotty Creek Bog               CC-BY-4.0           280  WET
+6   CA-SCC    Scotty Creek Landscape               CC-BY-4.0           285  ENF
+7   CH-Cha                    Chamau   CC-BY-4.0   CC-BY-4.0           393  GRA
+8   CH-Dav                     Davos   CC-BY-4.0   CC-BY-4.0          1639  ENF
+9   CH-Oe2            Oensingen crop   CC-BY-4.0   CC-BY-4.0           452  CRO
+10  CN-Hgu                  Hongyuan               CC-BY-4.0          3500  GRA
+    MAT    MAP                  geometry
+1   6.5  852.0   POINT (1259858 5245007)
+2  24.9 1486.0 POINT (-6279755 -1836549)
+3  21.0  460.0  POINT (2490339 -2111141)
+4  21.0  460.0  POINT (2580297 -2176085)
+5  -2.8  388.0 POINT (-13502876 6824876)
+6  -2.8  387.6 POINT (-13502965 6824764)
+7   9.5 1136.0  POINT (936241.4 5255415)
+8   2.8 1062.0   POINT (1097154 5211455)
+9   9.8 1155.0  POINT (860911.5 5263898)
+10  1.5  747.0  POINT (11420267 3656322)</code></pre>
 </div>
 </div>
-<p>st_distance returns a dense numeric matrix with distances between geometries:</p>
+<p>Now the Projected CRS is WGS 84 / World Equidistant Cylindrical.</p>
+<p><code>st_distance()</code> returns a dense numeric matrix with distances between geometries:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MeanDistance_km <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(FLUXNET.CH4.shp, FLUXNET.CH4.shp) <span class="sc">%&gt;%</span> <span class="fu">rowMeans</span>()<span class="sc">/</span><span class="dv">1000</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">col =</span> MeanDistance_km ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MeanDistance_km <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(FLUXNET.CH4.shp, FLUXNET.CH4.shp) <span class="sc">%&gt;%</span> <span class="fu">rowMeans</span>()<span class="sc">/</span><span class="dv">1000</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">col =</span> MeanDistance_km ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<p><img src="sf_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MeanDistance_km)) <span class="sc">+</span> </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MeanDistance_km)) <span class="sc">+</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -738,32 +680,24 @@ PROJCRS["WGS 84 / World Equidistant Cylindrical",
 <p><code>aoi_get()</code>: Defines an Area of Interest based on a variety of inputs such as bounding box coordinates, administrative boundaries, or addresses.</p>
 <p>Example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AOI)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define an area of interest by coordinates</span></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># aoi.NY.bb &lt;- aoi_get("New York")</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>aoi.NY <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">state=</span><span class="st">"New York"</span>)</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># aoi.NY.bb %&gt;% ggplot() + geom_sf()</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>aoi.NY <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AOI)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define an area of interest by coordinates</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># aoi.NY.bb &lt;- aoi_get("New York")</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>aoi.NY <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">state=</span><span class="st">"New York"</span>)</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># aoi.NY.bb %&gt;% ggplot() + geom_sf()</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>aoi.NY <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Creates a simple feature of South America:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>s.america <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="st">"South America"</span>, <span class="at">union=</span>T)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>s.america <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>s.america <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="st">"South America"</span>, <span class="at">union=</span>T)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>s.america <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -771,30 +705,26 @@ PROJCRS["WGS 84 / World Equidistant Cylindrical",
 <h3 class="anchored" data-anchor-id="what-is-union-t-doing">What is union =T doing?</h3>
 <p>Re-project the s.america to match Fluxnet.ch4:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica <span class="ot">&lt;-</span> <span class="fu">st_transform</span>( s.america , <span class="st">'+init=epsg:4087'</span>) </span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica <span class="ot">&lt;-</span> <span class="fu">st_transform</span>( s.america , <span class="st">'+init=epsg:4087'</span>) </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Creates a simple feature of Brazil and re-project it to match Fluxnet.ch4:</p>
-<p>The commands st_intersects, st_disjoint, st_touches, st_crosses, st_within, st_contains, st_overlaps, st_equals, st_covers, st_covered_by, st_equals_exact and st_is_within_distance all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:</p>
+<p>The functions <code>st_intersects()</code>, <code>st_disjoint()</code>, <code>st_touches()</code>, <code>st_crosses()</code>, <code>st_within()</code>, <code>st_contains()</code>, <code>st_overlaps()</code>, <code>st_equals()</code>, <code>st_covers()</code>, <code>st_covered_by()</code>, <code>st_equals_exact()</code> and <code>st_is_within_distance()</code> all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:</p>
 </section>
 </section>
 <section id="how-many-towers-are-in-south-america" class="level1">
 <h1>How many towers are in South America?</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sparse geometry binary predicate list of length 1, where the predicate
 was `intersects'
  1: 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      [,1] [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10] [,11] [,12]
 [1,] FALSE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
@@ -817,7 +747,11 @@ was `intersects'
 <p>Where possible geometric operations such as <code>st_distance()</code>, <code>st_length()</code> and <code>st_area()</code> report results with a units attribute appropriate for the CRS.</p>
 <p>Calculate the area of Brazil:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(aoi.SAmerica )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(aoi.SAmerica )</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1.918234e+13 [m^2]</code></pre>
+</div>
 </div>
 <section id="visualize-the-global-distribution-of-towers" class="level4">
 <h4 class="anchored" data-anchor-id="visualize-the-global-distribution-of-towers">Visualize the global distribution of towers:</h4>
@@ -827,34 +761,30 @@ was `intersects'
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Look at the CRS:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(aoi.terrestrial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Coordinate Reference System:
-  User input: WGS 84 
-  wkt:
-GEOGCRS["WGS 84",
-    DATUM["World Geodetic System 1984",
-        ELLIPSOID["WGS 84",6378137,298.257223563,
-            LENGTHUNIT["metre",1]]],
-    PRIMEM["Greenwich",0,
-        ANGLEUNIT["degree",0.0174532925199433]],
-    CS[ellipsoidal,2],
-        AXIS["latitude",north,
-            ORDER[1],
-            ANGLEUNIT["degree",0.0174532925199433]],
-        AXIS["longitude",east,
-            ORDER[2],
-            ANGLEUNIT["degree",0.0174532925199433]],
-    ID["EPSG",4326]]</code></pre>
+<pre><code>Simple feature collection with 171 features and 1 field
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -180 ymin: -55.61183 xmax: 180 ymax: 83.64513
+Geodetic CRS:  WGS 84
+First 10 features:
+                       name                       geometry
+2                  Tanzania MULTIPOLYGON (((33.90371 -0...
+3                 W. Sahara MULTIPOLYGON (((-8.66559 27...
+4                    Canada MULTIPOLYGON (((-122.84 49,...
+5  United States of America MULTIPOLYGON (((-122.84 49,...
+6                Kazakhstan MULTIPOLYGON (((87.35997 49...
+7                Uzbekistan MULTIPOLYGON (((55.96819 41...
+9                 Indonesia MULTIPOLYGON (((141.0002 -2...
+10                Argentina MULTIPOLYGON (((-68.63401 -...
+11                    Chile MULTIPOLYGON (((-68.63401 -...
+12          Dem. Rep. Congo MULTIPOLYGON (((29.34 -4.49...</code></pre>
 </div>
 </div>
 <p>Re-project the polygon to match FLUXNET.CH4.shp:</p>
@@ -862,76 +792,39 @@ GEOGCRS["WGS 84",
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>)) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>( <span class="dv">4087</span> ) </span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(aoi.terrestrial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Coordinate Reference System:
-  User input: EPSG:4087 
-  wkt:
-PROJCRS["WGS 84 / World Equidistant Cylindrical",
-    BASEGEOGCRS["WGS 84",
-        ENSEMBLE["World Geodetic System 1984 ensemble",
-            MEMBER["World Geodetic System 1984 (Transit)"],
-            MEMBER["World Geodetic System 1984 (G730)"],
-            MEMBER["World Geodetic System 1984 (G873)"],
-            MEMBER["World Geodetic System 1984 (G1150)"],
-            MEMBER["World Geodetic System 1984 (G1674)"],
-            MEMBER["World Geodetic System 1984 (G1762)"],
-            MEMBER["World Geodetic System 1984 (G2139)"],
-            ELLIPSOID["WGS 84",6378137,298.257223563,
-                LENGTHUNIT["metre",1]],
-            ENSEMBLEACCURACY[2.0]],
-        PRIMEM["Greenwich",0,
-            ANGLEUNIT["degree",0.0174532925199433]],
-        ID["EPSG",4326]],
-    CONVERSION["World Equidistant Cylindrical",
-        METHOD["Equidistant Cylindrical",
-            ID["EPSG",1028]],
-        PARAMETER["Latitude of 1st standard parallel",0,
-            ANGLEUNIT["degree",0.0174532925199433],
-            ID["EPSG",8823]],
-        PARAMETER["Longitude of natural origin",0,
-            ANGLEUNIT["degree",0.0174532925199433],
-            ID["EPSG",8802]],
-        PARAMETER["False easting",0,
-            LENGTHUNIT["metre",1],
-            ID["EPSG",8806]],
-        PARAMETER["False northing",0,
-            LENGTHUNIT["metre",1],
-            ID["EPSG",8807]]],
-    CS[Cartesian,2],
-        AXIS["easting (X)",east,
-            ORDER[1],
-            LENGTHUNIT["metre",1]],
-        AXIS["northing (Y)",north,
-            ORDER[2],
-            LENGTHUNIT["metre",1]],
-    USAGE[
-        SCOPE["Graticule coordinates expressed in simple Cartesian form."],
-        AREA["World."],
-        BBOX[-90,-180,90,180]],
-    ID["EPSG",4087]]</code></pre>
+<pre><code>Simple feature collection with 171 features and 1 field
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: -20037510 ymin: -6190681 xmax: 20037510 ymax: 9311333
+Projected CRS: WGS 84 / World Equidistant Cylindrical
+First 10 features:
+                       name                       geometry
+2                  Tanzania MULTIPOLYGON (((3774144 -10...
+3                 W. Sahara MULTIPOLYGON (((-964649 307...
+4                    Canada MULTIPOLYGON (((-13674486 5...
+5  United States of America MULTIPOLYGON (((-13674486 5...
+6                Kazakhstan MULTIPOLYGON (((9724867 547...
+7                Uzbekistan MULTIPOLYGON (((6230351 459...
+9                 Indonesia MULTIPOLYGON (((15696072 -2...
+10                Argentina MULTIPOLYGON (((-7640303 -5...
+11                    Chile MULTIPOLYGON (((-7640303 -5...
+12          Dem. Rep. Congo MULTIPOLYGON (((3266114 -50...</code></pre>
 </div>
 </div>
 <p>Visualize the shapefile you created:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Use ggplot to visualize the global distribution of Fluxnet CH4 sites:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi.terrestrial) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Extract the country from the world simple feature into FLUXNET.CH4.shp:</p>
@@ -956,11 +849,7 @@ all geometries</code></pre>
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP, <span class="at">col=</span>IGBP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -968,11 +857,7 @@ all geometries</code></pre>
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-33-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<p><img src="sf_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>IGBP <span class="ot">&lt;-</span> <span class="fu">as.factor</span>( FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -989,7 +874,7 @@ all geometries</code></pre>
 <p>delete_layer=TRUE causes st_write try to open the data source and delete the layer; no errors are given if the data source is not present, or the layer does not exist in the data source.</p>
 <p>delete_dsn=TRUE causes st_write to delete the data source when present, before writing the layer in a newly created data source. No error is given when the data source does not exist. This option should be handled with care, as it may wipe complete directories or databases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_sf</span>(FLUXNET.CH4.shp, <span class="st">"data/FLUXNET_CH4.shp"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_sf</span>(FLUXNET.CH4.shp, <span class="st">"data/products/FLUXNET_CH4.shp"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is possible to create data.frame objects with geometry list-columns that are not of class sf by:</p>
 <div class="cell">
@@ -1055,7 +940,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1087,50 +983,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+  function tippyHover(el, contentFn) {
     const config = {
       allowHTML: true,
+      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1140,17 +997,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start',
+      placement: 'bottom-start'
     };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1162,130 +1010,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
-        }
-      }
-    }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
-          }
-        }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
-        }
-        return container.innerHTML
-      } else {
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(note);
-        }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
-      }
-    }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
-          }
-        } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
-          .then(res => res.text())
-          .then(html => {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
-            if (note !== null) {
-              const html = processXRef(id, note);
-              instance.setContent(html);
-            } 
-          }).finally(() => {
-            instance.enable();
-            instance.show();
-          });
-        }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
+      return note.innerHTML;
     });
   }
       let selectedAnnoteEl;
@@ -1329,7 +1054,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
-            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1355,32 +1079,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1446,15 +1144,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       &nbsp;
     </div>   
-    <div class="nav-footer-center">
-<p>Copyright 2024, Sparkle L. Malone</p>
-</div>
+    <div class="nav-footer-center">Copyright 2024, Sparkle L. Malone</div>
     <div class="nav-footer-right">
       &nbsp;
     </div>
   </div>
 </footer>
-
 
 
 
