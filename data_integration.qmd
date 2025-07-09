@@ -8,7 +8,7 @@ Data analysis often requires combining data from multiple sources, such as files
 #### Workshop Goals: 
 
 1. Understand techniques for data Integration. 
-2. Combine information from tabular data sources.
+2. Obtain information from different data sources.
 3. Combine tabular and vector data.
 4. Combine tabular and raster data. 
 5. Combine tabular data by an ID and time.
@@ -31,6 +31,10 @@ Data integration can introduce errors or inconsistencies in your data, such as d
 
 In this workshop you will begin to extract information about the FLUXNET CH4 tower sites.
 
+### Install Packages:
+```{r, include=T, eval=F}
+install.packages(zoo)
+```
 # Load Libraries:
 ```{r, include=T, output=F}
 library(sf)
@@ -38,6 +42,7 @@ library(terra)
 library(tidyverse)
 library(ggplot2)
 library(AOI)
+library(zoo)
 ```
 
 # Integrating information from simple features
@@ -47,17 +52,32 @@ library(AOI)
 Import the file FluxNet_Sites_2024.csv and call it FluxNet
 
 ```{r, include=T}
-FluxNet <- read.csv('Data/FluxNet_Sites_2024.csv')
+FluxNet <- read.csv('data/FluxNet_Sites_2024.csv')
 ```
-Column Name | Description |
-|------:|-----------|
-|SITE_ID| Unique site id|
-|LOCATION_LAT|Location information|
-|LOCATION_LONG|Location information|
+This dataset includes:
 
-Convert FluxNet to a sf and call it FLUXNET.CH4.shp:
+| Column Name | Description |
+|---------------------------:|--------------------------------------------|
+| SITE_ID | Unique site id |
+| SITE_NAME | Site name |
+| FLUXNET2015 | License information for the data for the two FLUXNET Products |
+| FLUXNET-CH4 | License information for the data for the two FLUXNET Products |
+| LOCATION_LAT | Location information |
+| LOCATION_LONG | Location information |
+| LOCATION_ELEV | Elevation in meters |
+| IGBP | Vegetation type |
+| MAT | Mean annual temperature in Celsius |
+| MAP | Mean annual precipitation in mm |
+
+Subset file to incluse only sites measuring methane:
 ```{r, include=T}
-FLUXNET.CH4.shp <- st_as_sf(x = FluxNet,                         
+FLUXNET.CH4 <- FluxNet %>% filter( FLUXNET.CH4 == "CC-BY-4.0" )
+```
+
+Now that you have all of the sites measuring methane, convert FLUXNET.CH4 to a sf and call it FLUXNET.CH4.shp:
+```{r, include=T}
+
+FLUXNET.CH4.shp <- st_as_sf(x = FLUXNET.CH4,                         
            coords = c("LOCATION_LONG",  "LOCATION_LAT"),
            crs = 4326)
 
@@ -84,7 +104,7 @@ Make the CRS match:
 
 FLUXNET.CH4.shp = st_transform(FLUXNET.CH4.shp, crs= '+init=epsg:4087')
 
-global = st_transform(global, crs= '+init=epsg:4087')
+global = st_transform(global, crs= '+init=epsg:4087') %>% st_make_valid()
 
 ggplot() + geom_sf(data = global) + geom_sf(data = FLUXNET.CH4.shp) 
 
@@ -101,30 +121,35 @@ FLUXNET.CH4.shp$Country
 Import the file GlobalSoil_grids.tif :
 
 ```{r, include=T}
-soil <- terra::rast("Data/GlobalSoil_grids.tif" )
-crs(soil)
+soil <- terra::rast("data/GlobalSoil_grids.tif" )
+soil
 ```
 Transform FLUXNET.CH4.shp to the same CRS as soils:
 ```{r, include=T}
 FLUXNET.CH4.shp = st_transform(FLUXNET.CH4.shp, crs= crs(soil))
+FLUXNET.CH4.shp
 ```
 Extract soil information to FLUXNET.CH4.shp:
 ```{r, include=T}
 FLUXNET.CH4.shp$SOIL_BulkDensity = terra::extract(soil, FLUXNET.CH4.shp)$BulkDensity
+FLUXNET.CH4.shp$SOIL_BulkDensity
 
 FLUXNET.CH4.shp$SOIL_PH = terra::extract(soil, FLUXNET.CH4.shp)$PH
+FLUXNET.CH4.shp$SOIL_PH
 
 FLUXNET.CH4.shp$SOIL_Nitrogen = terra::extract(soil, FLUXNET.CH4.shp)$Nitrogen
+FLUXNET.CH4.shp$SOIL_Nitrogen 
 ```
 
 Import the climate information (GlobalClimate.tif) :
 ```{r, include=T}
-climate <- terra::rast("Data/GlobalClimate.tif" )
-crs(climate)
+climate <- terra::rast("data/GlobalClimate.tif" )
+climate
 ```
 Transform FLUXNET.CH4.shp to the same CRS as climate:
 ```{r, include=T}
 FLUXNET.CH4.shp = st_transform(FLUXNET.CH4.shp, crs= crs(climate))
+FLUXNET.CH4.shp
 ```
 Look at the data that is available in climate:
 ```{r, include=T}
@@ -136,11 +161,16 @@ FLUXNET.CH4.shp$MAP = terra::extract(climate, FLUXNET.CH4.shp)$MAP
 FLUXNET.CH4.shp$TMIN = terra::extract(climate, FLUXNET.CH4.shp)$TMIN
 FLUXNET.CH4.shp$TMAX = terra::extract(climate, FLUXNET.CH4.shp)$TMAX
 FLUXNET.CH4.shp$MAT = terra::extract(climate, FLUXNET.CH4.shp)$MAT
+
+FLUXNET.CH4.shp$MAP
+FLUXNET.CH4.shp$TMIN
+FLUXNET.CH4.shp$TMAX
+FLUXNET.CH4.shp$MAT
 ```
 Import elevation information (Elevation.tif):
 ```{r, include=T}
-elevation <- terra::rast("Data/Elevation.tif" )
-crs(elevation)
+elevation <- terra::rast("data/Elevation.tif" )
+elevation
 ```
 Transform FLUXNET.CH4.shp to the same CRS as elevation:
 ```{r, include=T}
@@ -153,6 +183,7 @@ names(elevation)
 Extract elevation information to FLUXNET.CH4.shp:
 ```{r, include=T}
 FLUXNET.CH4.shp$ELEVATION = terra::extract(elevation, FLUXNET.CH4.shp)$wc2.1_2.5m_elev
+FLUXNET.CH4.shp$ELEVATION 
 ```
 # Joining tables
 We can combine columns from two (or more) tables together. This can be achieved using the join family of functions in dplyr. There are different types of joins that will result in different outcomes.
@@ -164,7 +195,7 @@ We can combine columns from two (or more) tables together. This can be achieved 
 
 Import APPEEARS file where I requested MODIS NDVI and EVI data for all FLUXNET_sites (Data/ENV720-MOD13A3-061-results.csv):
 ```{r, include=T}
-FLUXNET <- read.csv("Data/ENV720-MOD13A3-061-results.csv")
+FLUXNET <- read.csv("data/ENV720-MOD13A3-061-results.csv")
 names(FLUXNET)
 ```
 
@@ -201,7 +232,7 @@ length(unique(FLUXNET_CH4_final$SITE_ID))
 Import the monthly FLUX data:
 ```{r, include=T}
 
-load( "Data/FLUXNET_FLUXES.RDATA")
+load( "data/FLUXNET_FLUXES.RDATA")
 ```
 Look at the flux file "FLUXNET.flux":
 ```{r, include=T}
@@ -212,10 +243,10 @@ names(FLUXNET.flux)
 ```{r, include=T, output=F}
 # Make SITE ID:
 FLUXNET.flux$SITE_ID <- FLUXNET.flux$SITE
-
+FLUXNET.flux$SITE_ID
 # This is a good column to join based on:
 FLUXNET.flux$YearMon
-
+FLUXNET.flux$YearMon
 ```
 In your site file, convert the date to Year-Month and use this column to join it with the flux file "FLUXNET.flux":
 
@@ -233,7 +264,6 @@ FLUXNET_CH4_final$Date
 FLUXNET_CH4_final$Date.f <-FLUXNET_CH4_final$Date %>% as.Date(format='%Y-%m-%d')
 
 # Format as a Yearmon:
-library(zoo)
 FLUXNET_CH4_final$YearMon <- FLUXNET_CH4_final$Date.f %>% zoo::as.yearmon( "%m-%Y")
 
 class(FLUXNET_CH4_final$YearMon)
@@ -245,6 +275,6 @@ fluxes_month <- FLUXNET.flux %>% left_join(FLUXNET_CH4_final , by = c ('YearMon'
 ```
 Save your file:
 ```{r, include=T, eval=F}
-save(fluxes_month, file="Monthly_Fluxes.RDATA" )
+save(fluxes_month, file="data/products/Monthly_Fluxes.RDATA" )
 ```
-You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure.
+You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure. Take note of the difference between joining site based static data versus site based data that changes over time. In your next in class assessment, you will build a file with all of the data you want to use to develop your methane model. To prepare for this, find and obtain your data sources.

@@ -7,11 +7,11 @@ A sensitivity analysis is a technique used to understand how changes in the inpu
 
 To begin load the model and [dataset](https://yale.instructure.com/courses/101353/files/10231469?wrap=1) we will use for this workshop:
 ```{r, include=F}
-load( 'data/SensitivityProducts.RDATA')
+load( 'SensitivityProducts.RDATA')
 ```
 
 ```{r, include=T, eval=F}
-load( 'SensitivityProducts.RDATA')
+load( 'data/SensitivityProducts.RDATA')
 ```
 We will use the following packages:
 ```{r, include=T, output=F}
@@ -33,18 +33,18 @@ Explore the conditions present within the dataset (fluxnet.new) used to build th
 ```{r, include=T}
 model.vars <- fluxnet.new %>% as.data.frame %>%  select( P_F, TA_F,Upland)
 ```
-Next, we will summarise the conditions within the dataset by quantiles (0.25, 0.5, 0.75): NOTE THAT YOUR CATEGORICAL VARIABLE WILL NEED TO BE IN THE `group_by()` FUNCTION!
+Next, we will summarize the conditions within the dataset by quantiles (0.25, 0.5, 0.75): note that your categorical varibles need to be listed in .by=c().
 
 ```{r, include=T}
-model.vars.lower <- model.vars %>% group_by(Upland) %>% summarise(P_F = quantile(P_F, 0.25),
+model.vars.lower <- model.vars %>% reframe( .by= Upland, P_F = quantile(P_F, 0.25),
                                                                       TA_F = quantile(TA_F, 0.25 ),
                                                                       Quantile = as.factor(0.25)) %>% as.data.frame()
 
-model.vars.median <- model.vars %>% group_by(Upland) %>% summarise(P_F = quantile(P_F, 0.5),
+model.vars.median <- model.vars %>% reframe( .by= Upland,P_F = quantile(P_F, 0.5),
                                                                    TA_F = quantile(TA_F, 0.5 ),
                                                                    Quantile = as.factor(0.5)) %>% as.data.frame()
 
-model.vars.upper <- model.vars %>% group_by(Upland) %>% summarise(P_F = quantile(P_F, 0.75),
+model.vars.upper <- model.vars %>% reframe( .by= Upland,P_F = quantile(P_F, 0.75),
                                                                    TA_F = quantile(TA_F, 0.75 ),
                                                                    Quantile = as.factor(0.75)) %>% as.data.frame()
 
@@ -54,6 +54,7 @@ Combine the individual Summaries into one dataframe:
 
 ```{r, include=T}
 summary <- smartbind( model.vars.lower, model.vars.median, model.vars.upper)
+summary 
 ```
 Now, choose the variable you want to explore: TA_F
 
@@ -92,6 +93,7 @@ Next, use the `predict()` function to predict values into the dataframe (TA_F_1A
 
 ```{r, include=T}
 TA_F_1AT$PRED <-predict(FCH4_F_gC.rf , newdata =  TA_F_1AT)
+TA_F_1AT$PRED
 ```
 Lets look at the predictions.
 

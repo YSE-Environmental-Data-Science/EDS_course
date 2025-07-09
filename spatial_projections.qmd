@@ -19,6 +19,12 @@ To date, we have completed model calibration, validation, and sensitivity analys
 
 (5) Use predictions to calculate an annual budget.
 
+Load libraries:
+```{r, output=F}
+library(randomForest)
+library(tidyverse)
+library(tidyterra)
+```
 
 # (1) Make a list of the variables, their units, the exact name and class of each variable in your model. 
 
@@ -26,7 +32,6 @@ To date, we have completed model calibration, validation, and sensitivity analys
 
 Load the datasets and the model. 
 ```{r}
-rm(list=ls())
 load(file="data/final_model.RDATA" )
 ```
 There are four items in this.RDATA file.  
@@ -36,10 +41,6 @@ There are four items in this.RDATA file.
 (4) the testing data.  
 
 ### Look at the model to determine which variables are in it:
-```{r, output=F}
-library(randomForest)
-```
-
 ```{r}
 FCH4_F_gC.rf
 ```
@@ -207,9 +208,9 @@ global.clim.ppt.resample <- resample( global.clim.ppt, igbp.ct.r.2021)
 ```
 Now, export the files to save a version processed as needed.
 ```{r, eval=F}
-writeRaster(global.clim.tmean.resample, "data/TERRA_TMEAN_2021_CT_rs.tif", overwrite=TRUE )
-writeRaster(global.clim.ppt.resample, "data/TERRA_PPT_2021_CT_rs.tif", overwrite=TRUE )
-writeRaster(igbp.ct.r.2021, "data/MODIS_Upland_2021_CT.tif", overwrite=TRUE )
+writeRaster(global.clim.tmean.resample, "data/products/TERRA_TMEAN_2021_CT_rs.tif", overwrite=TRUE )
+writeRaster(global.clim.ppt.resample, "data/products/TERRA_PPT_2021_CT_rs.tif", overwrite=TRUE )
+writeRaster(igbp.ct.r.2021, "data/products/MODIS_Upland_2021_CT.tif", overwrite=TRUE )
 ```
 # (4) Make predictions
 
@@ -243,16 +244,18 @@ We can do this in a for loop to get all 12 months.
 
 First, determine where you want to export the files to, and make a new folder there called predictions.
 ```{r, eval=F}
-setwd('data') # sets the working directory to your data folder
+setwd('data/products/') # sets the working directory to your products folder
 directory <- getwd() # saves the path to directory
 subDir <- 'predictions' # You will use this to make the folder called predictions
 
 dir.create(file.path(directory , subDir)) # this makes the new folder in data called predictions
 
-setwd(subDir) # sets the working directory to your new folder
+predictions.dir <- paste(directory,"/",subDir, sep="")
 ```
 Make the forloop to make predictions for all 12 months.
 ```{r, eval=F}
+
+setwd(predictions.dir) # sets the working directory to your new folder
 for ( i in 1:12){
  
   print(i)
@@ -269,11 +272,13 @@ for ( i in 1:12){
 ```
 Delete the json files created:
 ```{r, output=F}
+setwd(predictions.dir) 
 delete <- list.files( pattern=".json")
 file.remove(delete)
 ```
 Make of list of all the files in a directory that you want to import, and import all the files in the list with `rast()`.
 ```{r}
+setwd(predictions.dir)
 pred <- list.files( pattern="MODEL_PRED_m")
 predictions <- rast(pred)
 ```

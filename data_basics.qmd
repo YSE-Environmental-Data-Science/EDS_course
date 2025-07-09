@@ -14,7 +14,7 @@ In this workshop you will:
     -   Use `select()` to choose variables from a data frame.
     -   Use `filter()` to choose data based on values.
     -   Use `mutate()` to create new variables.
-    -   Use `group_by()` and `summarize()` to work with subsets of data.
+    -   Use `reframe()` to summarize datasets.
     -   Use `full_join()` to merge datasets
 3.  Visualize data with ggplot2
 4.  Learn to write basic functions
@@ -148,12 +148,12 @@ Look at your work:
 head(Yale.Myers.sub )
 ```
 
-### goup_by() and summarise()
+### reframe()
 
-Create an annual summary of conditions using `group_by()` and `summarise()` :
+Create an annual summary of conditions using `reframe`()` :
 
 ```{r, include=T}
-Yale.Myers.annual <-Yale.Myers.sub %>% group_by(year) %>% summarise( tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
+Yale.Myers.annual <-Yale.Myers.sub %>%reframe(.by=year, tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
 ```
 
 Look at your work:
@@ -162,10 +162,10 @@ Look at your work:
 head(Yale.Myers.annual)
 ```
 
-Determine the average monthly conditions using `group_by()` and `summarise()` :
+Determine the average monthly conditions using `reframe`()` :
 
 ```{r, include=T}
-Yale.Myers.monthly <-Yale.Myers.sub %>% group_by(month) %>% summarise( tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp)/29)
+Yale.Myers.monthly <-Yale.Myers.sub %>% reframe(.by =month, tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp)/29)
 ```
 
 Look at your work:
@@ -174,10 +174,10 @@ Look at your work:
 head(Yale.Myers.monthly)
 ```
 
-Determine the average conditions using `group_by()` and `summarise()` by both year and month:
+Determine the average conditions using `reframe`()` by both year and month:
 
 ```{r, include=T}
-Yale.Myers.yearmon <-Yale.Myers.sub %>% group_by(month, year) %>% summarise( tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
+Yale.Myers.yearmon <-Yale.Myers.sub %>% reframe(.by= c(month, year) , tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
 ```
 
 Look at your work:
@@ -205,7 +205,7 @@ head(Yale.Myers.annual.tmean)
 Save the two files, Yale.Myers and Yale.Myers.sub, in a .RDTAT object. You will need this for the post workshop assessment:
 
 ```{r, include=T, eval=F}
-save(Yale.Myers, Yale.Myers.sub,Yale.Myers.annual.tmean, file="DataBasics.RDATA" )
+save(Yale.Myers, Yale.Myers.sub,Yale.Myers.annual.tmean, file="data/products/DataBasics.RDATA" )
 ```
 
 # Introduction to ggplot2
@@ -353,7 +353,7 @@ Example: Theme layer – `element_rect()` function:
 ggplot(data = Yale.Myers.fall, aes(x = tmin , y = tmean)) + geom_point() +
   stat_smooth(method = lm, col = "red") +
   facet_grid(. ~ month) +
-  theme(plot.background = element_rect(fill = "blue", colour = "gray")) 
+  theme(plot.background = element_rect(fill = "lightblue", colour = "gray")) 
 ```
 
 # Introduction to Writing Functions in R
@@ -499,7 +499,7 @@ Things to remember when using functions inside other functions: - Functions can 
 
 The standard error measures the precision of the estimate of the sample mean. Write a function to calculate the standard error. Use this function when comparing mean monthly temperature values between Yale-Myers and a chosen location.
 
-Find a location of interest within the USA in google earth (<https://earth.google.com/>) and record the latitude and longitude in decimal degrees. Next, download Daymet data for that location. subset tmean in both datasets, calculate the mean monthly and standard error of tmean (SE) for both locations. Create a figure comparing mean monthly and the standard error of tmean at both locations.
+Find a location of interest within the USA in google earth (<https://earth.google.com/>) and record the latitude and longitude in decimal degrees. Next, download Daymet data for that location. Subset tmean in both datasets, calculate the mean monthly and standard error of tmean (SE) for both locations. Create a figure comparing mean monthly and the standard error of tmean at both locations.
 
 Create figures and text to show the following:
 
@@ -509,4 +509,4 @@ Create figures and text to show the following:
 4.  Differences in monthly maximim temperature (tmax), and standard error in tmax for both locations.
 5.  Why are the two locations similar or different?
 
--   Create an Rmarkdown report to upload to canvas (save as a pdf): <https://hbctraining.github.io/Training-modules/Rmarkdown/lesson.html>
+-   Create a report to upload to canvas (save as a pdf). Consider creating this report in Rmarkdown: <https://hbctraining.github.io/Training-modules/Rmarkdown/lesson.html>

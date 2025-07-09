@@ -24,7 +24,10 @@ library(ggplot2)
 
 # Goals
 
-The goals of this workshop are to: 1. Become familiar with simple features 2. Master simple feature manipulation 3. Visualize simple features
+The goals of this workshop are to: 
+1. Become familiar with simple features 
+2. Master simple feature manipulation 
+3. Visualize simple features
 
 # Data
 
@@ -141,13 +144,14 @@ methods(class = "sf")
 
 Below we will explore a few methods:
 
-st_is_valid and st_is_simple return a boolean indicating whether a geometry is valid or simple.
+`st_is_valid()` and `st_is_simple()` return a boolean indicating whether a geometry is valid or simple.
 
 ```{r, include=T}
 
 st_is_valid(FLUXNET.CH4.shp)
 
 ```
+If there were any issues with the geometery you can use `st_make_valid()` to fix. Since this is a point file there will be no issues with the geometry.
 
 ### Change the CRS to a projected EPGS with st_transform.
 
@@ -159,15 +163,12 @@ The importance of having epsg values stored with data besides proj4string values
 
 ```{r, include=T}
 FLUXNET.CH4.shp = st_transform(FLUXNET.CH4.shp, '+init=epsg:4087')
+
+FLUXNET.CH4.shp
 ```
+Now the Projected CRS is WGS 84 / World Equidistant Cylindrical.
 
-Check the CRS:
-
-```{r, include=T}
-st_crs(FLUXNET.CH4.shp)
-```
-
-st_distance returns a dense numeric matrix with distances between geometries:
+`st_distance()` returns a dense numeric matrix with distances between geometries:
 
 ```{r, include=T}
 
@@ -230,7 +231,7 @@ Creates a simple feature of Brazil and re-project it to match Fluxnet.ch4:
 
 ```
 
-The commands st_intersects, st_disjoint, st_touches, st_crosses, st_within, st_contains, st_overlaps, st_equals, st_covers, st_covered_by, st_equals_exact and st_is_within_distance all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:
+The functions `st_intersects()`, `st_disjoint()`, `st_touches()`, `st_crosses()`, `st_within()`, `st_contains()`, `st_overlaps()`, `st_equals()`, `st_covers()`, `st_covered_by()`, `st_equals_exact()` and `st_is_within_distance()` all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:
 
 # How many towers are in South America?
 
@@ -255,7 +256,7 @@ Calculate the area of Brazil:
 
 ```{r, include=T}
 aoi.SAmerica$Area <- st_area(aoi.SAmerica )
-
+aoi.SAmerica$Area
 ```
 
 #### Visualize the global distribution of towers:
@@ -272,7 +273,7 @@ aoi.terrestrial  %>% ggplot() + geom_sf()
 Look at the CRS:
 
 ```{r, include=T}
-st_crs(aoi.terrestrial)
+aoi.terrestrial
 ```
 
 Re-project the polygon to match FLUXNET.CH4.shp:
@@ -282,7 +283,7 @@ Re-project the polygon to match FLUXNET.CH4.shp:
 aoi.terrestrial <- aoi_get(country= c("Europe","Asia" ,"North America", "South America", "Australia","Africa", "New Zealand")) %>% st_transform( 4087 ) 
 
 
-st_crs(aoi.terrestrial)
+aoi.terrestrial
 ```
 
 Visualize the shapefile you created:
@@ -328,7 +329,7 @@ delete_layer=TRUE causes st_write try to open the data source and delete the lay
 delete_dsn=TRUE causes st_write to delete the data source when present, before writing the layer in a newly created data source. No error is given when the data source does not exist. This option should be handled with care, as it may wipe complete directories or databases.
 
 ```{r, include=T, eval=F}
-write_sf(FLUXNET.CH4.shp, "data/FLUXNET_CH4.shp") 
+write_sf(FLUXNET.CH4.shp, "data/products/FLUXNET_CH4.shp") 
 ```
 
 It is possible to create data.frame objects with geometry list-columns that are not of class sf by:

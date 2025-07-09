@@ -20,12 +20,12 @@ Boosted regression trees (BRT) represent a versatile machine learning technique 
 
 Read in the [data](https://yale.instructure.com/courses/101353/files/10186091?wrap=1):
 ```{r, include=F}
-load('data/RANDOMFOREST_DATASET.RDATA' )
+load('RANDOMFOREST_DATASET.RDATA' )
 
 ```
 
 ```{r, include=T, eval=F}
-load('RANDOMFOREST_DATASET.RDATA' )
+load('data/RANDOMFOREST_DATASET.RDATA' )
 
 ```
 
@@ -86,6 +86,7 @@ Another aspect of model evaluation is comparing predictions. Although random for
 
 ```{r, include=T}
 train$PRED.TPVPD <- predict(FCH4_F_gC.rf, train)
+train$PRED.TPVPD
 ```
 Compare the observed (FCH4_F_gC) versus predicted (PRED.TPVPD):
 
@@ -115,5 +116,5 @@ Save your final model and datasets in a .Rdata object for next class where we wi
 
 
 ```{r, include=T, eval=F}
-save( FCH4_F_gC.rf , file="FinalModel.RDATA")
+save( FCH4_F_gC.rf , file="data/products/FinalModel.RDATA")
 ```
