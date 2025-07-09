@@ -38,8 +38,12 @@ website:
         contents:
           - text: "Spatial Model Visualization"
             href: spatial_projections.qmd
-      - text: "Resources"
-        href: resources.qmd
+      - section: "Resources"
+        contents:
+          - text: "Coding"
+            href: resources.qmd
+          - text: "Data Repositories"
+            href: data_repos.qmd
           
 
 format:
