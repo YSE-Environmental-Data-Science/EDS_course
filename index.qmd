@@ -5,7 +5,7 @@ subtitle: "Environmental Data Science in R: Introduction to Data Integration and
 
 ## Meeting Information
 
-T 2:30pm-5:20pm in Sage 24
+Th 2:30pm-5:20pm in Kroon 319
 
 ## Instructor
 
@@ -13,7 +13,7 @@ Dr. Sparkle L. Malone
 
 sparkle.malone\@yale.edu
 
-Office Hours: TBD
+Office Hours: Mondays 12pm-3pm
 
 Teaching Fellow: TBD
 
@@ -71,9 +71,9 @@ Before collaborating with an AI chatbot on your work for this course, please req
 ## Course Ouline:
 
 +-------------+-------------------------------------------------------------+
-| Week        | Workshop Topic                                              |
+| ~Week       | Workshop Topic                                              |
 +=============+=============================================================+
-| 1-5         | **Introduction to R**                                       |
+| 1-6         | **Introduction to R**                                       |
 |             |                                                             |
 |             | -   Open Science Best Practices                             |
 |             |                                                             |
@@ -83,11 +83,11 @@ Before collaborating with an AI chatbot on your work for this course, please req
 |             |                                                             |
 |             | -   Raster Data Manipulation & Visualization (terra)        |
 +-------------+-------------------------------------------------------------+
-| 6-7         | **Data Integration in R**                                   |
+| 7-8         | **Data Integration in R**                                   |
 |             |                                                             |
 |             | -   Techniques for Data Integration                         |
 +-------------+-------------------------------------------------------------+
-| 7-10        | **Machine Learning in R**                                   |
+| 9-10        | **Machine Learning in R**                                   |
 |             |                                                             |
 |             | -   RandomForest Model Development: Fitting models          |
 |             |                                                             |

@@ -20,7 +20,7 @@ Boosted regression trees (BRT) represent a versatile machine learning technique 
 
 Read in the [data](https://yale.instructure.com/courses/101353/files/10186091?wrap=1):
 ```{r, include=F}
-load('RANDOMFOREST_DATASET.RDATA' )
+load('data/RANDOMFOREST_DATASET.RDATA' )
 
 ```
 
