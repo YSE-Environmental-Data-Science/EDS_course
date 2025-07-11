@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Additional Resources: Data Repositories</title>
+<title>Additional Resources: Data Publication</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -80,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./resources.html">Resources</a></li><li class="breadcrumb-item"><a href="./data_repos.html">Data Repositories</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./resources.html">Resources</a></li><li class="breadcrumb-item"><a href="./data_pub.html">Data Publication</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -220,13 +254,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data_repos.html" class="sidebar-item-text sidebar-link active">
+  <a href="./data_repos.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Repositories</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data_pub.html" class="sidebar-item-text sidebar-link">
+  <a href="./data_pub.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Data Publication</span></a>
   </div>
 </li>
@@ -237,15 +271,26 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#data-life-cycle" id="toc-data-life-cycle" class="nav-link" data-scroll-target="#data-life-cycle">Data Life Cycle</a></li>
+  <li><a href="#metadata" id="toc-metadata" class="nav-link" data-scroll-target="#metadata">Metadata</a></li>
+  <li><a href="#edi-quick-start-guide" id="toc-edi-quick-start-guide" class="nav-link" data-scroll-target="#edi-quick-start-guide">EDI Quick-Start Guide</a></li>
+  <li><a href="#knb-quick-start-guide" id="toc-knb-quick-start-guide" class="nav-link" data-scroll-target="#knb-quick-start-guide">KNB Quick-Start Guide</a></li>
+  <li><a href="#accessing-data-from-repositories-with-r" id="toc-accessing-data-from-repositories-with-r" class="nav-link" data-scroll-target="#accessing-data-from-repositories-with-r">Accessing Data from Repositories with R</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./resources.html">Resources</a></li><li class="breadcrumb-item"><a href="./data_repos.html">Data Repositories</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./resources.html">Resources</a></li><li class="breadcrumb-item"><a href="./data_pub.html">Data Publication</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Additional Resources: Data Repositories</h1>
+<h1 class="title">Additional Resources: Data Publication</h1>
 </div>
 
 
@@ -262,110 +307,191 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Here is a partial list of data repositories where you can find datasets on nearly every subject in environmental science. This list is credited to the LTER Network’s <a href="lter.github.io/ssecr/">Synthesis Skills for Early Career Researchers (SSECR) course</a> and <a href="https://lter.github.io/eco-data-synth-primer/">Ecological Data Synthesis: A Primer on Essential Methods course</a>. The data repository’s associated R package is listed as well. The R packages can be installed from either CRAN or GitHub.</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th style="text-align: center;"><strong>Name</strong></th>
-<th style="text-align: left;"><strong>Description</strong></th>
-<th style="text-align: center;">R <strong>Package</strong></th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://ameriflux.lbl.gov/data/data-policy/">AmeriFlux</a></td>
-<td style="text-align: left;">Provides data on carbon, water, and energy fluxes in ecosystems across the Americas, aiding in climate change and carbon cycle research.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/amerifluxr/index.html"><code>amerifluxr</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://www.dataone.org/">DataONE</a></td>
-<td style="text-align: left;">A network of around 60 data repositories. Aggregates environmental and ecological data from global sources, focusing on biodiversity, climate, and ecosystem research.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/dataone/index.html"><code>dataone</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://daymet.ornl.gov/">Daymet</a></td>
-<td style="text-align: left;">Daymet provides long-term, continuous, gridded estimates of daily weather and climatology variables for North America.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/daymetr/index.html"><code>daymetr</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://edirepository.org/">EDI</a></td>
-<td style="text-align: left;">Contains a wide range of ecological and environmental datasets, including long-term observational data, experimental results, and field studies from diverse ecosystems.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/EDIutils/index.html"><code>EDIutils</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://ess-dive.lbl.gov/">EES-DIVE</a></td>
-<td style="text-align: left;">The Environmental System Science Data Infrastructure for a Virtual Ecosystem (ESS-DIVE) includes a variety of observational, experimental, modeling and other data products from a wide range of ecological and urban systems.</td>
-<td style="text-align: center;">–</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://www.gbif.org/">GBIF</a></td>
-<td style="text-align: left;">The Global Biodiversity Information Facility (GBIF) aggregates global species occurrence data and biodiversity records, supporting research in species distribution and conservation.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/rgbif/index.html"><code>rgbif</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://earthengine.google.com/">Google Earth Engine</a></td>
-<td style="text-align: left;">Google Earth Engine is a cloud-based geospatial analysis platform that provides access to vast amounts of satellite imagery and environmental data for monitoring and understanding changes in the Earth’s surface.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/rgee/index.html"><code>rgee</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://knb.ecoinformatics.org/">KNB</a></td>
-<td style="text-align: left;">An open-source data repository hosting international ecological and environmental research. A member of the DataOne network.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/dataone/index.html"><code>dataone</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://planetarycomputer.microsoft.com/">Microsoft Planetary Computer</a></td>
-<td style="text-align: left;">The Microsoft Planetary Computer is a cloud-based platform that combines global environmental datasets with advanced analytical tools to support sustainability and ecological research.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/rstac/index.html"><code>rstac</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://data.nasa.gov/">NASA</a></td>
-<td style="text-align: left;">Provides data on earth science, space exploration, and climate, including satellite imagery and observational data for both terrestrial and extraterrestrial studies. Nice GUI-based data download via <a href="https://appeears.earthdatacloud.nasa.gov/">AppEEARS</a>.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/nasadata/index.html"><code>nasadata</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://www.ncbi.nlm.nih.gov/">NCBI</a></td>
-<td style="text-align: left;">Hosts genomic and biological data, including DNA, RNA, and protein sequences, supporting genomics and molecular biology research.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/rentrez/index.html"><code>rentrez</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://data.neonscience.org/">NEON</a></td>
-<td style="text-align: left;">Provides ecological data from U.S. field sites, covering biodiversity, ecosystems, and environmental changes, supporting large-scale ecological research.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/neonUtilities/index.html"><code>neonUtilities</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://data.noaa.gov/onestop/">NOAA</a></td>
-<td style="text-align: left;">Offers meteorological, oceanographic, and climate data, essential for understanding atmospheric conditions, marine environments, and long-term climate trends.</td>
-<td style="text-align: center;">GitHub: <a href="https://github.com/NOAA-Big-Data-Program/EpiNOAA-R"><code>EpiNOAA-R</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://opentraits.org/datasets.html">Open Traits Network</a></td>
-<td style="text-align: left;">While not a repository <em>per se</em>, the Open Traits Network has compiled an extensive lists of repositories for trait data. Check out their repository inventory for trait data</td>
-<td style="text-align: center;">–</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://phenocam.nau.edu/webcam/">PhenoCam Network</a></td>
-<td style="text-align: left;">A network of digital cameras that tracks vegetation phenology through images across North America and around the world.</td>
-<td style="text-align: center;"><a href="https://github.com/PhenoCamNetwork/phenocamapi"><code>phenocamapi</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://data.census.gov/">US Census Bureau</a></td>
-<td style="text-align: left;">Census data containing information about education, employment, health, and housing across America.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/tidycensus/index.html"><code>tidycensus</code></a></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><a href="https://www.usgs.gov/products/data/all-data">USGS</a></td>
-<td style="text-align: left;">Hosts data on geology, hydrology, biology, and geography, including topographical maps and natural resource assessments.</td>
-<td style="text-align: center;"><a href="https://cran.r-project.org/web/packages/dataRetrieval/index.html"><code>dataRetrieval</code></a></td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><a href="https://www.nps.gov/subjects/science/science-data.htm">US National Park Service</a></td>
-<td style="text-align: left;">Provides geospatial and tabular data products, which includes national park boundaries, vegetation maps, geology maps, air quality, and water quality.</td>
-<td style="text-align: center;">GitHub: <a href="https://github.com/nationalparkservice/NPSutils/"><code>NPSutils</code></a></td>
-</tr>
-</tbody>
-</table>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>A research project can involve multiple moving parts that could get lost if there isn’t a plan in place to manage how your research will be preserved and reused. This page will get you familiarized with the best practices of data management/publication, and serves as a quick-start guide to the <a href="https://edirepository.org/">EDI</a> and <a href="https://knb.ecoinformatics.org/">KNB</a> data repositories.</p>
+<p>Some content on this page have been adapted from NCEAS’ <a href="https://learning.nceas.ucsb.edu/2024-06-delta/">coreR for Delta Science Program</a>.</p>
+</section>
+<section id="data-life-cycle" class="level2">
+<h2 class="anchored" data-anchor-id="data-life-cycle">Data Life Cycle</h2>
+<p align="center">
+</p><p><img src="images/Data-Lifecycle.png" align="center" width="100%"></p>
+<p></p>
+<p><left><em>Source: Faundeen et al 2013, USGS</em></left></p>
+<p>As you begin a research project, your data may go through lots of stages in its life cycle. Like the diagram from <a href="https://pubs.usgs.gov/of/2013/1265/pdf/of2013-1265.pdf">Faundeen et al 2013</a> shows, the first stage starts with <strong>planning</strong> out goals you want to accomplish or research questions you want to answer. Consider the resources (data, funding, personnel) you will need.</p>
+<p>With a plan in mind, the second stage of the data life cycle involves identifying and evaluating new or existing data sources to be collected/generated/re-used. You might <strong>acquire</strong> datasets at one of the many <a href="https://yse-environmental-data-science.github.io/EDS_course/data_repos.html">data repositories</a> out there. At the next stage, these data inputs will be <strong>processed</strong> through data cleaning and wrangling.</p>
+<p>Once the data is processed, it will be ready for <strong>analysis</strong>, where new insights are generated. Be sure to document the processes that were involved, for example, recording the methods and organizing files to ensure that your workflow is reproducible.</p>
+<p>As the research project nears its end, consider how you will <strong>preserve</strong> your data products for the long-term, especially if it’s required by your funding. If you are planning to submit your data/code for archival at a <a href="https://yse-environmental-data-science.github.io/EDS_course/data_repos.html">data repository</a>, plan what metadata and documentation you will need to ensure your results will be accessible and reusable for the future. Each repository will have slightly different requirements, but check out the next few sections to learn more about what data publication at <a href="https://edirepository.org/">EDI</a> and <a href="https://knb.ecoinformatics.org/">KNB</a> entails.</p>
+<p>Last but not least, once your data is <strong>published</strong> with a DOI (digital object identifier), other researchers will be able to use and cite your work in the future, which in turn, will expose your research to an even wider audience.</p>
+<p>You may have also noticed three arrows cutting across the diagram. These steps should always be kept in mind when you’re progressing your research in order to manage your data effectively.</p>
+<p>As you’re working, <em>describe</em> your data products by documenting its metadata. Metadata, or data about data, is a critical component of data reusability. More on metadata below. Additionally, have some <em>quality control</em> techniques in place so that the values of your output are expected. This helps to ensure that your workflow will run as intended. Finally, it never hurts to <em>backup</em> your data regularly to protect it from unexpected data losses due to software failures or natural disasters.</p>
+</section>
+<section id="metadata" class="level2">
+<h2 class="anchored" data-anchor-id="metadata">Metadata</h2>
+<p>As mentioned, metadata plays an important role in the data life cycle, yet it’s often overlooked. Metadata is crucial to understanding, interpreting, and reusing datasets. It contains information on what was measured, who made the measurements, when and where were measurements made, and why was the data collected. The point is to have enough metadata so that anyone (even you) can reuse the data far into the future.</p>
+<p>If you are submitting your dataset/code to a <a href="https://yse-environmental-data-science.github.io/EDS_course/data_repos.html">data repository</a>, you will need to create metadata that documents all the details about the data itself. One popular, standard format for metadata files in the field of environmental sciences is <a href="https://eml.ecoinformatics.org/">EML</a>, Ecological Metadata Language. This format arranges the metadata into an organized, machine-readable set of elements.</p>
+<p>There are many ways to create this EML file, such as programmatically through R or by filling out a web form offered by a data repository. EDI and KNB are two data repositories that have the web form option for researchers to generate their metadata file.</p>
+</section>
+<section id="edi-quick-start-guide" class="level2">
+<h2 class="anchored" data-anchor-id="edi-quick-start-guide">EDI Quick-Start Guide</h2>
+<p><a href="https://edirepository.org/">EDI</a>, or the Environmental Data Initiative, is a <a href="https://www.dataone.org/">DataONE</a> data repository that hosts ecological and environmental data for the long-term. They have staff to support curation efforts and work closely with the <a href="https://lternet.edu/">LTER Network</a> to promote best practices for <a href="https://www.go-fair.org/fair-principles/">FAIR</a> (Findable, Accessible, Interoperable, and Reusable) data.</p>
+<p>To get started with your data package submission, navigate to the <a href="https://edirepository.org/data/publish-data"><strong>Publish Data</strong></a> page in EDI. Click to login to their ezEML metadata editor. ezEML is EDI’s easy-to-use web-based tool for creating metadata.</p>
+<p align="center">
+</p><p><img src="images/edi1.png" align="center" width="100%"></p>
+<p></p>
+<p>Choose one of the many options to login to ezEML. You will want to stay consistent with the account that you’re using to login because your submissions will only be associated to the account you used to login.</p>
+<p align="center">
+</p><p><img src="images/edi2.png" align="center" width="100%"></p>
+<p></p>
+<p>Once you’ve logged in, click on <strong>EML Documents</strong> then <strong>New..</strong> to start a new EML document.</p>
+<p align="center">
+</p><p><img src="images/edi3.png" align="center" width="100%"></p>
+<p></p>
+<p>You will be prompted to enter a name for your metadata document. Enter a unique, memorable name.</p>
+<p align="center">
+</p><p><img src="images/edi4.png" align="center" width="100%"></p>
+<p></p>
+<p>Then you will be presented with a form to fill out all the information about your data, such as the Title, Data Tables, Creators, Contacts, etc. Be as descriptive as you can. Don’t worry about filling it all out in one sitting. The information you enter will be saved as you go, and you can always return to your metadata document to continue where you’ve left off.</p>
+<p align="center">
+</p><p><img src="images/edi5.png" align="center" width="100%"></p>
+<p></p>
+<p>If you’re not sure how to fill out a section, click on the question mark to get helpful tips.</p>
+<p align="center">
+</p><p><img src="images/edi6.png" align="center" width="100%"></p>
+<p></p>
+<p>In the screenshot below, a pop-up appeared on how to best come up with a Title for your data package.</p>
+<p align="center">
+</p><p><img src="images/edi7.png" align="center" width="100%"></p>
+<p></p>
+<p>If you have tabular data in CSV files, you can upload them in <strong>Data Tables</strong> and EDI will automatically infer many attributes about your data, like column names, so you can save some time on manually filling out information. Be sure to double-check the metadata so everything looks correct.</p>
+<p align="center">
+</p><p><img src="images/edi8.png" align="center" width="100%"></p>
+<p></p>
+<p>For all other types of data, you can upload them in <strong>Other Entities</strong> and fill out the metadata as appropriate.</p>
+<p align="center">
+</p><p><img src="images/edi9.png" align="center" width="100%"></p>
+<p></p>
+<p>For extra help, check out the <a href="https://ezeml.edirepository.org/eml/user_guide">ezEML User Guide</a> or <a href="https://edirepository.org/support/contact-us">email EDI for support</a>. You can also watch their YouTube tutorial below.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/T2lhEBWzIPQ?si=ljlsFHtQvZ7bqAIb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p>Once you’re done filling out the sections to the best of your ability, click on <strong>Submit/Share Package</strong> to submit your data package for the EDI team to review. When you’re submitting for review, there’s an option to add a message to your submission. If you wish for your data to be embargoed, you should mention it here.</p>
+<p>The EDI team will respond back to you via email with any additional suggestions/edits or the greenlight to publish your data package with a DOI if everything looks good.</p>
+<p align="center">
+</p><p><img src="images/edi10.png" align="center" width="100%"></p>
+<p></p>
+<p>There’s also an option on this page to invite your colleagues to collaborate on editing the metadata. Be aware that only one person can edit the metadata at a time.</p>
+<p>When your data is published with a DOI, the landing page for your data package may look something like <a href="https://doi.org/10.6073/pasta/ae3ef7402b347a7b9ec92bbf8b314685">this</a>:</p>
+<p align="center">
+</p><p><img src="images/edi11.png" align="center" width="100%"></p>
+<p></p>
+<p>The full metadata will be available under <strong>View Full Metadata</strong>. With this, your data will be available for reuse!</p>
+</section>
+<section id="knb-quick-start-guide" class="level2">
+<h2 class="anchored" data-anchor-id="knb-quick-start-guide">KNB Quick-Start Guide</h2>
+<p>Just like EDI, <a href="https://knb.ecoinformatics.org/">KNB</a>, or the Knowledge Network for Biocomplexity, is another <a href="https://www.dataone.org/">DataONE</a> data repository that preserves ecological and environmental data for the long-term. They are hosted by <a href="https://www.nceas.ucsb.edu/">NCEAS</a> and abide by the <a href="https://www.go-fair.org/fair-principles/">FAIR</a> (Findable, Accessible, Interoperable, and Reusable) data principles.</p>
+<p>Navigate to the <a href="https://knb.ecoinformatics.org/submit"><strong>Submit</strong></a> page to get started on your submission. It will prompt you to sign-in through your <a href="https://orcid.org/">ORCID</a> account if you’re not already signed-in. Be sure to create an ORCID account if you don’t have one already. It will help you keep track of the products of your research.</p>
+<p align="center">
+</p><p><img src="images/knb1.png" align="center" width="100%"></p>
+<p></p>
+<p align="center">
+</p><p><img src="images/knb2.png" align="center" width="100%"></p>
+<p></p>
+<p>Once you’ve signed-in, the <strong>Submit</strong> page will direct you to fill out a web form. The top half of the form is for uploading and describing your data files while the bottom half is for the other metadata fields like Overview, People, Dates, Locations, etc.</p>
+<p align="center">
+</p><p><img src="images/knb3.png" align="center" width="100%"></p>
+<p></p>
+<p>Click on <strong>+ Add Files</strong> to add any data files you wish to submit. Once you have them uploaded, there are options to either Describe, Replace, or Remove the file.</p>
+<p align="center">
+</p><p><img src="images/knb4.png" align="center" width="100%"></p>
+<p></p>
+<p>Click on <strong>Describe</strong> to enter metadata about the data files. Provide a file description and information about the attributes/variables in this data file.</p>
+<p align="center">
+</p><p><img src="images/knb5.png" align="center" width="100%"></p>
+<p></p>
+<p align="center">
+</p><p><img src="images/knb6.png" align="center" width="100%"></p>
+<p></p>
+<p>Once you’re done entering the metadata for the data files, you will also need to fill out the rest of the metadata fields in the bottom half of the web form. Fill out the Overview, People, Dates, Locations, Taxa, and Methods sections as best as you can.</p>
+<p align="center">
+</p><p><img src="images/knb7.png" align="center" width="100%"></p>
+<p></p>
+<p>Like with EDI, you do not need to worry about submitting all your metadata in one sitting. Utilize the <strong>Save dataset</strong> button to save your progress and feel free to continue another day.</p>
+<p align="center">
+</p><p><img src="images/knb8.png" align="center" width="100%"></p>
+<p></p>
+<p>After you’ve saved your dataset once, you can come back to the same submission to edit it however you like. Unlike EDI, you can publish your data package in KNB by assigning it a DOI yourself. Click on <strong>Publish with DOI</strong> whenever you’re ready. Of course, you can continue to edit your data even after assigning it a DOI, but be aware that a new DOI will be issued for every version of your submission.</p>
+<p align="center">
+</p><p><img src="images/knb9.png" align="center" width="100%"></p>
+<p></p>
+<p>For extra assistance, email KNB (knb-help@nceas.ucsb.edu) or <a href="https://knb.ecoinformatics.org/data">browse other data packages</a> on KNB to get an idea of what the final product should look like.</p>
+</section>
+<section id="accessing-data-from-repositories-with-r" class="level2">
+<h2 class="anchored" data-anchor-id="accessing-data-from-repositories-with-r">Accessing Data from Repositories with R</h2>
+<p>Now that you have your data published, you can access it via R. Below is an example script on how to get data from EDI and KNB.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#      How to pull data from EDI or KNB</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Script author(s): Angel Chen</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Purpose:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## This script shows you how to either read in data directly from EDI/KNB, </span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">## or download the data first and then read in</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#               Housekeeping -----</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tidyverse"</span>) </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#               EDI example -----</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># As an example, let's get the ER_contour.csv dataset from this EDI package:</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># https://portal.edirepository.org/nis/mapbrowse?scope=edi&amp;identifier=1790</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># First specify the direct url to the dataset you want</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># You can copy any dataset's url by clicking on View Full Metadata</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Scroll down to the Detailed Metadata -&gt; Data Entities section</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the URL associated with the data file you want</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the direct url to ER_contour.csv</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>edi_url <span class="ot">&lt;-</span> <span class="st">"https://portal.edirepository.org/nis/dataviewer?packageid=edi.1790.1&amp;entityid=e64ec185b099968d9ae653d620e23d31"</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading directly </span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(edi_url)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Or you can download first, and then read in</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> edi_url, <span class="at">destfile =</span> <span class="st">"ER_contour.csv"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"ER_contour.csv"</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#                KNB example -----</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># This method works for KNB repositories as well!</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's get the DangermondSnowyPloverNests_2024_data.csv from this KNB package:</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co"># https://knb.ecoinformatics.org/view/urn%3Auuid%3A4ec4857c-282b-4ba2-a52d-64d5ef707a54</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co"># First specify the direct url to the dataset you want</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co"># You can copy any dataset's url by right-clicking its Download button,</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co"># and then selecting "Copy Link Address"</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the direct url to DangermondSnowyPloverNests_2024_data.csv</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>knb_url <span class="ot">&lt;-</span> <span class="st">"https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A70e3c51f-fcb5-4e61-962a-6984ccfd3575"</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading directly</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(knb_url)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Or you can download first, and then read in</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> knb_url, <span class="at">destfile =</span> <span class="st">"DangermondSnowyPloverNests_2024_data.csv"</span>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"DangermondSnowyPloverNests_2024_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
