@@ -7,7 +7,7 @@ A sensitivity analysis is a technique used to understand how changes in the inpu
 
 To begin load the model and [dataset](https://yale.instructure.com/courses/101353/files/10231469?wrap=1) we will use for this workshop:
 
-```{r, include=T, eval=T}
+```{r, include=T}
 load( 'data/SensitivityProducts.RDATA')
 ```
 We will use the following packages:
