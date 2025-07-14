@@ -99,6 +99,12 @@ We need mean air temperature. Calculate the mean using the maximum and minimum a
 global.clim.tmean <-   mean(global.clim.tmin, global.clim.tmax)
 global.clim.tmean
 ```
+Rename the layers to start with "tmean" to match the data.
+```{r}
+names(global.clim.tmean) <- gsub(pattern = "tmin", replacement = "tmean", x = names(global.clim.tmean))
+global.clim.tmean
+```
+
 Remove the layers you no longer need. 
 ```{r}
 rm(global.clim.tmin, global.clim.tmax)
