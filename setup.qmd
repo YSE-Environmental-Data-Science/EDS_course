@@ -49,7 +49,9 @@ Scroll down to "Detailed Metadata" and click on the plus/minus symbols next to "
 
 This section describes what the file is for, along with additional metadata such as the file size and format. Copy the URL for this file. 
 
-Once you've got the URL, navigate to your workspace/working directory in RStudio for this course. Follow the code below to download and unzip "EDS_Course_Materials.zip".
+Once you've got the URL, navigate to your workspace/working directory in RStudio for this course. You can check your current working directory by running `getwd()`. If the output of `getwd()` does not return the file path to your folder for this course, you will need to run `setwd(dir = "...")` by replacing `...` with the file path of your choice. 
+
+Then follow the code below to download and unzip "EDS_Course_Materials.zip".
 
 ```{r, eval=F}
 ## --------------------------------------------- ##
