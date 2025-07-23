@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Additional Resources: Coding</title>
+<title>Course Setup</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -80,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./resources.html">Resources</a></li><li class="breadcrumb-item"><a href="./resources.html">Coding</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setup.html">Setup</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -119,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./setup.html" class="sidebar-item-text sidebar-link">
+  <a href="./setup.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Setup</span></a>
   </div>
 </li>
@@ -220,7 +254,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./resources.html" class="sidebar-item-text sidebar-link active">
+  <a href="./resources.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Coding</span></a>
   </div>
 </li>
@@ -248,18 +282,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#gitgithub" id="toc-gitgithub" class="nav-link active" data-scroll-target="#gitgithub">Git/GitHub</a></li>
-  <li><a href="#tidyverse" id="toc-tidyverse" class="nav-link" data-scroll-target="#tidyverse">Tidyverse</a></li>
-  <li><a href="#spatial-data" id="toc-spatial-data" class="nav-link" data-scroll-target="#spatial-data">Spatial Data</a></li>
+  <li><a href="#data-acquisition" id="toc-data-acquisition" class="nav-link active" data-scroll-target="#data-acquisition">Data Acquisition</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./resources.html">Resources</a></li><li class="breadcrumb-item"><a href="./resources.html">Coding</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Additional Resources: Coding</h1>
+<h1 class="title">Course Setup</h1>
 </div>
 
 
@@ -276,33 +308,124 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Here are some additional resources that serve as a good starting point to learning more about the different types of tools involved in environmental data science. All listed resources are beginner-friendly so please feel free to check them out.</p>
-<section id="gitgithub" class="level2">
-<h2 class="anchored" data-anchor-id="gitgithub">Git/GitHub</h2>
-<ul>
-<li><p><a href="https://lter.github.io/workshop-github/">Collaborative Coding with GitHub</a>: An introductory workshop on how to use Git with GitHub and RStudio. This workshop was created by the <a href="https://lternet.edu/">LTER Network</a> for their synthesis working groups but remains a great resource for all beginners, especially those who are hesitant to use the command line. There are also lessons on advanced Git/GitHub topics for those looking to further improve their skills.</p></li>
-<li><p><a href="https://learning.nceas.ucsb.edu/2024-02-arctic/">Reproducible Approaches to Arctic Research Using R</a>: A course designed by the <a href="https://www.nceas.ucsb.edu/learning-hub">NCEAS Learning Hub</a> to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the <a href="https://learning.nceas.ucsb.edu/2024-02-arctic/session_06.html">Introduction to Git and GitHub</a> and <a href="https://learning.nceas.ucsb.edu/2024-02-arctic/session_09.html">Collaborating with Git and GitHub</a> lessons, where the Git workflow and Git commands are explained thoroughly.</p></li>
-<li><p><a href="https://happygitwithr.com/">Happy Git and GitHub for the userR</a>: A comprehensive guide by <a href="https://jennybryan.org/">Jenny Bryan</a> on using Git, GitHub, and RStudio that covers everything from the basics to the more intricate topics. This book has a dedicated page for <a href="https://happygitwithr.com/troubleshooting">troubleshooting</a> common problems a user might run into while setting up their computer.</p></li>
-</ul>
-</section>
-<section id="tidyverse" class="level2">
-<h2 class="anchored" data-anchor-id="tidyverse">Tidyverse</h2>
-<ul>
-<li><p><a href="https://lter.github.io/workshop-tidyverse/">Coding in the Tidyverse</a>: A workshop on using <code>dplyr</code>, <code>tidyr</code>, and <code>ggplot2</code>, which are R packages that are part of the <a href="https://www.tidyverse.org/">Tidyverse</a>. The workshop covers the fundamental tools for tidying data in R, for example, wrangling, summarizing, reshaping, joining, and visualizing data. This workshop was created by the <a href="https://lternet.edu/">LTER Network</a> for their synthesis working groups.</p></li>
-<li><p><a href="https://learning.nceas.ucsb.edu/2024-02-arctic/">Reproducible Approaches to Arctic Research Using R</a>: A course designed by the <a href="https://www.nceas.ucsb.edu/learning-hub">NCEAS Learning Hub</a> to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the <a href="https://learning.nceas.ucsb.edu/2024-02-arctic/session_07.html">Data Modeling Essentials</a> and <a href="https://learning.nceas.ucsb.edu/2024-02-arctic/session_08.html">Cleaning and Wrangling Data</a> lessons, where the principles of tidy data and basic Tidyverse functions are explained.</p></li>
-<li><p><a href="https://r4ds.hadley.nz/">R for Data Science</a>: An online textbook by written by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund that goes over the entire Tidyverse workflow from start to finish.</p></li>
-<li><p><a href="https://posit.co/resources/cheatsheets/">Posit Cheatsheets</a>: A collection of cheatsheets created by <a href="https://posit.co/">Posit</a> (formerly RStudio Inc.) to serve as helpful reminders on how to use the most important functions from a wide array of R packages. Here are the cheatsheets for <a href="https://rstudio.github.io/cheatsheets/html/data-transformation.html">dplyr</a>, <a href="https://rstudio.github.io/cheatsheets/html/tidyr.html">tidyr</a>, and <a href="https://rstudio.github.io/cheatsheets/html/data-visualization.html">ggplot2</a>.</p></li>
-</ul>
-</section>
-<section id="spatial-data" class="level2">
-<h2 class="anchored" data-anchor-id="spatial-data">Spatial Data</h2>
-<ul>
-<li><p><a href="https://datacarpentry.github.io/organization-geospatial/">Introduction to Geospatial Concepts</a>: A workshop from the <a href="https://datacarpentry.org/">Data Carpentry</a> on core geospatial concepts such as raster data, vector data, and coordinate reference systems. This workshop is a prerequisite to their <a href="https://datacarpentry.github.io/r-raster-vector-geospatial/">Introduction to Geospatial Raster and Vector Data with R</a> workshop and is a great resource for reviewing the different kinds of geospatial data.</p></li>
-<li><p><a href="https://datacarpentry.github.io/r-raster-vector-geospatial/">Introduction to Geospatial Raster and Vector Data with R</a>: A workshop from the <a href="https://datacarpentry.org/">Data Carpentry</a> that focuses on manipulating and plotting raster and vector data using the <code>terra</code>, <code>sf</code>, and <code>ggplot2</code> R packages. The functions and operations involved in a basic geospatial data workflow are taught in this workshop.</p></li>
-<li><p><a href="https://learning.nceas.ucsb.edu/2024-06-delta/">NCEAS coreR for Delta Science Program</a>: A course designed by the <a href="https://www.nceas.ucsb.edu/learning-hub">NCEAS Learning Hub</a> to teach researchers techniques and tools to make their work more reproducible. Particularly relevant is the <a href="https://learning.nceas.ucsb.edu/2024-06-delta/session_13.html">Working with Spatial Data</a> lesson that works with the <code>sf</code>, <code>dplyr</code>, <code>ggplot2</code>, and <code>leaflet</code> R packages to manipulate and visualize vector data by following the Tidyverse principles. Interactive maps are also covered.</p></li>
-<li><p><a href="https://rstudio.github.io/cheatsheets/sf.pdf">Spatial manipulation with sf cheatsheet</a>: A handy cheatsheet that serves as a reminder on how to use common functions from the <code>sf</code> R package.</p></li>
-<li><p><a href="https://rspatial.org/spatial/1-introduction.html">Spatial data with terra</a>: A tutorial showcasing functions from the <code>terra</code> R package to manipulate both raster and vector geospatial data. The tutorial was written by the team behind the development of <a href="https://rspatial.github.io/terra/index.html">terra</a>.</p></li>
-</ul>
+<section id="data-acquisition" class="level2">
+<h2 class="anchored" data-anchor-id="data-acquisition">Data Acquisition</h2>
+<p>The data files required for this course are available through the <a href="https://edirepository.org/">Environmental Data Initiative</a> (EDI) repository. EDI is a data repository that hosts ecological and environmental data for the long-term.</p>
+<p>There are various ways to acquire data from data repositories. The method that a lot of people are accustomed to is by clicking “Download” to manually grab the files and then dragging them to the appropriate folder on their local computer. This method works, but it is not the most reproducible way to run your workflow since it’s difficult to document the clicking of your cursor.</p>
+<p>Instead, you can acquire data programmatically with R and save all the steps in this part of the workflow in a script. If you, or anyone else, want to reproduce the same results in the future, you can just rerun the same script.</p>
+<p>To get the data programmatically through R, first navigate to the data package landing page at: <a href="">https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f</a></p>
+<p align="center">
+</p><p><img src="images/setup1.png" align="center" width="100%"></p>
+<p></p>
+<p>The landing page shows a summary of the metadata for this data package. Metadata, or data about data, gives context to the variables in the dataset by documenting what was measured, who made the measurements, when and where were they made, and why was the data collected/created in the first place.</p>
+<p>We will need the direct URL to “EDS_Course_Materials.zip” in order to download it through R. To get this specific URL, click on “View Full Metadata”.</p>
+<p align="center">
+</p><p><img src="images/setup2.png" align="center" width="100%"></p>
+<p></p>
+<p>This will bring us to a page with detailed descriptions of everything associated with this data package.</p>
+<p align="center">
+</p><p><img src="images/setup3.png" align="center" width="100%"></p>
+<p></p>
+<p>Scroll down to “Detailed Metadata” and click on the plus/minus symbols next to “Data Entities” to show more information on “EDS_Course_Materials.zip”.</p>
+<p align="center">
+</p><p><img src="images/setup4.png" align="center" width="100%"></p>
+<p></p>
+<p>This section describes what the file is for, along with additional metadata such as the file size and format. Copy the URL for this file.</p>
+<p>Once you’ve got the URL, navigate to your workspace/working directory in RStudio for this course. Follow the code below to download and unzip “EDS_Course_Materials.zip”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#               EDI Download -----</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's download EDS_Course_Materials.zip from this EDI package:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the direct URL to EDS_Course_Materials.zip</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>edi_url <span class="ot">&lt;-</span> <span class="st">"https://pasta.lternet.edu/package/data/eml/edi/2081/1/757761d2f8d14f9026c67a449beac216"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment and run the line below if you get a timeout error while downloading the file</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># This will set the download timeout to 120 seconds instead of the default 60</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># options(timeout = 120) </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the zip file to your local computer</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> edi_url, <span class="at">destfile =</span> <span class="st">"EDS_Course_Materials.zip"</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Unzip it into a folder called "data"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"EDS_Course_Materials.zip"</span>, <span class="at">exdir =</span> <span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you encounter an error while downloading that says, “Timeout of 60 seconds was reached”, run <code>options(timeout = 120)</code> to increase the duration of the timeout to 120 seconds. Feel free to set an even higher number if your computer needs extra time.</p>
+<p>Due to the way the data has been packaged, you may see this folder organization once you’ve unzipped the file:</p>
+<pre data-eval="F"><code>your-working-directory/
+├── data/               
+│   ├── __MACOSX/             
+│   └── EDS_Course_Materials/             
+│       ├── EDS_Course_Materials_README.pdf
+│       ├── Elevation.tif
+│       ├── Elevation.tif.aux.json
+│       ├── ENV720-MOD13A3-061-results.csv
+│       ├── final_model.RDATA
+│       ├── FLUXNET_FLUXES.RDATA
+│       ├── FluxNet_Sites_2024.csv
+│       ├── GlobalClimate.tif
+│       ├── GlobalClimate.tif.aux.json
+│       ├── GlobalSoil_grids.tif
+│       ├── GlobalSoil_grids.tif.aux.json
+│       ├── MODIS_IGBP_2001-2022_CT.tif
+│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.json
+│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml
+│       ├── Monthly_Fluxes.RDATA
+│       ├── RANDOMFOREST_DATASET.RDATA
+│       ├── SensitivityProducts.RDATA
+│       ├── TERRA_PPT_2021_CT.tif
+│       └── TERRA_TMEAN_2021_CT.tif   
+│
+└── more_stuff/            </code></pre>
+<p>For the purposes of this course, we need to move all the content under <code>data/EDS_Course_Materials</code> to just the <code>data</code> folder. Run the following code to do so.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#               Moving Files -----</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># List all the files inside "data/EDS_Course_Materials"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>names <span class="ot">&lt;-</span> <span class="fu">dir</span>(<span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"EDS_Course_Materials"</span>)) </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a function to move all the files from "data/EDS_Course_Materials" to "data"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>relocate_function <span class="ot">&lt;-</span> <span class="cf">function</span>(file_name){</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">file.rename</span>(<span class="at">from =</span> <span class="fu">file.path</span>(<span class="st">"data/EDS_Course_Materials"</span>, file_name),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">to =</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, file_name) )</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the function to all files</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(names, relocate_function)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete the now empty EDS_Course_Materials folder</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span>(<span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"EDS_Course_Materials"</span>), <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you’ve followed all the steps correctly, your working directory should now look something like this:</p>
+<pre data-eval="F"><code>your-working-directory/
+├── data/               
+│   ├── __MACOSX/             
+│   ├── EDS_Course_Materials_README.pdf
+│   ├── Elevation.tif
+│   ├── Elevation.tif.aux.json
+│   ├── ENV720-MOD13A3-061-results.csv
+│   ├── final_model.RDATA
+│   ├── FLUXNET_FLUXES.RDATA
+│   ├── FluxNet_Sites_2024.csv
+│   ├── GlobalClimate.tif
+│   ├── GlobalClimate.tif.aux.json
+│   ├── GlobalSoil_grids.tif
+│   ├── GlobalSoil_grids.tif.aux.json
+│   ├── MODIS_IGBP_2001-2022_CT.tif
+│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.json
+│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml
+│   ├── Monthly_Fluxes.RDATA
+│   ├── RANDOMFOREST_DATASET.RDATA
+│   ├── SensitivityProducts.RDATA
+│   ├── TERRA_PPT_2021_CT.tif
+│   └── TERRA_TMEAN_2021_CT.tif   
+│
+└── more_stuff/     </code></pre>
 
 
 </section>

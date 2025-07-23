@@ -16,6 +16,8 @@ website:
     contents:
       - text: "Syllabus"
         href: index.qmd
+      - text: "Setup"
+        href: setup.qmd        
       - section: "Introduction to R"
         contents:
           - text: "Data Basics"
