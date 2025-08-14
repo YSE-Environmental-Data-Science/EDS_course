@@ -238,21 +238,24 @@ Now that you have your data published, you can access it via R. Below is an exam
 
 # Load necessary libraries
 library("tidyverse") 
+library("EDIutils")
 
 ## --------------------------------------------- ##
 #               EDI example -----
 ## --------------------------------------------- ##
 
-# As an example, let's get the ER_contour.csv dataset from this EDI package:
-# https://portal.edirepository.org/nis/mapbrowse?scope=edi&identifier=1790
+# Getting a single file ------------------------------------------
 
-# First specify the direct url to the dataset you want
-# You can copy any dataset's url by clicking on View Full Metadata
-# Scroll down to the Detailed Metadata -> Data Entities section
+# As an example, let's get ER_contour.csv from this EDI package:
+# https://doi.org/10.6073/pasta/9b0cce476cb9a7f96575ff1c3d3155c3
+
+# First specify the direct URL to the data file you want
+# You can copy any data file's URL by clicking on "View Full Metadata"
+# Scroll down to the "Detailed Metadata" -> "Data Entities" section
 # Copy the URL associated with the data file you want
 
-# Paste the direct url to ER_contour.csv
-edi_url <- "https://portal.edirepository.org/nis/dataviewer?packageid=edi.1790.1&entityid=e64ec185b099968d9ae653d620e23d31"
+# Paste the direct URL to ER_contour.csv
+edi_url <- "https://pasta.lternet.edu/package/data/eml/edi/1790/1/e64ec185b099968d9ae653d620e23d31"
 
 # Reading directly 
 df <- read_csv(edi_url)
@@ -261,25 +264,60 @@ df <- read_csv(edi_url)
 download.file(url = edi_url, destfile = "ER_contour.csv")
 df <- read_csv("ER_contour.csv")
 
+# Getting multiple files -----------------------------------------
+
+# If you would like to download the entire data package as a zip file, 
+# use EDIutils::read_data_package_archive()
+
+# Create an empty folder to store the zip file in
+dir.create(path = "edi_data")
+
+# Download the data package by specifying the package ID number
+# The package ID is listed on the landing page of every data package
+read_data_package_archive("edi.1790.1", path = "edi_data")
+
+# Unzip the contents into a new "edi.1790.1" folder
+unzip(file.path("edi_data", "edi.1790.1.zip"), exdir = file.path("edi_data", "edi.1790.1"))
+
 ## --------------------------------------------- ##
 #                KNB example -----
 ## --------------------------------------------- ##
 
-# This method works for KNB repositories as well!
-# Let's get the DangermondSnowyPloverNests_2024_data.csv from this KNB package:
-# https://knb.ecoinformatics.org/view/urn%3Auuid%3A4ec4857c-282b-4ba2-a52d-64d5ef707a54
+# Getting a single file ------------------------------------------
 
-# First specify the direct url to the dataset you want
-# You can copy any dataset's url by right-clicking its Download button,
+# This method works for KNB repositories as well!
+# Let's get Everglades_Aquatic_Metabolism_SRS_2.csv from this KNB package:
+# https://doi.org/10.5063/JQ0ZDM
+
+# First specify the direct URL to the data file you want
+# You can copy any data file's URL by right-clicking its Download button (appears as a cloud icon),
 # and then selecting "Copy Link Address"
 
-# Paste the direct url to DangermondSnowyPloverNests_2024_data.csv
-knb_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A70e3c51f-fcb5-4e61-962a-6984ccfd3575"
+# Paste the direct URL to Everglades_Aquatic_Metabolism_SRS_2.csv
+knb_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A9e3cdf01-47b9-4025-8656-75dcf696a46c"
 
 # Reading directly
 df <- read_csv(knb_url)
 
 # Or you can download first, and then read in
-download.file(url = knb_url, destfile = "DangermondSnowyPloverNests_2024_data.csv")
-df <- read_csv("DangermondSnowyPloverNests_2024_data.csv")
+download.file(url = knb_url, destfile = "Everglades_Aquatic_Metabolism_SRS_2.csv")
+df <- read_csv("Everglades_Aquatic_Metabolism_SRS_2.csv")
+
+# Getting multiple files -----------------------------------------
+
+# If you would like to download the entire data package as a zip file,
+# right-click the data package's Download button (appears as a cloud icon),
+# and then select "Copy Link Address"
+
+# Paste the URL to the entire data package
+knb_pkg_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/packages/application%2Fbagit-1.0/urn%3Auuid%3Ab9539caf-9133-4d93-8099-3a38b1c4d568"
+
+# Create an empty folder to store the zip file in
+dir.create(path = "knb_data")
+
+# Download the data package as a zip file
+download.file(url = knb_pkg_url, destfile = file.path("knb_data", "example_knb_pkg.zip"))
+
+# Unzip the contents into a new "example_knb_pkg" folder
+unzip(file.path("knb_data", "example_knb_pkg.zip"), exdir = file.path("knb_data", "example_knb_pkg"))
 ```
