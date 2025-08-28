@@ -324,33 +324,21 @@
     "href": "data_basics.html",
     "title": "Data Basics",
     "section": "",
-    "text": "In this workshop you will:\n\nDownload climate data with daymetr\nManipulate data with tidyverse:\n\nFormat date elements\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets\n\nVisualize data with ggplot2\nLearn to write basic functions",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
+    "text": "In this workshop you will:\n\nDownload climate data with daymetr\nManipulate data with tidyverse:\n\nFormat date elements\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets\n\nVisualize data with ggplot2\nLearn to write basic functions"
   },
   {
     "objectID": "data_basics.html#learn-the-basics-of-manipulating-data-in-r",
     "href": "data_basics.html#learn-the-basics-of-manipulating-data-in-r",
     "title": "Data Basics",
     "section": "",
-    "text": "In this workshop you will:\n\nDownload climate data with daymetr\nManipulate data with tidyverse:\n\nFormat date elements\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets\n\nVisualize data with ggplot2\nLearn to write basic functions",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
+    "text": "In this workshop you will:\n\nDownload climate data with daymetr\nManipulate data with tidyverse:\n\nFormat date elements\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets\n\nVisualize data with ggplot2\nLearn to write basic functions"
   },
   {
     "objectID": "data_basics.html#calling-a-function-in-r",
     "href": "data_basics.html#calling-a-function-in-r",
     "title": "Data Basics",
     "section": "Calling a Function in R",
-    "text": "Calling a Function in R\nIn all the above examples, we called the created functions by using the function name and adding the necessary arguments inside the parenthesis. In R, function arguments can be passed by position, by name (so-called named arguments), by mixing position-based and name-based matching, or by omitting the arguments altogether.\nIf we pass the arguments by position, we need to follow the same sequence of arguments as defined in the function:\n\nsubtract_two_nums &lt;- function(x, y){\n    x - y\n}\n\nprint(subtract_two_nums(3, 1))\n\n[1] 2\n\n\nIn the above example, x is equal to 3 and y to 1, and not vice versa.\nIf we pass the arguments by name, i.e., explicitly specify what value each parameter defined in the function takes, the order of the arguments doesn’t matter:\n\nsubtract_two_nums &lt;- function(x, y){\n  x - y\n}\nprint(subtract_two_nums(x=3, y=1))\n\n[1] 2\n\nprint(subtract_two_nums(y=1, x=3))\n\n[1] 2\n\n\nThings to remember when using functions inside other functions: - Functions can have default values for arguments. - Functions can return multiple values using a list or other data structures. - You can use the return() statement to specify the value to be returned by the function. - If you want to be able to use the function independent of another function, it should be created outside a function instead of nesting the functions.",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
+    "text": "Calling a Function in R\nIn all the above examples, we called the created functions by using the function name and adding the necessary arguments inside the parenthesis. In R, function arguments can be passed by position, by name (so-called named arguments), by mixing position-based and name-based matching, or by omitting the arguments altogether.\nIf we pass the arguments by position, we need to follow the same sequence of arguments as defined in the function:\n\nsubtract_two_nums &lt;- function(x, y){\n    x - y\n}\n\nprint(subtract_two_nums(3, 1))\n\n[1] 2\n\n\nIn the above example, x is equal to 3 and y to 1, and not vice versa.\nIf we pass the arguments by name, i.e., explicitly specify what value each parameter defined in the function takes, the order of the arguments doesn’t matter:\n\nsubtract_two_nums &lt;- function(x, y){\n  x - y\n}\nprint(subtract_two_nums(x=3, y=1))\n\n[1] 2\n\nprint(subtract_two_nums(y=1, x=3))\n\n[1] 2\n\n\nThings to remember when using functions inside other functions: - Functions can have default values for arguments. - Functions can return multiple values using a list or other data structures. - You can use the return() statement to specify the value to be returned by the function. - If you want to be able to use the function independent of another function, it should be created outside a function instead of nesting the functions."
   },
   {
     "objectID": "spatial_projections.html",
