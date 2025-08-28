@@ -72,7 +72,7 @@ Format the date variables and create a date in the format YYYY-mm-dd :
 Step 1. Use the year and day of the year to create a year.day variable.
 
 ```{r, include=T}
-Yale.Myers$year.day <- paste( Yale.Myers$year, Yale.Myers$yday, sep="-") %>% as.Date(format="%Y-%j")
+Yale.Myers$date <- paste( Yale.Myers$year, Yale.Myers$yday, sep="-") %>% as.Date(format="%Y-%j")
 ```
 
 Look at your work:
