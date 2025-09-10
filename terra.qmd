@@ -191,9 +191,9 @@ ggplot()+  geom_sf(data = aoi.global) + geom_sf( data = FLUXNET.ch4.ppt.sf, aes(
 
 FLUXNET data can be used to understand patterns in natural methane fluxes. Evaluating the conditions where measurements are taken is essential to designing a useful model. 
 
-## Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in Assessment 2/3.
+## Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in Assignment 2/3.
 
-## Assessment 2
+## Assignment 2
 We will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.
 
 #### References
