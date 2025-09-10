@@ -86,7 +86,7 @@ Another aspect of model evaluation is comparing predictions. Although random for
 
 ```{r, include=T}
 train$PRED.TPVPD <- predict(FCH4_F_gC.rf, train)
-train$PRED.TPVPD
+head(train$PRED.TPVPD)
 ```
 Compare the observed (FCH4_F_gC) versus predicted (PRED.TPVPD):
 

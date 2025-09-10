@@ -170,7 +170,7 @@ Extract information from your raster stack using `terra::extract()`
 ```{r, include=T}
 
 FLUXNET.ch4.ppt <-terra::extract( normals.ppt$ppt, FLUXNET.ch4)
-FLUXNET.ch4.ppt
+head(FLUXNET.ch4.ppt)
 ```
 
 What did the extract function return?
