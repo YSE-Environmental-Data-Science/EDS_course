@@ -34,7 +34,7 @@ Yale-Myers Forest is a 7,840 acre research forest in Connecticut. It is a hub fo
 
 To explore the climate of the area, download daily daymet data for (41.952909, -72.123859). Review the arguments for the `download_daymet()` function.
 
-```{r, include=T}
+```{r, include=T, eval = F}
 ?download_daymet()
 ```
 
