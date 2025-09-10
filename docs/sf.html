@@ -302,7 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#writing-files-using-st_write" id="toc-writing-files-using-st_write" class="nav-link" data-scroll-target="#writing-files-using-st_write">Writing files using st_write:</a></li>
   <li><a href="#additional-reading" id="toc-additional-reading" class="nav-link" data-scroll-target="#additional-reading">Additional Reading:</a></li>
   </ul></li>
-  <li><a href="#post-workshop-assessment" id="toc-post-workshop-assessment" class="nav-link" data-scroll-target="#post-workshop-assessment">Post Workshop Assessment:</a></li>
+  <li><a href="#assignment" id="toc-assignment" class="nav-link" data-scroll-target="#assignment">Assignment:</a></li>
   </ul>
 </nav>
     </div>
@@ -352,7 +352,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
-<p>Import <a href="https://yale.instructure.com/courses/101353/files/9857764?wrap=1">FluxNet_Sites_2024.csv</a>. This table was created from the FLUXNET site list found at <a href="https://fluxnet.org/sites/site-list-and-pages/?view=table" class="uri">https://fluxnet.org/sites/site-list-and-pages/?view=table</a>.</p>
+<p>Import FluxNet_Sites_2024.csv. This table was created from the FLUXNET site list found at <a href="https://fluxnet.org/sites/site-list-and-pages/?view=table" class="uri">https://fluxnet.org/sites/site-list-and-pages/?view=table</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'data/FluxNet_Sites_2024.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -761,32 +761,40 @@ First 10 features:
 </section>
 <section id="what-is-union-t-doing" class="level3">
 <h3 class="anchored" data-anchor-id="what-is-union-t-doing">What is union =T doing?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore what happens when union = F here</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Re-project the s.america to match Fluxnet.ch4:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica <span class="ot">&lt;-</span> <span class="fu">st_transform</span>( s.america , <span class="st">'+init=epsg:4087'</span>) </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica <span class="ot">&lt;-</span> <span class="fu">st_transform</span>( s.america , <span class="st">'+init=epsg:4087'</span>) </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="sf_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Creates a simple feature of Brazil and re-project it to match Fluxnet.ch4:</p>
+<p>Create a simple feature of Brazil and re-project it to match Fluxnet.ch4:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your simple feature object here</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>The functions <code>st_intersects()</code>, <code>st_disjoint()</code>, <code>st_touches()</code>, <code>st_crosses()</code>, <code>st_within()</code>, <code>st_contains()</code>, <code>st_overlaps()</code>, <code>st_equals()</code>, <code>st_covers()</code>, <code>st_covered_by()</code>, <code>st_equals_exact()</code> and <code>st_is_within_distance()</code> all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:</p>
 </section>
 </section>
 <section id="how-many-towers-are-in-south-america" class="level1">
 <h1>How many towers are in South America?</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sparse geometry binary predicate list of length 1, where the predicate
 was `intersects'
  1: 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      [,1] [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10] [,11] [,12]
 [1,] FALSE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
@@ -806,33 +814,42 @@ was `intersects'
 </div>
 <section id="how-many-towers-are-in-brazil" class="level3">
 <h3 class="anchored" data-anchor-id="how-many-towers-are-in-brazil">How many towers are in Brazil?</h3>
-<p>Where possible geometric operations such as <code>st_distance()</code>, <code>st_length()</code> and <code>st_area()</code> report results with a units attribute appropriate for the CRS.</p>
-<p>Calculate the area of Brazil:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(aoi.SAmerica )</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find out how many towers are in Brazil here</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Where possible geometric operations such as <code>st_distance()</code>, <code>st_length()</code> and <code>st_area()</code> report results with a units attribute appropriate for the CRS.</p>
+<p>Calculate the area of South America:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(aoi.SAmerica )</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1.918234e+13 [m^2]</code></pre>
 </div>
+</div>
+<p>Calculate the area of Brazil:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the area here</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="visualize-the-global-distribution-of-towers" class="level4">
 <h4 class="anchored" data-anchor-id="visualize-the-global-distribution-of-towers">Visualize the global distribution of towers:</h4>
 <p>First create a simple feature for all large terrestrial regions in Europe, Asia, the Americas, Africa, Australia and New Zealand:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>))</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>))</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="sf_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Look at the CRS:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 171 features and 1 field
 Geometry type: MULTIPOLYGON
@@ -855,10 +872,10 @@ First 10 features:
 </div>
 <p>Re-project the polygon to match FLUXNET.CH4.shp:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>)) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>( <span class="dv">4087</span> ) </span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>)) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>( <span class="dv">4087</span> ) </span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 171 features and 1 field
 Geometry type: MULTIPOLYGON
@@ -881,47 +898,18 @@ First 10 features:
 </div>
 <p>Visualize the shapefile you created:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="sf_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Use ggplot to visualize the global distribution of Fluxnet CH4 sites:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi.terrestrial) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Extract the country from the world simple feature into FLUXNET.CH4.shp:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>( aoi.terrestrial, FLUXNET.CH4.shp)<span class="sc">$</span>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
-all geometries</code></pre>
-</div>
-</div>
-<p>Explore the Fluxnet CH4 sites:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "SITE_ID"         "SITE_NAME"       "FLUXNET2015"     "FLUXNET.CH4"    
- [5] "LOCATION_ELEV"   "IGBP"            "MAT"             "MAP"            
- [9] "geometry"        "MeanDistance_km" "Country"        </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
-(`geom_point()`).</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi.terrestrial) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -929,7 +917,24 @@ all geometries</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP, <span class="at">col=</span>IGBP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extract the country from the world simple feature into FLUXNET.CH4.shp:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>( aoi.terrestrial, FLUXNET.CH4.shp)<span class="sc">$</span>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: attribute variables are assumed to be spatially constant throughout
+all geometries</code></pre>
+</div>
+</div>
+<p>Explore the Fluxnet CH4 sites:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "SITE_ID"         "SITE_NAME"       "FLUXNET2015"     "FLUXNET.CH4"    
+ [5] "LOCATION_ELEV"   "IGBP"            "MAT"             "MAP"            
+ [9] "geometry"        "MeanDistance_km" "Country"        </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -937,12 +942,24 @@ all geometries</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="sf_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="sf_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>IGBP <span class="ot">&lt;-</span> <span class="fu">as.factor</span>( FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP, <span class="at">col=</span>IGBP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="sf_files/figure-html/unnamed-chunk-34-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>IGBP <span class="ot">&lt;-</span> <span class="fu">as.factor</span>( FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>BSV CRO CSH EBF ENF GRA  MF OSH SNO URB WAT WET WSA 
   2  13   1   4   7   9   1   2   1   1   2  37   1 </code></pre>
@@ -956,22 +973,22 @@ all geometries</code></pre>
 <p>delete_layer=TRUE causes st_write try to open the data source and delete the layer; no errors are given if the data source is not present, or the layer does not exist in the data source.</p>
 <p>delete_dsn=TRUE causes st_write to delete the data source when present, before writing the layer in a newly created data source. No error is given when the data source does not exist. This option should be handled with care, as it may wipe complete directories or databases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_sf</span>(FLUXNET.CH4.shp, <span class="st">"data/products/FLUXNET_CH4.shp"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_sf</span>(FLUXNET.CH4.shp, <span class="st">"data/products/FLUXNET_CH4.shp"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>It is possible to create data.frame objects with geometry list-columns that are not of class sf by:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>Fluxnet.ch4.df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>Fluxnet.ch4.df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Check the class:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Fluxnet.ch4.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Fluxnet.ch4.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
 </div>
 <p>Such objects: no longer register which column is the geometry list-column no longer have a plot method, and lack all of the other dedicated methods listed above for class sf. To write this object:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(Fluxnet.ch4.df, <span class="st">"data/Fluxnet.ch4.df"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(Fluxnet.ch4.df, <span class="st">"data/Fluxnet.ch4.df"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="additional-reading" class="level3">
@@ -979,8 +996,8 @@ all geometries</code></pre>
 <p>S. Scheider, B. Gräler, E. Pebesma, C. Stasch, 2016. Modelling spatio-temporal information generation. Int J of Geographic Information Science, 30 (10), 1980-2008. (open access) Stasch, C., S. Scheider, E. Pebesma, W. Kuhn, 2014. Meaningful Spatial Prediction and Aggregation. Environmental Modelling &amp; Software, 51, (149–165, open access).</p>
 </section>
 </section>
-<section id="post-workshop-assessment" class="level1">
-<h1>Post Workshop Assessment:</h1>
+<section id="assignment" class="level1">
+<h1>Assignment:</h1>
 <p>Write a 3-page report on the distribution of tower sites discussing the strengths and weakness of the current tower representation. Please create 2 visualizations. You are welcome to use any additional data.</p>
 
 
