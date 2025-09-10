@@ -217,6 +217,11 @@ s.america %>% ggplot() + geom_sf()
 
 ### What is union =T doing?
 
+```{r, include=T}
+# Explore what happens when union = F here
+# ...
+```
+
 Re-project the s.america to match Fluxnet.ch4:
 
 ```{r, include=T}
@@ -224,11 +229,11 @@ aoi.SAmerica <- st_transform( s.america , '+init=epsg:4087')
 aoi.SAmerica  %>% ggplot() + geom_sf()
 ```
 
-Creates a simple feature of Brazil and re-project it to match Fluxnet.ch4:
+Create a simple feature of Brazil and re-project it to match Fluxnet.ch4:
 
 ```{r, include=T}
-
-
+# Create your simple feature object here
+# ...
 ```
 
 The functions `st_intersects()`, `st_disjoint()`, `st_touches()`, `st_crosses()`, `st_within()`, `st_contains()`, `st_overlaps()`, `st_equals()`, `st_covers()`, `st_covered_by()`, `st_equals_exact()` and `st_is_within_distance()` all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:
@@ -245,18 +250,23 @@ st_intersects(aoi.SAmerica, FLUXNET.CH4.shp, sparse = FALSE)
 ### How many towers are in Brazil?
 
 ```{r, include=T}
-
-
-
+# Find out how many towers are in Brazil here
+# ...
 ```
 
 Where possible geometric operations such as `st_distance()`, `st_length()` and `st_area()` report results with a units attribute appropriate for the CRS.
 
-Calculate the area of Brazil:
+Calculate the area of South America:
 
 ```{r, include=T}
 aoi.SAmerica$Area <- st_area(aoi.SAmerica )
 aoi.SAmerica$Area
+```
+
+Calculate the area of Brazil:
+```{r}
+# Calculate the area here
+# ...
 ```
 
 #### Visualize the global distribution of towers:
