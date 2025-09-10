@@ -18,7 +18,7 @@ library(GGally)
 ```
 Boosted regression trees (BRT) represent a versatile machine learning technique applicable to both classification and regression tasks. This approach facilitates the assessment of the relative significance of numerous variables associated with a target response variable. In this workshop, our focus will be on utilizing BRT to develop a model for monthly methane fluxes originating from natural ecosystems. We'll leverage climate and moisture conditions within these ecosystems to enhance predictive accuracy and understanding.
 
-Read in the [data](https://yale.instructure.com/courses/101353/files/10186091?wrap=1):
+Read in the data:
 ```{r, include=F}
 load('data/RANDOMFOREST_DATASET.RDATA' )
 

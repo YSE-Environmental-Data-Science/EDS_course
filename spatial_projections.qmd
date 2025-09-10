@@ -28,8 +28,6 @@ library(tidyterra)
 
 # (1) Make a list of the variables, their units, the exact name and class of each variable in your model. 
 
-<b>Datasets:</b> [data.zip](https://yale.instructure.com/courses/101353/files/10270118?wrap=1)
-
 Load the datasets and the model. 
 ```{r}
 load(file="data/final_model.RDATA" )

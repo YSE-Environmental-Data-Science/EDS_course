@@ -47,8 +47,6 @@ library(zoo)
 
 # Integrating information from simple features
 
-<b>Dataset:</b> [Data.zip](https://yale.instructure.com/courses/101353/files/10087646?wrap=1)
-
 Import the file FluxNet_Sites_2024.csv and call it FluxNet
 
 ```{r, include=T}
