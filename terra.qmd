@@ -47,8 +47,10 @@ aoi.global <- aoi_get(country= c("Europe","Asia" ,"North America", "South Americ
 
 ```
 Visualize your AOI:
-```{r, include=T}
 
+```{r, include=T}
+# Visualize it here
+# ...
 ```
 
 We will use TerraClimate, a dataset of high-spatial resolution (1/24°, ~4-km) monthly climate and climatic water balance for global terrestrial surfaces from 1958–2015 (Abatzoglou, 2018).
