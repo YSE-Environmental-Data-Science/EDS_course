@@ -276,22 +276,22 @@
     ]
   },
   {
-    "objectID": "terra.html#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assignment-23.",
-    "href": "terra.html#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-assignment-23.",
+    "objectID": "terra.html#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment.",
+    "href": "terra.html#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment.",
     "title": "Introduction to rasters with the terra package",
-    "section": "Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in Assignment 2/3.",
-    "text": "Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in Assignment 2/3.",
+    "section": "Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.",
+    "text": "Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.",
     "crumbs": [
       "Introduction to R",
       "Raster Data"
     ]
   },
   {
-    "objectID": "terra.html#assignment-2",
-    "href": "terra.html#assignment-2",
+    "objectID": "terra.html#assignment",
+    "href": "terra.html#assignment",
     "title": "Introduction to rasters with the terra package",
-    "section": "Assignment 2",
-    "text": "Assignment 2\nWe will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.\n\nReferences\nAbatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015. Sci Data 5, 170191 (2018). https://doi.org/10.1038/sdata.2017.191",
+    "section": "Assignment",
+    "text": "Assignment\nWe will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.\n\nReferences\nAbatzoglou, J., Dobrowski, S., Parks, S. et al. TerraClimate, a high-resolution global dataset of monthly climate and climatic water balance from 1958–2015. Sci Data 5, 170191 (2018). https://doi.org/10.1038/sdata.2017.191",
     "crumbs": [
       "Introduction to R",
       "Raster Data"
