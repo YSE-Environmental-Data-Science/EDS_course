@@ -57,6 +57,11 @@ Then follow the code below to download and unzip "EDS_Course_Materials.zip".
 ## --------------------------------------------- ##
 #               EDI Download -----
 ## --------------------------------------------- ##
+# If you don't have the curl package, install it first
+# install.packages("curl")
+
+# Load package(s)
+library(curl)
 
 # Let's download EDS_Course_Materials.zip from this EDI package:
 # https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f 
@@ -64,18 +69,18 @@ Then follow the code below to download and unzip "EDS_Course_Materials.zip".
 # Paste the direct URL to EDS_Course_Materials.zip
 edi_url <- "https://pasta.lternet.edu/package/data/eml/edi/2081/1/757761d2f8d14f9026c67a449beac216"
 
-# Uncomment and run the line below if you get a timeout error while downloading the file
-# This will set the download timeout to 120 seconds instead of the default 60
-# options(timeout = 120) 
-
 # Download the zip file to your local computer
-download.file(url = edi_url, destfile = "EDS_Course_Materials.zip")
+curl::curl_download(url = edi_url, destfile = "EDS_Course_Materials.zip")
 
 # Unzip it into a folder called "data"
 unzip("EDS_Course_Materials.zip", exdir = "data")
 ```
 
-If you encounter an error while downloading that says, "Timeout of 60 seconds was reached", run `options(timeout = 120)` to increase the duration of the timeout to 120 seconds. Feel free to set an even higher number if your computer needs extra time.  
+::: {.callout-note}
+## Having trouble downloading?
+If you're having issues downloading the zip file through R, navigate back to the data package landing page on EDI and click on the **Download** button under "Data Entities: 1. EDS_Course_Materials".
+![](images/setup5.png)
+:::
 
 Due to the way the data has been packaged, you may see this folder organization once you've unzipped the file:
 ```{eval=F}
@@ -118,8 +123,8 @@ names <- dir(file.path("data", "EDS_Course_Materials"))
 
 # Create a function to move all the files from "data/EDS_Course_Materials" to "data"
 relocate_function <- function(file_name){
-  file.rename(from = file.path("data/EDS_Course_Materials", file_name),
-              to = file.path("data", file_name) )
+  file.rename(from = file.path("data", "EDS_Course_Materials", file_name),
+              to = file.path("data", file_name))
 }
 
 # Apply the function to all files
