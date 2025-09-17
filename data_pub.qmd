@@ -236,9 +236,10 @@ Now that you have your data published, you can access it via R. Below is an exam
 #               Housekeeping -----
 ## --------------------------------------------- ##
 
-# Load necessary libraries
-library("tidyverse") 
-library("EDIutils")
+# Load necessary packages
+library(readr) 
+library(EDIutils)
+library(curl)
 
 ## --------------------------------------------- ##
 #               EDI example -----
@@ -258,11 +259,14 @@ library("EDIutils")
 edi_url <- "https://pasta.lternet.edu/package/data/eml/edi/1790/1/e64ec185b099968d9ae653d620e23d31"
 
 # Reading directly 
-df <- read_csv(edi_url)
+df <- readr::read_csv(edi_url)
 
 # Or you can download first, and then read in
-download.file(url = edi_url, destfile = "ER_contour.csv")
-df <- read_csv("ER_contour.csv")
+curl::curl_download(url = edi_url, 
+                    destfile = "ER_contour.csv", 
+                    quiet = F)
+
+df <- readr::read_csv("ER_contour.csv")
 
 # Getting multiple files -----------------------------------------
 
@@ -274,10 +278,11 @@ dir.create(path = "edi_data")
 
 # Download the data package by specifying the package ID number
 # The package ID is listed on the landing page of every data package
-read_data_package_archive("edi.1790.1", path = "edi_data")
+EDIutils::read_data_package_archive("edi.1790.1", path = "edi_data")
 
 # Unzip the contents into a new "edi.1790.1" folder
-unzip(file.path("edi_data", "edi.1790.1.zip"), exdir = file.path("edi_data", "edi.1790.1"))
+unzip(zipfile = file.path("edi_data", "edi.1790.1.zip"), 
+      exdir = file.path("edi_data", "edi.1790.1"))
 
 ## --------------------------------------------- ##
 #                KNB example -----
@@ -297,11 +302,14 @@ unzip(file.path("edi_data", "edi.1790.1.zip"), exdir = file.path("edi_data", "ed
 knb_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/object/urn%3Auuid%3A9e3cdf01-47b9-4025-8656-75dcf696a46c"
 
 # Reading directly
-df <- read_csv(knb_url)
+df <- readr::read_csv(knb_url)
 
 # Or you can download first, and then read in
-download.file(url = knb_url, destfile = "Everglades_Aquatic_Metabolism_SRS_2.csv")
-df <- read_csv("Everglades_Aquatic_Metabolism_SRS_2.csv")
+curl::curl_download(url = knb_url, 
+                    destfile = "Everglades_Aquatic_Metabolism_SRS_2.csv", 
+                    quiet = F)
+
+df <- readr::read_csv("Everglades_Aquatic_Metabolism_SRS_2.csv")
 
 # Getting multiple files -----------------------------------------
 
@@ -316,8 +324,11 @@ knb_pkg_url <- "https://knb.ecoinformatics.org/knb/d1/mn/v2/packages/application
 dir.create(path = "knb_data")
 
 # Download the data package as a zip file
-download.file(url = knb_pkg_url, destfile = file.path("knb_data", "example_knb_pkg.zip"))
+curl::curl_download(url = knb_pkg_url, 
+                    destfile = file.path("knb_data", "example_knb_pkg.zip"), 
+                    quiet = F)
 
 # Unzip the contents into a new "example_knb_pkg" folder
-unzip(file.path("knb_data", "example_knb_pkg.zip"), exdir = file.path("knb_data", "example_knb_pkg"))
+unzip(zipfile = file.path("knb_data", "example_knb_pkg.zip"), 
+      exdir = file.path("knb_data", "example_knb_pkg"))
 ```
