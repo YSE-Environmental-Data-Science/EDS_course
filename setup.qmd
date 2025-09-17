@@ -70,7 +70,9 @@ library(curl)
 edi_url <- "https://pasta.lternet.edu/package/data/eml/edi/2081/1/757761d2f8d14f9026c67a449beac216"
 
 # Download the zip file to your local computer
-curl::curl_download(url = edi_url, destfile = "EDS_Course_Materials.zip")
+curl::curl_download(url = edi_url, 
+                    destfile = "EDS_Course_Materials.zip", 
+                    quiet = F)
 
 # Unzip it into a folder called "data"
 unzip("EDS_Course_Materials.zip", exdir = "data")
