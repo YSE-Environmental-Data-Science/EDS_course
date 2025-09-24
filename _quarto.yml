@@ -56,4 +56,5 @@ format:
       - yeti
       - styles.scss
     toc: true
-
+    link-external-newwindow: true
+    link-external-icon: false
