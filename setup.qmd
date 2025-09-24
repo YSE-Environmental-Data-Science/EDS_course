@@ -12,7 +12,7 @@ There are various ways to acquire data from data repositories. The method that a
 
 Instead, you can acquire data programmatically with R and save all the steps in this part of the workflow in a script. If you, or anyone else, want to reproduce the same results in the future, you can just rerun the same script. 
 
-To get the data programmatically through R, first navigate to the data package landing page at: [https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f]()
+To get the data programmatically through R, first navigate to the data package landing page at: [https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f](https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f)
 
 <p align="center">
 
