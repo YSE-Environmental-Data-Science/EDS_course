@@ -19,7 +19,6 @@ EDS_course/
 │   ├── final_model.RDATA
 │   ├── FLUXNET_FLUXES.RDATA
 │   ├── FluxNet_Sites_2024.csv
-│   ├── Fluxnet.ch4.df (see instructions below)
 │   ├── GlobalClimate.tif
 │   ├── GlobalClimate.tif.aux.json
 │   ├── GlobalSoil_grids.tif
@@ -32,16 +31,17 @@ EDS_course/
 │   ├── SensitivityProducts.RDATA
 │   ├── TERRA_PPT_2021_CT.tif
 │   ├── TERRA_TMEAN_2021_CT.tif   
+│   ├── fluxnet_ch4.csv (see instructions below)
 │   └── products/
-│       ├── FLUXNET_CH4.dbf (see instructions below)
-│       ├── FLUXNET_CH4.prj (see instructions below)
-│       ├── FLUXNET_CH4.shp (see instructions below)
-│       ├── FLUXNET_CH4.shx (see instructions below)
+│       ├── fluxnet_ch4.dbf (see instructions below)
+│       ├── fluxnet_ch4.prj (see instructions below)
+│       ├── fluxnet_ch4.shp (see instructions below)
+│       ├── fluxnet_ch4.shx (see instructions below)
 │       └── predictions/
-│           ├── MODEL_PRED_m1.tif (see instructions below)
+│           ├── model_pred_m01.tif (see instructions below)
 │           ├── ...
-│           └── MODEL_PRED_m12.tif (see instructions below)
+│           └── model_pred_m12.tif (see instructions below)
 │
 └── more_stuff/     
 ```
-You can generate `Fluxnet.ch4.df` and the `FLUXNET_CH4` shapefile by running `sf.qmd`. You can generate the `MODEL_PRED` tif files by running `spatial_predictions.qmd`.
+You can generate `fluxnet_ch4.csv` and the `fluxnet_ch4` shapefile by running `sf.qmd`. You can generate the `model_pred_m*.tif` files by running `spatial_projections.qmd`.

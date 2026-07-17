@@ -1,6 +1,6 @@
 ---
 title: "Data Basics"
-editor: 
+editor:
   mode: source
 ---
 
@@ -23,7 +23,8 @@ In this workshop you will:
 
 ### Load the required libraries
 
-```{r, include=T, output=F}
+```{r}
+#| output: false
 library(daymetr)
 library(tidyverse)
 ```
@@ -34,14 +35,15 @@ Yale-Myers Forest is a 7,840 acre research forest in Connecticut. It is a hub fo
 
 To explore the climate of the area, download daily daymet data for (41.952909, -72.123859). Review the arguments for the `download_daymet()` function.
 
-```{r, include=T, eval = F}
+```{r}
+#| eval: false
 ?download_daymet()
 ```
 
 To use the `download_daymet()` function you need the latitude, longitude, start (1990), and end (2018) years.
 
-```{r, include=T}
-Yale.Myers.daymet <- download_daymet( lat =  41.952909,
+```{r}
+yale_myers_daymet <- download_daymet(lat = 41.952909,
                                       lon = -72.123859,
                                       start = 1990,
                                       end = 2018)
@@ -49,163 +51,164 @@ Yale.Myers.daymet <- download_daymet( lat =  41.952909,
 
 You now have a nested list that includes information on the site location. The true climate data is stored in the "data" part of the nested list. Pull the data out of the list and create a dataframe.
 
-```{r, include=T}
-Yale.Myers <- as.data.frame(Yale.Myers.daymet$data)
+```{r}
+yale_myers <- as.data.frame(yale_myers_daymet$data)
 ```
 
 Look at the dataframe:
 
-```{r, include=T}
-head(Yale.Myers )
+```{r}
+head(yale_myers)
 ```
 
 Evaluate the data types:
 
-```{r, include=T}
-summary( Yale.Myers)
+```{r}
+summary(yale_myers)
 ```
 
 ### It's a Date
 
 Format the date variables and create a date in the format YYYY-mm-dd :
 
-Step 1. Use the year and day of the year to create a year.day variable.
+Step 1. Use the year and day of the year to create a year_day variable.
 
-```{r, include=T}
-Yale.Myers$year.day <- paste( Yale.Myers$year, Yale.Myers$yday, sep="-") %>% as.Date(format="%Y-%j")
+```{r}
+yale_myers$year_day <- paste(yale_myers$year, yale_myers$yday, sep = "-") %>% as.Date(format = "%Y-%j")
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers$year.day)
+```{r}
+head(yale_myers$year_day)
 ```
 
-Step 2. Format the year.day as YYYY-mm-dd and convert to a date.
+Step 2. Format the year_day as YYYY-mm-dd and convert to a date.
 
-```{r, include=T}
-Yale.Myers$date <- format( Yale.Myers$year.day, "%Y-%m-%d") %>% as.Date()
+```{r}
+yale_myers$date <- format(yale_myers$year_day, "%Y-%m-%d") %>% as.Date()
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers$date)
+```{r}
+head(yale_myers$date)
 ```
 
 Check the class:
 
-```{r, include=T}
-class(Yale.Myers$date)
+```{r}
+class(yale_myers$date)
 ```
 
 ### mutate()
 
-The function `mutate()` creates new columns that are a function of existing variables. Use `mutate()` to create a month (month) and Julian day (JulianD) from the formatted date.
+The function `mutate()` creates new columns that are a function of existing variables. Use `mutate()` to create a month (month) and Julian day (julian_day) from the formatted date.
 
-```{r, include=T}
-Yale.Myers <- Yale.Myers %>% mutate( month = format( Yale.Myers$date, format="%m" ),
-                     julianD = format( Yale.Myers$date, format="%j") )
+```{r}
+yale_myers <- yale_myers %>% mutate(month = format(yale_myers$date, format = "%m"),
+                                     julian_day = format(yale_myers$date, format = "%j"))
 ```
 
 With daymet data you have to calculate the mean temperature using tmax and tmin:
 
-```{r, include=T}
-Yale.Myers$tmean = (0.606 *as.numeric(Yale.Myers$tmax..deg.c.)) + 0.394 * as.numeric(Yale.Myers$tmin..deg.c.)
+```{r}
+yale_myers$tmean <- (0.606 * as.numeric(yale_myers$tmax..deg.c.)) + 0.394 * as.numeric(yale_myers$tmin..deg.c.)
 ```
 
 Look at your work:
 
-```{r, include=T}
-summary(Yale.Myers$tmean)
+```{r}
+summary(yale_myers$tmean)
 ```
 
 ### rename()
 
 Use the function `rename()` to rename tmax..deg.c to tmax, tmin..deg.c to tmin, and prcp..mm.day. to prcp:
 
-```{r, include=T}
-Yale.Myers.rn <-Yale.Myers %>% rename(tmax=tmax..deg.c., tmin=tmin..deg.c., prcp = prcp..mm.day.)
+```{r}
+yale_myers_rn <- yale_myers %>% rename(tmax = tmax..deg.c., tmin = tmin..deg.c., prcp = prcp..mm.day.)
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers.rn )
+```{r}
+head(yale_myers_rn)
 ```
 
 ### subset()
 
-Subset the dataset to include only \[date, month, year, julianD, tmax, tmin, tmean, and prcp\] :
+Subset the dataset to include only \[date, month, year, julian_day, tmax, tmin, tmean, and prcp\] :
 
-```{r, include=T}
-Yale.Myers.sub <-Yale.Myers.rn %>% select(date, month, year, julianD, tmax, tmin, tmean, prcp)
+```{r}
+yale_myers_sub <- yale_myers_rn %>% select(date, month, year, julian_day, tmax, tmin, tmean, prcp)
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers.sub )
+```{r}
+head(yale_myers_sub)
 ```
 
 ### reframe()
 
-Create an annual summary of conditions using `reframe`()` :
+Create an annual summary of conditions using `reframe()`:
 
-```{r, include=T}
-Yale.Myers.annual <-Yale.Myers.sub %>%reframe(.by=year, tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
+```{r}
+yale_myers_annual <- yale_myers_sub %>% reframe(.by = year, tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers.annual)
+```{r}
+head(yale_myers_annual)
 ```
 
-Determine the average monthly conditions using `reframe`()` :
+Determine the average monthly conditions using `reframe()`:
 
-```{r, include=T}
-Yale.Myers.monthly <-Yale.Myers.sub %>% reframe(.by =month, tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp)/29)
-```
-
-Look at your work:
-
-```{r, include=T}
-head(Yale.Myers.monthly)
-```
-
-Determine the average conditions using `reframe`()` by both year and month:
-
-```{r, include=T}
-Yale.Myers.yearmon <-Yale.Myers.sub %>% reframe(.by= c(month, year) , tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
+```{r}
+yale_myers_monthly <- yale_myers_sub %>% reframe(.by = month, tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp) / 29)
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers.yearmon )
+```{r}
+head(yale_myers_monthly)
+```
+
+Determine the average conditions using `reframe()` by both year and month:
+
+```{r}
+yale_myers_yearmon <- yale_myers_sub %>% reframe(.by = c(month, year), tmax = max(tmax), tmin = min(tmin), tmean = mean(tmean), prcp = sum(prcp))
+```
+
+Look at your work:
+
+```{r}
+head(yale_myers_yearmon)
 ```
 
 ### select()
 
 Subset the mean annual temperate and year from the annual summary. Then rename tmean with "Yale-Myers" :
 
-```{r, include=T}
-Yale.Myers.annual.tmean <- Yale.Myers.annual %>% mutate(Yale.Myers = tmean) %>% select(year, Yale.Myers)
+```{r}
+yale_myers_annual_tmean <- yale_myers_annual %>% mutate(yale_myers = tmean) %>% select(year, yale_myers)
 ```
 
 Look at your work:
 
-```{r, include=T}
-head(Yale.Myers.annual.tmean)
+```{r}
+head(yale_myers_annual_tmean)
 ```
 
 ### save()
 
-Save the two files, Yale.Myers and Yale.Myers.sub, in a .RDTAT object. You will need this for the post workshop assessment:
+Save the three files, yale_myers, yale_myers_sub, and yale_myers_annual_tmean, in a .RDATA object. You will need this for the post workshop assessment:
 
-```{r, include=T, eval=F}
-save(Yale.Myers, Yale.Myers.sub,Yale.Myers.annual.tmean, file="data/products/DataBasics.RDATA" )
+```{r}
+#| eval: false
+save(yale_myers, yale_myers_sub, yale_myers_annual_tmean, file = "data/products/data_basics.RDATA")
 ```
 
 # Introduction to ggplot2
@@ -214,7 +217,7 @@ ggplot2 is a plotting package in R. Graphics are built layer by layer by adding 
 
 Load the library:
 
-```{r, echo=TRUE}
+```{r}
 library(ggplot2)
 ```
 
@@ -232,18 +235,17 @@ library(ggplot2)
 
 We first need to define the source of the information to be visualized. The function `ggplot()` is used to generate the plots.
 
-```{r, echo=TRUE}
-ggplot(data = Yale.Myers.sub) + 
- labs(title = "Climate of Yale Myers Forest")
-
+```{r}
+ggplot(data = yale_myers_sub) +
+  labs(title = "Climate of Yale Myers Forest")
 ```
 
 ### Aesthetic Layer:
 
 The data is used to map onto the aesthetics attributes such as x-axis, y-axis, color, fill, size, labels, alpha, shape, line width, line type.
 
-```{r, echo=TRUE}
-ggplot(data = Yale.Myers.sub, aes(x = date , y = tmean)) +
+```{r}
+ggplot(data = yale_myers_sub, aes(x = date, y = tmean)) +
   labs(title = "Climate of Yale Myers Forest")
 ```
 
@@ -251,9 +253,9 @@ ggplot(data = Yale.Myers.sub, aes(x = date , y = tmean)) +
 
 The geometric layer controls the essential elements. Display the data using point, line, histogram, bar, or boxplot.
 
-```{r, echo=TRUE}
-ggplot(data = Yale.Myers.sub, aes(x = date , y = tmean))+
-   geom_point() +
+```{r}
+ggplot(data = yale_myers_sub, aes(x = date, y = tmean)) +
+  geom_point() +
   labs(title = "Climate of Yale Myers Forest",
        x = "Date",
        y = "Mean Air Temperature (Degrees Celcius)")
@@ -261,85 +263,79 @@ ggplot(data = Yale.Myers.sub, aes(x = date , y = tmean))+
 
 Geometric layer: Adding size, color, and shape.
 
-```{r, echo=TRUE}
+```{r}
 # Adding size
-ggplot(data = Yale.Myers.sub, aes(x = date , y = tmean, size=year))+
+ggplot(data = yale_myers_sub, aes(x = date, y = tmean, size = year)) +
   geom_point() +
-  labs(title = 'Climate of Yale Myers Forest',
+  labs(title = "Climate of Yale Myers Forest",
        x = "Date",
        y = "Mean Air Temperature (Degrees Celcius)")
-       
+
 # Adding shape and color
-ggplot(data = Yale.Myers.sub, aes(x = date , y = tmean, col=month))+
+ggplot(data = yale_myers_sub, aes(x = date, y = tmean, col = month)) +
   geom_point() +
-  labs(title = 'Climate of Yale Myers Forest',
+  labs(title = "Climate of Yale Myers Forest",
        x = "Date",
        y = "Mean Air Temperature (Degrees Celcius)")
- 
+
 # Histogram plot
-ggplot(data =  Yale.Myers.sub, aes(x = tmean)) +
+ggplot(data = yale_myers_sub, aes(x = tmean)) +
   geom_histogram(binwidth = 5) +
-  labs(title = 'Climate of Yale Myers Forest',
+  labs(title = "Climate of Yale Myers Forest",
        x = "Mean Air Temperature (Degrees Celcius)",
-       y = "Count" )
+       y = "Count")
 ```
 
 ### Facet Layer:
 
 The facet layer is used to split the data into subsets of the entire dataset. It allows the subsets to be visualized on the same plot. Here we separate plots according to month.
 
-```{r, echo=TRUE}
+```{r}
+# Subset dataset to include only months 9-11
+yale_myers_fall <- yale_myers_sub %>% filter(month > "08" & month < "12")
 
-# Subset dataset to indlude only months 9-11
-Yale.Myers.fall <- Yale.Myers.sub %>% filter( month > '08' & month < '12')
-
-p <- ggplot(data = Yale.Myers.fall, aes(x = date , y = tmean)) + geom_point()
+p <- ggplot(data = yale_myers_fall, aes(x = date, y = tmean)) + geom_point()
 
 p + facet_grid(month ~ .) +
-  labs(title = 'Climate of Yale Myers Forest',
+  labs(title = "Climate of Yale Myers Forest",
        x = "Date",
        y = "Mean Air Temperature (Degrees Celcius)")
-
 ```
 
 ### Statistics layer:
 
 We can transform our data using binning, smoothing, descriptive, or intermediate. We will explore how February temperatures have changed from 1990 - 2018
 
-```{r, echo=TRUE}
+```{r}
+# Subset the data:
+yale_myers_feb <- yale_myers_sub %>% filter(month == "02")
 
-#Subset the data:
-Yale.Myers.feb <- Yale.Myers.sub %>% filter( month =='02')
-
-ggplot(data = Yale.Myers.feb, aes(x = date , y = tmean)) + geom_point() +
+ggplot(data = yale_myers_feb, aes(x = date, y = tmean)) + geom_point() +
   stat_smooth(method = lm, col = "red") +
-  labs(title = 'Climate of Yale Myers Forest')
-
+  labs(title = "Climate of Yale Myers Forest")
 ```
 
 ### Coordinates layer:
 
 Data coordinates are mapped together to the mentioned plane of the graphic and we adjust the axis and change the spacing of the displayed data with control plot dimensions.
 
-```{r, echo=TRUE}
-ggplot(data = Yale.Myers.fall, aes(x = tmin , y = tmean)) + geom_point() +
+```{r}
+ggplot(data = yale_myers_fall, aes(x = tmin, y = tmean)) + geom_point() +
   stat_smooth(method = lm, col = "red") +
-  labs(title = 'Climate of Yale Myers Forest') +
   scale_y_continuous(limits = c(-10, 40), expand = c(0, 0)) +
   scale_x_continuous(limits = c(-10, 40), expand = c(0, 0)) +
   coord_equal() +
-  labs(title = 'Climate of Yale Myers Forest')
-  
+  labs(title = "Climate of Yale Myers Forest")
 ```
 
 `coord_cartesian()` to proper zoom in:
 
-```{r, echo=TRUE}
+```{r}
 # Add coord_cartesian() to proper zoom in
-ggplot(data = Yale.Myers.fall, aes(x = tmin , y = tmean)) + geom_point() +
+ggplot(data = yale_myers_fall, aes(x = tmin, y = tmean)) + geom_point() +
   stat_smooth(method = lm, col = "red") +
-  labs(title = 'Climate of Yale Myers Forest')  +
-						coord_cartesian(xlim = c(-10, 10))
+  labs(title = "Climate of Yale Myers Forest") +
+  coord_cartesian(xlim = c(-10, 10))
 ```
 
 ### Theme Layer:
@@ -348,17 +344,16 @@ Layer controls the finer points of display, like the font size and background co
 
 Example: Theme layer – `element_rect()` function:
 
-```{r, echo=TRUE}
-
-ggplot(data = Yale.Myers.fall, aes(x = tmin , y = tmean)) + geom_point() +
+```{r}
+ggplot(data = yale_myers_fall, aes(x = tmin, y = tmean)) + geom_point() +
   stat_smooth(method = lm, col = "red") +
   facet_grid(. ~ month) +
-  theme(plot.background = element_rect(fill = "lightblue", colour = "gray")) 
+  theme(plot.background = element_rect(fill = "lightblue", colour = "gray"))
 ```
 
 # Introduction to Writing Functions in R
 
-Functions are essential tools in R. Functions eliminate repetition from your code, which can reduce your workload, and help you to avoid errors. Here’s what you need to know about creating and calling them. It is very important to understand the purpose and syntax of R functions and knowing how to create or use them. In this tutorial, we'll learn what an R function is, what types of functions exist in R, when we should use a function, how to create and call a user-defined function.
+Functions are essential tools in R. Functions eliminate repetition from your code, which can reduce your workload, and help you to avoid errors. Here's what you need to know about creating and calling them. It is very important to understand the purpose and syntax of R functions and knowing how to create or use them. In this tutorial, we'll learn what an R function is, what types of functions exist in R, when we should use a function, how to create and call a user-defined function.
 
 ### What Is a function in R?
 
@@ -378,7 +373,7 @@ Some of the most popular built in function are:
 -   `length()`: returns the number of items in an R object (a vector, a list, etc.)
 -   `nchar()`: returns the number of characters in a character object
 -   `sort()`: sorts a vector in ascending or descending (decreasing=TRUE) order
--   `exists()`:returns TRUE or FALSE depending on whether or not a variable is defined in the R environment
+-   `exists()`: returns TRUE or FALSE depending on whether or not a variable is defined in the R environment
 
 ### Creating a Function in R
 
@@ -398,55 +393,48 @@ Function parameters are the variables in the function definition placed inside t
 
 The function body is a set of commands inside the curly braces that are run in a predefined order every time we call the function. In the function body, we place what exactly we need the function to do. For example, we can create a function to sum two numbers listed as parameters x and y:
 
-```{r, echo=TRUE}
-
-sum_two_nums <- function(x, y){
-    x + y
+```{r}
+sum_two_nums <- function(x, y) {
+  x + y
 }
 
 print(sum_two_nums(1, 2))
-
 ```
 
 Next, lets create a function to calculate the circumference of a circle with a known radius. The function has only one parameter r.
 
-```{r, echo=TRUE}
-
-  circumference <- function(radius){
-    2*pi*radius
-  }
+```{r}
+circumference <- function(radius) {
+  2 * pi * radius
+}
 ```
 
 After defining the function, call it with the radius equal to 2:
 
-```{r, echo=TRUE}
-circumference( r=2)
-
+```{r}
+circumference(r = 2)
 ```
 
 It's possible, for a function to have no parameters:
 
 ```{r}
-
-hello_world <- function(){
-    'Hello, World!'
+hello_world <- function() {
+  "Hello, World!"
 }
 
 print(hello_world())
-
 ```
 
 Also, some parameters can be set to default values inside the function definition, which then can be reset when calling the function. In the circumference function, we can set the default radius of a circle to 1. If we call the function with no argument passed, it will calculate the circumference of a circle with a radius of 1. Otherwise, it will calculate the circumference of a circle with the provided radius:
 
 ```{r}
-
-circumference <- function(r=1){
-    2*pi*r
+circumference <- function(r = 1) {
+  2 * pi * r
 }
 
 print(circumference())
 
-print(circumference( r=2))
+print(circumference(r = 2))
 ```
 
 Note that the statements in the function body should be indented by 2 or 4 spaces, depending on the IDE where we run the code. The important thing is to be consistent with the indentation throughout the program. While it doesn't affect the code performance, it makes the code easier to read.
@@ -456,10 +444,10 @@ Note that the statements in the function body should be indented by 2 or 4 space
 As we saw from all the above examples, in R, it usually isn't necessary to explicitly include the return statement when defining a function since an R function just automatically returns the last evaluated expression in the function body. However, we still can add the return statement inside the function body using the syntax return(expression_to_be_returned). This becomes important if we need to return more than one result from a function. For example:
 
 ```{r}
-mean_median <- function(vector){
-    mean <- mean(vector)
-    median <- median(vector)
-    return(c(mean, median))
+mean_median <- function(vector) {
+  mean <- mean(vector)
+  median <- median(vector)
+  return(c(mean, median))
 }
 
 print(mean_median(c(1, 1, 1, 2, 3)))
@@ -474,8 +462,8 @@ In all the above examples, we called the created functions by using the function
 If we pass the arguments by position, we need to follow the same sequence of arguments as defined in the function:
 
 ```{r}
-subtract_two_nums <- function(x, y){
-    x - y
+subtract_two_nums <- function(x, y) {
+  x - y
 }
 
 print(subtract_two_nums(3, 1))
@@ -486,11 +474,11 @@ In the above example, x is equal to 3 and y to 1, and not vice versa.
 If we pass the arguments by name, i.e., explicitly specify what value each parameter defined in the function takes, the order of the arguments doesn't matter:
 
 ```{r}
-subtract_two_nums <- function(x, y){
+subtract_two_nums <- function(x, y) {
   x - y
 }
-print(subtract_two_nums(x=3, y=1))
-print(subtract_two_nums(y=1, x=3))
+print(subtract_two_nums(x = 3, y = 1))
+print(subtract_two_nums(y = 1, x = 3))
 ```
 
 Things to remember when using functions inside other functions: - Functions can have default values for arguments. - Functions can return multiple values using a list or other data structures. - You can use the `return()` statement to specify the value to be returned by the function. - If you want to be able to use the function independent of another function, it should be created outside a function instead of nesting the functions.
