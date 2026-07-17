@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Introduction to Data Integration in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -21,8 +24,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +37,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -65,15 +69,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c27a0819adbec56e9d03f3e11156bb0e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-sidebar docked quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -129,7 +134,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">ENV 730</a> 
@@ -282,11 +288,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#install-packages" id="toc-install-packages" class="nav-link active" data-scroll-target="#install-packages">Install Packages:</a></li>
+  <li><a href="#getting-a-climate-data-store-cds-api-key" id="toc-getting-a-climate-data-store-cds-api-key" class="nav-link active" data-scroll-target="#getting-a-climate-data-store-cds-api-key">Getting a Climate Data Store (CDS) API key</a>
+  <ul class="collapse">
+  <li><a href="#install-packages" id="toc-install-packages" class="nav-link" data-scroll-target="#install-packages">Install Packages:</a></li>
+  </ul></li>
   <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">Load Libraries:</a></li>
   <li><a href="#integrating-information-from-simple-features" id="toc-integrating-information-from-simple-features" class="nav-link" data-scroll-target="#integrating-information-from-simple-features">Integrating information from simple features</a></li>
   <li><a href="#integrating-information-from-rasters" id="toc-integrating-information-from-rasters" class="nav-link" data-scroll-target="#integrating-information-from-rasters">Integrating information from rasters</a></li>
   <li><a href="#joining-tables" id="toc-joining-tables" class="nav-link" data-scroll-target="#joining-tables">Joining tables</a></li>
+  <li><a href="#validating-tower-measurements-with-era5-reanalysis-climate-data" id="toc-validating-tower-measurements-with-era5-reanalysis-climate-data" class="nav-link" data-scroll-target="#validating-tower-measurements-with-era5-reanalysis-climate-data">Validating tower measurements with ERA5 reanalysis climate data</a>
+  <ul class="collapse">
+  <li><a href="#download-monthly-era5-data" id="toc-download-monthly-era5-data" class="nav-link" data-scroll-target="#download-monthly-era5-data">Download monthly ERA5 data</a></li>
+  <li><a href="#convert-units-to-match-p_f-and-ta_f" id="toc-convert-units-to-match-p_f-and-ta_f" class="nav-link" data-scroll-target="#convert-units-to-match-p_f-and-ta_f">Convert units to match P_F and TA_F</a></li>
+  <li><a href="#extract-monthly-values-at-each-tower-site" id="toc-extract-monthly-values-at-each-tower-site" class="nav-link" data-scroll-target="#extract-monthly-values-at-each-tower-site">Extract monthly values at each tower site</a></li>
+  <li><a href="#how-well-does-era5-match-the-tower-measurements" id="toc-how-well-does-era5-match-the-tower-measurements" class="nav-link" data-scroll-target="#how-well-does-era5-match-the-tower-measurements">How well does ERA5 match the tower measurements?</a></li>
+  <li><a href="#save-your-work" id="toc-save-your-work" class="nav-link" data-scroll-target="#save-your-work">Save your work</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -313,6 +330,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Data analysis often requires combining data from multiple sources, such as files, databases, APIs, or web scraping. R is a powerful and flexible tool for data integration, but it can also pose some challenges and pitfalls. In this workshop, you will learn some of the best ways to integrate data from multiple sources in R.</p>
+<section id="getting-a-climate-data-store-cds-api-key" class="level2">
+<h2 class="anchored" data-anchor-id="getting-a-climate-data-store-cds-api-key">Getting a Climate Data Store (CDS) API key</h2>
+<p>Later in this workshop you’ll download real historical climate data (ERA5) from the Copernicus Climate Data Store (CDS). This requires a free personal account and API key, separate from anything else in this course, so set it up now — it can take a few minutes for the account to activate.</p>
+<ol type="1">
+<li>Create a free account at <a href="https://cds.climate.copernicus.eu/" class="uri">https://cds.climate.copernicus.eu/</a>.</li>
+<li>Once logged in, open your user profile page and copy your <strong>Personal Access Token</strong> — this is your API key.</li>
+<li>In R, register it once per computer (you’ll install the <code>ecmwfr</code> package later in this workshop, but you can do it now too):</li>
+</ol>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ecmwfr"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ecmwfr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">wf_set_key</span>(<span class="at">key =</span> <span class="st">"paste-your-personal-access-token-here"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>ecmwfr</code> stores the key in your system’s secure credential manager, so you only need to do this once — every future R session on this computer will use it automatically.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Never save your API key in a script
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Type your key directly into the R console (or a chunk you run once and then delete), not into a <code>.qmd</code> file you save or push to GitHub. Treat it like a password — if it’s ever exposed, regenerate it from your CDS profile page.</p>
+</div>
+</div>
 <section id="workshop-goals" class="level4">
 <h4 class="anchored" data-anchor-id="workshop-goals">Workshop Goals:</h4>
 <ol type="1">
@@ -361,25 +405,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="install-packages" class="level3">
 <h3 class="anchored" data-anchor-id="install-packages">Install Packages:</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"zoo"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rnaturalearth"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ecmwfr"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"lubridate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+</section>
 </section>
 <section id="load-libraries" class="level1">
 <h1>Load Libraries:</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AOI)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ecmwfr)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="integrating-information-from-simple-features" class="level1">
 <h1>Integrating information from simple features</h1>
-<p>Import the file FluxNet_Sites_2024.csv and call it FluxNet</p>
+<p>Import the file FluxNet_Sites_2024.csv and call it fluxnet_sites</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'data/FluxNet_Sites_2024.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/FluxNet_Sites_2024.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This dataset includes:</p>
 <table class="caption-top table">
@@ -436,32 +486,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Subset file to incluse only sites measuring methane:</p>
+<p>Subset file to include only sites measuring methane:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4 <span class="ot">&lt;-</span> FluxNet <span class="sc">%&gt;%</span> <span class="fu">filter</span>( FLUXNET.CH4 <span class="sc">==</span> <span class="st">"CC-BY-4.0"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4 <span class="ot">&lt;-</span> fluxnet_sites <span class="sc">%&gt;%</span> <span class="fu">filter</span>(FLUXNET.CH4 <span class="sc">==</span> <span class="st">"CC-BY-4.0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Now that you have all of the sites measuring methane, convert FLUXNET.CH4 to a sf and call it FLUXNET.CH4.shp:</p>
+<p>Now that you have all of the sites measuring methane, convert fluxnet_ch4 to a sf and call it fluxnet_ch4_sf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="at">x =</span> FLUXNET.CH4,                         </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LOCATION_LONG"</span>,  <span class="st">"LOCATION_LAT"</span>),</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>FLUXNET.CH4.shp ) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="at">x =</span> fluxnet_ch4,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LOCATION_LONG"</span>, <span class="st">"LOCATION_LAT"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> fluxnet_ch4_sf) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_integration_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="data_integration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>check the class and that the geometry is valid:</p>
+<p>Check the class and that the geometry is valid:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "sf"         "data.frame"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 [16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
@@ -473,53 +523,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Create a global sf and extract the country into the sf</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>global <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(global)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>world_sf <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continent <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Europe"</span>, <span class="st">"Asia"</span>, <span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Africa"</span>, <span class="st">"Oceania"</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(world_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [13] FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [25]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [37]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [49]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [61]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [73]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [85]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
- [97]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-[109]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-[121]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-[133]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-[145]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-[157]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
-[169]  TRUE  TRUE  TRUE</code></pre>
+<pre><code>  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+ [16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+ [31] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+ [46] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+ [61] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+ [76] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+ [91] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[106] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[121] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[136] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[151] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[166] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[181] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[196] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[211] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[226] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
 </div>
 </div>
 <p>Make the CRS match:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="st">'+init=epsg:4087'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is
-deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>global <span class="ot">=</span> <span class="fu">st_transform</span>(global, <span class="at">crs=</span> <span class="st">'+init=epsg:4087'</span>) <span class="sc">%&gt;%</span> <span class="fu">st_make_valid</span>()</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> global) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="dv">4087</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>world_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(world_sf, <span class="at">crs =</span> <span class="dv">4087</span>) <span class="sc">%&gt;%</span> <span class="fu">st_make_valid</span>()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> world_sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="data_integration_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="data_integration_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Use the st_intersect to extract the country of each tower site:</p>
+<p>Use st_intersection to extract the country of each tower site. A straight <code>st_intersection()</code> can return more or fewer rows than you started with (a point can sit exactly on a shared border and match two polygons, or fall outside all of them), so join back on <code>SITE_ID</code> instead of assigning the result directly:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>( global, FLUXNET.CH4.shp)<span class="sc">$</span>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>country_lookup <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(world_sf, fluxnet_ch4_sf) <span class="sc">%&gt;%</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SITE_ID, name) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(SITE_ID, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: attribute variables are assumed to be spatially constant throughout
 all geometries</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> fluxnet_ch4_sf <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_lookup, <span class="at">by =</span> <span class="st">"SITE_ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">country =</span> name)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>country</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Austria"                  "Brazil"                  
  [3] "Botswana"                 "Botswana"                
@@ -530,7 +586,7 @@ all geometries</code></pre>
 [13] "Germany"                  "Germany"                 
 [15] "Finland"                  "Finland"                 
 [17] "Finland"                  "Finland"                 
-[19] "France"                   "China"                   
+[19] "France"                   "Hong Kong"               
 [21] "Indonesia"                "Italy"                   
 [23] "Italy"                    "Japan"                   
 [25] "Japan"                    "Japan"                   
@@ -551,11 +607,11 @@ all geometries</code></pre>
 [55] "United States of America" "United States of America"
 [57] "United States of America" "United States of America"
 [59] "United States of America" "United States of America"
-[61] "United States of America" "United States of America"
+[61] "United States of America" NA                        
 [63] "United States of America" "United States of America"
 [65] "United States of America" "United States of America"
 [67] "United States of America" "United States of America"
-[69] "United States of America" "United States of America"
+[69] NA                         NA                        
 [71] "United States of America" "United States of America"
 [73] "United States of America" "United States of America"
 [75] "United States of America" "United States of America"
@@ -568,25 +624,25 @@ all geometries</code></pre>
 <h1>Integrating information from rasters</h1>
 <p>Import the file GlobalSoil_grids.tif :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>soil <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/GlobalSoil_grids.tif"</span> )</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>soil</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>soil <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/GlobalSoil_grids.tif"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>soil</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster 
-dimensions  : 18000, 43200, 3  (nrow, ncol, nlyr)
+<pre><code>class       : SpatRaster
+size        : 18000, 43200, 3  (nrow, ncol, nlyr)
 resolution  : 0.008333333, 0.008333333  (x, y)
 extent      : -180, 180, -60, 90  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326) 
-source      : GlobalSoil_grids.tif 
-names       : BulkDensity,   PH, Nitrogen 
-min values  :         0.1,  3.5,      0.0 
-max values  :         1.8, 10.0,     28.3 
-unit        :     kg dm-3,  H2O,     kg-1 </code></pre>
+coord. ref. : lon/lat WGS 84 (EPSG:4326)
+source      : GlobalSoil_grids.tif
+names       : BulkDensity,  PH,  Nitrogen
+min values  :         0.1, 3.5,         0
+max values  :         1.8,  10, 28.299999
+unit        :     kg dm-3, H2O,      kg-1</code></pre>
 </div>
 </div>
-<p>Transform FLUXNET.CH4.shp to the same CRS as soils:</p>
+<p>Transform fluxnet_ch4_sf to the same CRS as soil:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(soil))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="fu">crs</span>(soil))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 79 features and 9 fields
 Geometry type: POINT
@@ -605,23 +661,23 @@ First 10 features:
 8   CH-Dav                     Davos   CC-BY-4.0   CC-BY-4.0          1639  ENF
 9   CH-Oe2            Oensingen crop   CC-BY-4.0   CC-BY-4.0           452  CRO
 10  CN-Hgu                  Hongyuan               CC-BY-4.0          3500  GRA
-    MAT    MAP                  geometry     Country
-1   6.5  852.0   POINT (11.3175 47.1167)     Austria
-2  24.9 1486.0   POINT (-56.412 -16.498)      Brazil
-3  21.0  460.0  POINT (22.3711 -18.9647)    Botswana
-4  21.0  460.0  POINT (23.1792 -19.5481)    Botswana
-5  -2.8  388.0 POINT (-121.2984 61.3089)      Canada
-6  -2.8  387.6 POINT (-121.2992 61.3079)      Canada
-7   9.5 1136.0    POINT (8.4104 47.2102) Switzerland
-8   2.8 1062.0    POINT (9.8559 46.8153) Switzerland
-9   9.8 1155.0    POINT (7.7337 47.2864) Switzerland
-10  1.5  747.0    POINT (102.59 32.8453)       China</code></pre>
+    MAT    MAP     country                  geometry
+1   6.5  852.0     Austria   POINT (11.3175 47.1167)
+2  24.9 1486.0      Brazil   POINT (-56.412 -16.498)
+3  21.0  460.0    Botswana  POINT (22.3711 -18.9647)
+4  21.0  460.0    Botswana  POINT (23.1792 -19.5481)
+5  -2.8  388.0      Canada POINT (-121.2984 61.3089)
+6  -2.8  387.6      Canada POINT (-121.2992 61.3079)
+7   9.5 1136.0 Switzerland    POINT (8.4104 47.2102)
+8   2.8 1062.0 Switzerland    POINT (9.8559 46.8153)
+9   9.8 1155.0 Switzerland    POINT (7.7337 47.2864)
+10  1.5  747.0       China    POINT (102.59 32.8453)</code></pre>
 </div>
 </div>
-<p>Extract soil information to FLUXNET.CH4.shp:</p>
+<p>Extract soil information to fluxnet_ch4_sf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_BulkDensity <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>BulkDensity</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_BulkDensity</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>soil_bulk_density <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, fluxnet_ch4_sf)<span class="sc">$</span>BulkDensity</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>soil_bulk_density</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1.0 1.3 1.3 1.4 1.0 1.0 1.2 1.0 1.2 1.2 1.1 1.0 1.1 1.2 0.6 0.6 0.6 0.6 1.2
 [20] 0.8 1.0 1.3 1.2 1.0 1.1  NA 1.3 1.1 0.9 0.9 1.2 0.9 0.9 0.9 0.6 0.6  NA 0.5
@@ -629,8 +685,8 @@ First 10 features:
 [58] 1.2 1.1 1.2 1.2 1.2 1.3 0.4 0.5 1.3 1.3 1.1 1.2 1.2 1.4 1.3 1.2 1.2 1.2 1.2
 [77] 1.2 0.6 1.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_PH <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>PH</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_PH</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>soil_ph <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, fluxnet_ch4_sf)<span class="sc">$</span>PH</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>soil_ph</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 5.9 5.6 6.4 6.6 6.3 6.3 6.3 5.0 6.3 6.0 5.3 5.9 5.8 6.4 4.4 4.8 4.8 4.8 5.3
 [20] 5.3 4.7 7.4 6.7 5.3 5.9  NA 6.5 4.6 6.2 5.4 6.1 6.0 6.0 6.0 5.1 4.6  NA 5.9
@@ -638,8 +694,8 @@ First 10 features:
 [58] 5.4 4.9 5.2 5.9 6.9 4.5 5.4 5.0 6.2 6.2 5.1 7.0 7.0 6.6 5.1 6.2 6.0 6.0 6.2
 [77] 6.1 5.8 6.8</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_Nitrogen <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, FLUXNET.CH4.shp)<span class="sc">$</span>Nitrogen</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>SOIL_Nitrogen </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>soil_nitrogen <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(soil, fluxnet_ch4_sf)<span class="sc">$</span>Nitrogen</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>soil_nitrogen</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  8.8  2.6  1.1  1.7  2.6  2.7  8.5  9.0  6.9  7.1  7.8  9.5  7.4  8.7 11.1
 [16]  9.5 11.4 11.0  6.4  4.1  3.2  3.8  5.5  9.0  6.0   NA  5.7  4.4  7.5  6.1
@@ -651,25 +707,25 @@ First 10 features:
 </div>
 <p>Import the climate information (GlobalClimate.tif) :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>climate <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/GlobalClimate.tif"</span> )</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>climate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>climate <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/GlobalClimate.tif"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>climate</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster 
-dimensions  : 3343, 8640, 4  (nrow, ncol, nlyr)
+<pre><code>class       : SpatRaster
+size        : 3343, 8640, 4  (nrow, ncol, nlyr)
 resolution  : 0.04166667, 0.04166667  (x, y)
 extent      : -180, 180, -55.625, 83.66667  (xmin, xmax, ymin, ymax)
-coord. ref. : +proj=longlat +ellps=WGS84 +no_defs 
-source      : GlobalClimate.tif 
-names       :     MAP,      TMIN,      TMAX,       MAT 
-min values  :     0.0,     -50.4,      -9.3, -27.10833 
-max values  : 12390.2,      26.6,      53.7,  34.14167 
-unit        :      mm, Degrees C, Degrees C, Degrees C </code></pre>
+coord. ref. : +proj=longlat +ellps=WGS84 +no_defs
+source      : GlobalClimate.tif
+names       :          MAP,       TMIN,      TMAX,        MAT
+min values  :            0, -50.400002,      -9.3, -27.108334
+max values  : 12390.200195,       26.6, 53.700001,  34.141666
+unit        :           mm,  Degrees C, Degrees C,  Degrees C</code></pre>
 </div>
 </div>
-<p>Transform FLUXNET.CH4.shp to the same CRS as climate:</p>
+<p>Transform fluxnet_ch4_sf to the same CRS as climate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(climate))</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="fu">crs</span>(climate))</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 79 features and 12 fields
 Geometry type: POINT
@@ -704,18 +760,18 @@ First 10 features:
 8   CH-Dav                     Davos   CC-BY-4.0   CC-BY-4.0          1639  ENF
 9   CH-Oe2            Oensingen crop   CC-BY-4.0   CC-BY-4.0           452  CRO
 10  CN-Hgu                  Hongyuan               CC-BY-4.0          3500  GRA
-    MAT    MAP                  geometry     Country SOIL_BulkDensity SOIL_PH
-1   6.5  852.0   POINT (11.3175 47.1167)     Austria              1.0     5.9
-2  24.9 1486.0   POINT (-56.412 -16.498)      Brazil              1.3     5.6
-3  21.0  460.0  POINT (22.3711 -18.9647)    Botswana              1.3     6.4
-4  21.0  460.0  POINT (23.1792 -19.5481)    Botswana              1.4     6.6
-5  -2.8  388.0 POINT (-121.2984 61.3089)      Canada              1.0     6.3
-6  -2.8  387.6 POINT (-121.2992 61.3079)      Canada              1.0     6.3
-7   9.5 1136.0    POINT (8.4104 47.2102) Switzerland              1.2     6.3
-8   2.8 1062.0    POINT (9.8559 46.8153) Switzerland              1.0     5.0
-9   9.8 1155.0    POINT (7.7337 47.2864) Switzerland              1.2     6.3
-10  1.5  747.0    POINT (102.59 32.8453)       China              1.2     6.0
-   SOIL_Nitrogen
+    MAT    MAP     country                  geometry soil_bulk_density soil_ph
+1   6.5  852.0     Austria   POINT (11.3175 47.1167)               1.0     5.9
+2  24.9 1486.0      Brazil   POINT (-56.412 -16.498)               1.3     5.6
+3  21.0  460.0    Botswana  POINT (22.3711 -18.9647)               1.3     6.4
+4  21.0  460.0    Botswana  POINT (23.1792 -19.5481)               1.4     6.6
+5  -2.8  388.0      Canada POINT (-121.2984 61.3089)               1.0     6.3
+6  -2.8  387.6      Canada POINT (-121.2992 61.3079)               1.0     6.3
+7   9.5 1136.0 Switzerland    POINT (8.4104 47.2102)               1.2     6.3
+8   2.8 1062.0 Switzerland    POINT (9.8559 46.8153)               1.0     5.0
+9   9.8 1155.0 Switzerland    POINT (7.7337 47.2864)               1.2     6.3
+10  1.5  747.0       China    POINT (102.59 32.8453)               1.2     6.0
+   soil_nitrogen
 1            8.8
 2            2.6
 3            1.1
@@ -730,19 +786,19 @@ First 10 features:
 </div>
 <p>Look at the data that is available in climate:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(climate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "MAP"  "TMIN" "TMAX" "MAT" </code></pre>
 </div>
 </div>
-<p>Extract climate information to FLUXNET.CH4.shp:</p>
+<p>Extract climate information to fluxnet_ch4_sf. Note these are named with a <code>climate_</code> prefix rather than reusing <code>MAT</code>/<code>MAP</code> — <code>fluxnet_sites</code> already has site-reported <code>MAT</code>/<code>MAP</code> columns, and this keeps the raster-extracted values available for comparison instead of silently overwriting them:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAP <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>MAP</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMIN <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>TMIN</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMAX <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>TMAX</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAT <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, FLUXNET.CH4.shp)<span class="sc">$</span>MAT</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAP</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_map <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, fluxnet_ch4_sf)<span class="sc">$</span>MAP</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_tmin <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, fluxnet_ch4_sf)<span class="sc">$</span>TMIN</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_tmax <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, fluxnet_ch4_sf)<span class="sc">$</span>TMAX</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_mat <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate, fluxnet_ch4_sf)<span class="sc">$</span>MAT</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_map</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1000.3 1322.5  447.9  418.3  430.0  430.0 1208.7 1093.9 1151.7  696.5
 [11]  591.8  608.0 1104.9  620.9  676.6  551.0  673.7  678.9  709.1 1854.9
@@ -753,7 +809,7 @@ First 10 features:
 [61] 1204.9  362.9 1322.4  118.0  427.1  968.5  921.8  822.6  346.8  346.8
 [71]  543.0 1130.0  377.1  377.1  377.1  377.1  377.1  293.5  902.0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMIN</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_tmin</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  -7.2  14.7   8.2   9.0 -26.9 -26.9  -2.3  -7.8  -2.0 -17.8  -2.6  -1.3
 [13]  -4.0  -2.3 -11.6 -17.8 -11.7 -11.6   0.3  12.1  23.0   5.5  -2.3 -11.6
@@ -763,7 +819,7 @@ First 10 features:
 [61]  -4.2   3.6   2.0 -30.0 -20.6  -6.4  -7.1 -16.7   3.6   3.6   3.7  -3.4
 [73]   3.2   3.2   3.2   3.2   3.2 -25.0  -7.2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>TMAX</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_tmax</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 19.6 34.1 35.6 35.5 23.2 23.2 24.7 16.1 24.5 18.8 22.6 21.0 23.6 21.9 21.5
 [16] 18.0 21.8 21.6 25.7 32.0 32.2 30.5 29.4 25.3 30.2 27.7 28.2 32.3 22.2 23.8
@@ -772,7 +828,7 @@ First 10 features:
 [61] 29.7 30.6 30.9  9.4 16.2 29.4 28.3 24.6 30.9 30.9 29.8 30.2 31.2 31.2 31.2
 [76] 31.2 31.2 22.3 28.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MAT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>climate_mat</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]   5.3000002  25.4583340  23.7000008  23.9291668  -2.4583333  -2.4583333
  [7]   9.8541670   3.4625001   9.5000000   2.7291667   8.5916662   8.8041668
@@ -792,36 +848,36 @@ First 10 features:
 </div>
 <p>Import elevation information (Elevation.tif):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>elevation <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/Elevation.tif"</span> )</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>elevation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>elevation <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/Elevation.tif"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>elevation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster 
-dimensions  : 4320, 8640, 1  (nrow, ncol, nlyr)
+<pre><code>class       : SpatRaster
+size        : 4320, 8640, 1  (nrow, ncol, nlyr)
 resolution  : 0.04166667, 0.04166667  (x, y)
 extent      : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326) 
-source      : Elevation.tif 
-name        : wc2.1_2.5m_elev 
-min value   :            -415 
-max value   :            7412 
-unit        :               m </code></pre>
+coord. ref. : lon/lat WGS 84 (EPSG:4326)
+source      : Elevation.tif
+name        : wc2.1_2.5m_elev
+min value   :            -415
+max value   :            7412
+unit        : m</code></pre>
 </div>
 </div>
-<p>Transform FLUXNET.CH4.shp to the same CRS as elevation:</p>
+<p>Transform fluxnet_ch4_sf to the same CRS as elevation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="at">crs=</span> <span class="fu">crs</span>(elevation))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="fu">crs</span>(elevation))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Look at the data that is available in elevation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(elevation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(elevation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "wc2.1_2.5m_elev"</code></pre>
 </div>
 </div>
-<p>Extract elevation information to FLUXNET.CH4.shp:</p>
+<p>Extract elevation information to fluxnet_ch4_sf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>ELEVATION <span class="ot">=</span> terra<span class="sc">::</span><span class="fu">extract</span>(elevation, FLUXNET.CH4.shp)<span class="sc">$</span>wc2<span class="fl">.1</span>_2<span class="fl">.5</span>m_elev</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>ELEVATION </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>elevation_m <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(elevation, fluxnet_ch4_sf)<span class="sc">$</span>wc2<span class="fl">.1</span>_2<span class="fl">.5</span>m_elev</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>elevation_m</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] 1445  126  981  950  244  244  410 1738  462 3506   89    7  592   11  167
 [16]  320  172  180  157    5   15    3   84   15   18  853  174   21   -2    7
@@ -837,10 +893,10 @@ unit        :               m </code></pre>
 <p>We can combine columns from two (or more) tables together. This can be achieved using the join family of functions in dplyr. There are different types of joins that will result in different outcomes.</p>
 <p><code>inner_join()</code> includes all rows that appear in both the first data frame (x) and the second data frame (y).</p>
 <p><code>left_join()</code> returns all rows from x based on matching rows on shared columns in y. <code>right_join()</code> is the companion to <code>left_join()</code>, but returns all rows included in y based on matching rows on shared columns in x.</p>
-<p>Import APPEEARS file where I requested MODIS NDVI and EVI data for all FLUXNET_sites (Data/ENV720-MOD13A3-061-results.csv):</p>
+<p>Import APPEEARS file where I requested MODIS NDVI and EVI data for all FLUXNET sites (data/ENV720-MOD13A3-061-results.csv):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>FLUXNET <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/ENV720-MOD13A3-061-results.csv"</span>)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>modis_vi <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/ENV720-MOD13A3-061-results.csv"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(modis_vi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "ID"                                                                         
  [2] "Latitude"                                                                   
@@ -873,60 +929,64 @@ unit        :               m </code></pre>
 [29] "MOD13A3_061__1_km_monthly_VI_Quality_Possible_shadow_Description"           </code></pre>
 </div>
 </div>
-<p>Subset the FLUXNET dataset to include only the columns of interest and rename them:</p>
+<p>Subset the modis_vi dataset to include only the columns of interest and rename them:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.sub <span class="ot">&lt;-</span> FLUXNET <span class="sc">%&gt;%</span> <span class="fu">select</span>( <span class="st">"ID"</span>,</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="st">"Date"</span>,</span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="st">"MOD13A3_061__1_km_monthly_EVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_NDVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_VI_Quality"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>( <span class="at">SITE_ID =</span> ID,</span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="at">EVI =</span> MOD13A3_061__1_km_monthly_EVI,</span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="at">NDVI =</span> MOD13A3_061__1_km_monthly_NDVI, </span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="at">QAQC =</span> MOD13A3_061__1_km_monthly_VI_Quality ) <span class="sc">%&gt;%</span> <span class="fu">filter</span>( QAQC <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.sub)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ndvi <span class="ot">&lt;-</span> modis_vi <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="st">"ID"</span>,</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"Date"</span>,</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="st">"MOD13A3_061__1_km_monthly_EVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_NDVI"</span>, <span class="st">"MOD13A3_061__1_km_monthly_VI_Quality"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">SITE_ID =</span> ID,</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">EVI =</span> MOD13A3_061__1_km_monthly_EVI,</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">NDVI =</span> MOD13A3_061__1_km_monthly_NDVI,</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">QAQC =</span> MOD13A3_061__1_km_monthly_VI_Quality) <span class="sc">%&gt;%</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(QAQC <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fluxnet_ndvi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "SITE_ID" "Date"    "EVI"     "NDVI"    "QAQC"   </code></pre>
 </div>
 </div>
-<p>Make the FLUXNET.CH4.shp vector a dataframe:</p>
+<p>Make the fluxnet_ch4_sf vector a dataframe:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4 <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>( FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Identify the column that you should use to join the datasets FLUXNET_CH4 and FLUXNET.sub:</p>
+<p>Identify the column that you should use to join the datasets fluxnet_ch4_df and fluxnet_ndvi:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4<span class="sc">$</span>SITE_ID</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.sub<span class="sc">$</span>SITE_ID</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_df<span class="sc">$</span>SITE_ID</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ndvi<span class="sc">$</span>SITE_ID</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Use left_join because you want to keep all the data from FLUXNET_CH4 and only the sites in FLUXNET.sub that match the sites in FLUXNET_CH4:</p>
+<p>Use left_join because you want to keep all the data from fluxnet_ch4_df and only the sites in fluxnet_ndvi that match the sites in fluxnet_ch4_df:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final <span class="ot">&lt;-</span> FLUXNET_CH4 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>( FLUXNET.sub, <span class="at">by=</span> <span class="st">'SITE_ID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_final <span class="ot">&lt;-</span> fluxnet_ch4_df <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(fluxnet_ndvi, <span class="at">by =</span> <span class="st">"SITE_ID"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Check to make sure the list of sites matches:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>( <span class="fu">unique</span>(FLUXNET_CH4<span class="sc">$</span>SITE_ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(fluxnet_ch4_df<span class="sc">$</span>SITE_ID))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 79</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(FLUXNET_CH4_final<span class="sc">$</span>SITE_ID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(fluxnet_ch4_final<span class="sc">$</span>SITE_ID))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 79</code></pre>
 </div>
 </div>
 <p>Import the monthly FLUX data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>( <span class="st">"data/FLUXNET_FLUXES.RDATA"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/FLUXNET_FLUXES.RDATA"</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The saved object is called FLUXNET.flux; alias it to match this course's naming convention</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>fluxnet_flux <span class="ot">&lt;-</span> FLUXNET.flux</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Look at the flux file “FLUXNET.flux”:</p>
+<p>Look at the flux file “fluxnet_flux”:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( FLUXNET.flux)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet_flux)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    YearMon         SITE                P_F               TA_F        
- Min.   :2006   Length:2370        Min.   :   0.00   Min.   :-37.188  
- 1st Qu.:2014   Class :character   1st Qu.:  14.42   1st Qu.:  2.863  
- Median :2015   Mode  :character   Median :  43.10   Median : 11.123  
- Mean   :2015                      Mean   :  69.08   Mean   :  9.543  
- 3rd Qu.:2017                      3rd Qu.:  84.12   3rd Qu.: 17.540  
- Max.   :2019                      Max.   :1094.02   Max.   : 31.280  
+<pre><code>    YearMon            SITE           P_F               TA_F        
+ Min.   :2006   Length   :2370   Min.   :   0.00   Min.   :-37.188  
+ 1st Qu.:2014   N.unique :  73   1st Qu.:  14.42   1st Qu.:  2.863  
+ Median :2015   N.blank  :   0   Median :  43.10   Median : 11.123  
+ Mean   :2015   Min.nchar:   6   Mean   :  69.08   Mean   :  9.543  
+ 3rd Qu.:2017   Max.nchar:   6   3rd Qu.:  84.12   3rd Qu.: 17.540  
+ Max.   :2019                    Max.   :1094.02   Max.   : 31.280  
      VPD_F           NEE_F_gC          FCH4_F_gC      
  Min.   : 0.000   Min.   :-383.426   Min.   :-1.8194  
  1st Qu.: 1.635   1st Qu.: -24.661   1st Qu.: 0.1008  
@@ -935,301 +995,508 @@ unit        :               m </code></pre>
  3rd Qu.: 6.722   3rd Qu.:  19.432   3rd Qu.: 1.4318  
  Max.   :29.075   Max.   :1251.787   Max.   :28.3012  </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.flux)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fluxnet_flux)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "YearMon"   "SITE"      "P_F"       "TA_F"      "VPD_F"     "NEE_F_gC" 
 [7] "FCH4_F_gC"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make SITE ID:</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>SITE_ID <span class="ot">&lt;-</span> FLUXNET.flux<span class="sc">$</span>SITE</span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>SITE_ID</span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a good column to join based on:</span></span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>YearMon</span>
-<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>FLUXNET.flux<span class="sc">$</span>YearMon</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make SITE ID:</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>fluxnet_flux<span class="sc">$</span>SITE_ID <span class="ot">&lt;-</span> fluxnet_flux<span class="sc">$</span>SITE</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>fluxnet_flux<span class="sc">$</span>SITE_ID</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a good column to join based on:</span></span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>fluxnet_flux<span class="sc">$</span>YearMon</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>In your site file, convert the date to Year-Month and use this column to join it with the flux file “FLUXNET.flux”:</p>
+<p>In your site file, convert the date to Year-Month and use this column to join it with the flux file “fluxnet_flux”:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET_CH4_final)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fluxnet_ch4_final)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "SITE_ID"          "SITE_NAME"        "FLUXNET2015"      "FLUXNET.CH4"     
- [5] "LOCATION_ELEV"    "IGBP"             "MAT"              "MAP"             
- [9] "geometry"         "Country"          "SOIL_BulkDensity" "SOIL_PH"         
-[13] "SOIL_Nitrogen"    "TMIN"             "TMAX"             "ELEVATION"       
-[17] "Date"             "EVI"              "NDVI"             "QAQC"            </code></pre>
+<pre><code> [1] "SITE_ID"           "SITE_NAME"         "FLUXNET2015"      
+ [4] "FLUXNET.CH4"       "LOCATION_ELEV"     "IGBP"             
+ [7] "MAT"               "MAP"               "country"          
+[10] "geometry"          "soil_bulk_density" "soil_ph"          
+[13] "soil_nitrogen"     "climate_map"       "climate_tmin"     
+[16] "climate_tmax"      "climate_mat"       "elevation_m"      
+[19] "Date"              "EVI"               "NDVI"             
+[22] "QAQC"             </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>( FLUXNET_CH4_final<span class="sc">$</span>Date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet_ch4_final<span class="sc">$</span>Date)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   Length     Class      Mode 
-    12264 character character </code></pre>
+<pre><code>   Length  N.unique   N.blank Min.nchar Max.nchar 
+    12264       156         0        10        10 </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Date:</span></span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>Date.f <span class="ot">&lt;-</span>FLUXNET_CH4_final<span class="sc">$</span>Date <span class="sc">%&gt;%</span> <span class="fu">as.Date</span>(<span class="at">format=</span><span class="st">'%Y-%m-%d'</span>)</span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Yearmon:</span></span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>FLUXNET_CH4_final<span class="sc">$</span>YearMon <span class="ot">&lt;-</span> FLUXNET_CH4_final<span class="sc">$</span>Date.f <span class="sc">%&gt;%</span> zoo<span class="sc">::</span><span class="fu">as.yearmon</span>( <span class="st">"%m-%Y"</span>)</span>
-<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET_CH4_final<span class="sc">$</span>YearMon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Date:</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_final<span class="sc">$</span>date_formatted <span class="ot">&lt;-</span> fluxnet_ch4_final<span class="sc">$</span>Date <span class="sc">%&gt;%</span> <span class="fu">as.Date</span>(<span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Format as a Yearmon:</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_final<span class="sc">$</span>YearMon <span class="ot">&lt;-</span> fluxnet_ch4_final<span class="sc">$</span>date_formatted <span class="sc">%&gt;%</span> zoo<span class="sc">::</span><span class="fu">as.yearmon</span>(<span class="st">"%m-%Y"</span>)</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fluxnet_ch4_final<span class="sc">$</span>YearMon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "yearmon"</code></pre>
 </div>
 </div>
 <p>Join the two files:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>fluxes_month <span class="ot">&lt;-</span> FLUXNET.flux <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(FLUXNET_CH4_final , <span class="at">by =</span> <span class="fu">c</span> (<span class="st">'YearMon'</span>, <span class="st">'SITE_ID'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>fluxes_month <span class="ot">&lt;-</span> fluxnet_flux <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(fluxnet_ch4_final, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"YearMon"</span>, <span class="st">"SITE_ID"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Save your file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fluxes_month, <span class="at">file=</span><span class="st">"data/products/Monthly_Fluxes.RDATA"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fluxes_month, <span class="at">file =</span> <span class="st">"data/products/Monthly_Fluxes.RDATA"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="validating-tower-measurements-with-era5-reanalysis-climate-data" class="level1">
+<h1>Validating tower measurements with ERA5 reanalysis climate data</h1>
+<p>The static climate layer you extracted earlier (GlobalClimate.tif) gives each site a single long-term average — useful for describing a site, but not for matching a specific month. <code>fluxnet_flux</code> already includes tower-measured monthly precipitation (P_F) and temperature (TA_F), recorded by instruments at each site. Here we’ll download ERA5, a global atmospheric reanalysis produced by the European Centre for Medium-Range Weather Forecasts (ECMWF), and compare its monthly values against what the towers actually measured. ERA5 is genuinely global and covers specific months back to 1940, which is why we’re using it here instead of the climate normals from earlier workshops — and the same download will double as the input for your spatial projection workshop.</p>
+<p>Register your CDS key for this R session, if you haven’t already (see the setup instructions at the top of this workshop):</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wf_set_key</span>(<span class="at">key =</span> <span class="st">"paste-your-personal-access-token-here"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="download-monthly-era5-data" class="level3">
+<h3 class="anchored" data-anchor-id="download-monthly-era5-data">Download monthly ERA5 data</h3>
+<p>We need monthly precipitation and temperature for every year covered by <code>fluxnet_flux</code>:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(fluxnet_flux<span class="sc">$</span>YearMon)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Jan 2006" "Dec 2018"</code></pre>
+</div>
+</div>
+<p>Build one request per year (global extent, both variables), then submit them together with <code>wf_request_batch()</code>, which runs several requests at once instead of waiting for each one in turn:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>era5_years <span class="ot">&lt;-</span> <span class="dv">2006</span><span class="sc">:</span><span class="dv">2018</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>era5_requests <span class="ot">&lt;-</span> <span class="fu">lapply</span>(era5_years, <span class="cf">function</span>(yr) {</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">dataset_short_name =</span> <span class="st">"reanalysis-era5-single-levels-monthly-means"</span>,</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">product_type =</span> <span class="st">"monthly_averaged_reanalysis"</span>,</span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"2m_temperature"</span>, <span class="st">"total_precipitation"</span>),</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">as.character</span>(yr),</span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>),</span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> <span class="st">"00:00"</span>,</span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">data_format =</span> <span class="st">"netcdf"</span>,</span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">target =</span> <span class="fu">paste0</span>(<span class="st">"era5_"</span>, yr, <span class="st">".nc"</span>)</span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>era5_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"products"</span>, <span class="st">"era5"</span>)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(era5_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">wf_request_batch</span>(<span class="at">request_list =</span> era5_requests, <span class="at">workers =</span> <span class="dv">2</span>, <span class="at">retry =</span> <span class="dv">30</span>, <span class="at">user =</span> <span class="st">"ecmwfr"</span>, <span class="at">path =</span> era5_dir)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>This step takes a few minutes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each request is processed by ECMWF’s queue rather than downloaded instantly — the whole batch (13 years, global, 2 variables) typically finishes in a few minutes, but can take longer if the CDS service is busy. You only need to run it once; the files are saved to <code>data/products/era5/</code>. Don’t raise <code>workers</code> or lower <code>retry</code> to try to speed this up — polling too aggressively gets your requests throttled by CDS (“check your retry rate”) rather than completed faster.</p>
+</div>
+</div>
+<p>Each year downloads as a zip containing one NetCDF file per variable. Unzip them into per-year folders so files with the same name across years don’t collide:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>era5_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"products"</span>, <span class="st">"era5"</span>)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>era5_zips <span class="ot">&lt;-</span> <span class="fu">list.files</span>(era5_dir, <span class="at">pattern =</span> <span class="st">"[.]zip$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (z <span class="cf">in</span> era5_zips) {</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unzip</span>(z, <span class="at">exdir =</span> tools<span class="sc">::</span><span class="fu">file_path_sans_ext</span>(z))</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Read each variable’s files across all years into one SpatRaster stack, in chronological order:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>era5_ppt_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(era5_dir, <span class="at">pattern =</span> <span class="st">"avgad[.]nc$"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>era5_tmean_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(era5_dir, <span class="at">pattern =</span> <span class="st">"avgua[.]nc$"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">sort</span>()</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>era5_ppt_raw <span class="ot">&lt;-</span> <span class="fu">rast</span>(era5_ppt_files)</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>era5_tmean_raw <span class="ot">&lt;-</span> <span class="fu">rast</span>(era5_tmean_files)</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a><span class="fu">nlyr</span>(era5_ppt_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 156</code></pre>
+</div>
+</div>
+<p>ERA5’s global grid runs longitude 0-360 degrees, but our site coordinates use the standard -180 to 180 degree convention. <code>terra::rotate()</code> converts it so the two line up:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>era5_ppt_raw <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rotate</span>(era5_ppt_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+|---------|---------|---------|---------|
+=========================================
+                                          </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>era5_tmean_raw <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rotate</span>(era5_tmean_raw)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+|---------|---------|---------|---------|
+=========================================
+                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="convert-units-to-match-p_f-and-ta_f" class="level3">
+<h3 class="anchored" data-anchor-id="convert-units-to-match-p_f-and-ta_f">Convert units to match P_F and TA_F</h3>
+<p><code>total_precipitation</code> in this product is a mean <em>daily</em> rate in meters, not a monthly total, so we multiply by 1000 (meters to mm) and by the number of days in that layer’s month:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>era5_ppt_mm <span class="ot">&lt;-</span> era5_ppt_raw <span class="sc">*</span> <span class="dv">1000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+|---------|---------|---------|---------|
+=========================================
+                                          </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>era5_ppt_monthly <span class="ot">&lt;-</span> era5_ppt_mm <span class="sc">*</span> lubridate<span class="sc">::</span><span class="fu">days_in_month</span>(terra<span class="sc">::</span><span class="fu">time</span>(era5_ppt_raw))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+|---------|---------|---------|---------|
+=========================================
+                                          </code></pre>
+</div>
+</div>
+<p><code>2m_temperature</code> is already a monthly mean, in Kelvin — just convert to Celsius:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>era5_tmean_c <span class="ot">&lt;-</span> era5_tmean_raw <span class="sc">-</span> <span class="fl">273.15</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+|---------|---------|---------|---------|
+=========================================
+                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="extract-monthly-values-at-each-tower-site" class="level3">
+<h3 class="anchored" data-anchor-id="extract-monthly-values-at-each-tower-site">Extract monthly values at each tower site</h3>
+<p>Name each layer with its year-month so we can pivot the extracted values into a long, joinable format:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(era5_ppt_monthly) <span class="ot">&lt;-</span> <span class="fu">as.character</span>(zoo<span class="sc">::</span><span class="fu">as.yearmon</span>(terra<span class="sc">::</span><span class="fu">time</span>(era5_ppt_raw)))</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(era5_tmean_c) <span class="ot">&lt;-</span> <span class="fu">as.character</span>(zoo<span class="sc">::</span><span class="fu">as.yearmon</span>(terra<span class="sc">::</span><span class="fu">time</span>(era5_tmean_raw)))</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="fu">crs</span>(era5_ppt_monthly))</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>era5_ppt_long <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(era5_ppt_monthly, fluxnet_ch4_sf, <span class="at">ID =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SITE_ID =</span> fluxnet_ch4_sf<span class="sc">$</span>SITE_ID) <span class="sc">%&gt;%</span></span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>SITE_ID, <span class="at">names_to =</span> <span class="st">"YearMon"</span>, <span class="at">values_to =</span> <span class="st">"era5_p_f"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YearMon =</span> zoo<span class="sc">::</span><span class="fu">as.yearmon</span>(YearMon))</span>
+<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a>era5_tmean_long <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(era5_tmean_c, fluxnet_ch4_sf, <span class="at">ID =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-12"><a href="#cb92-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SITE_ID =</span> fluxnet_ch4_sf<span class="sc">$</span>SITE_ID) <span class="sc">%&gt;%</span></span>
+<span id="cb92-13"><a href="#cb92-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>SITE_ID, <span class="at">names_to =</span> <span class="st">"YearMon"</span>, <span class="at">values_to =</span> <span class="st">"era5_ta_f"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-14"><a href="#cb92-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YearMon =</span> zoo<span class="sc">::</span><span class="fu">as.yearmon</span>(YearMon))</span>
+<span id="cb92-15"><a href="#cb92-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-16"><a href="#cb92-16" aria-hidden="true" tabindex="-1"></a>era5_monthly <span class="ot">&lt;-</span> era5_ppt_long <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(era5_tmean_long, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SITE_ID"</span>, <span class="st">"YearMon"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Join ERA5 onto the flux data, the same way you joined NDVI/EVI earlier:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>fluxes_month_era5 <span class="ot">&lt;-</span> fluxes_month <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(era5_monthly, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SITE_ID"</span>, <span class="st">"YearMon"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="how-well-does-era5-match-the-tower-measurements" class="level3">
+<h3 class="anchored" data-anchor-id="how-well-does-era5-match-the-tower-measurements">How well does ERA5 match the tower measurements?</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fluxes_month_era5, <span class="fu">aes</span>(<span class="at">x =</span> P_F, <span class="at">y =</span> era5_p_f)) <span class="sc">+</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Tower vs. ERA5 monthly precipitation"</span>,</span>
+<span id="cb94-5"><a href="#cb94-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Tower-measured P_F (mm)"</span>,</span>
+<span id="cb94-6"><a href="#cb94-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ERA5 precipitation (mm)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_integration_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(fluxes_month_era5<span class="sc">$</span>P_F, fluxes_month_era5<span class="sc">$</span>era5_p_f, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5475576</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(fluxes_month_era5, <span class="fu">aes</span>(<span class="at">x =</span> TA_F, <span class="at">y =</span> era5_ta_f)) <span class="sc">+</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Tower vs. ERA5 monthly mean temperature"</span>,</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Tower-measured TA_F (degrees C)"</span>,</span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"ERA5 temperature (degrees C)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="data_integration_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(fluxes_month_era5<span class="sc">$</span>TA_F, fluxes_month_era5<span class="sc">$</span>era5_ta_f, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9889273</code></pre>
+</div>
+</div>
+<p>A tower sits at one exact point and measures its immediate surroundings; ERA5 is a reanalysis model output at ~0.25 degree (~28 km) resolution, so each value represents the average condition across a fairly large grid cell. Expect closer agreement for temperature (which varies smoothly over that distance) than for precipitation (which is often much more localized) — this is exactly the kind of gap to check for before trusting a reanalysis product as a stand-in for missing tower data.</p>
+</section>
+<section id="save-your-work" class="level3">
+<h3 class="anchored" data-anchor-id="save-your-work">Save your work</h3>
+<p>Save the ERA5-enriched dataset, and the two raster stacks so you don’t need to re-download them for the spatial projection workshop:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fluxes_month_era5, <span class="at">file =</span> <span class="st">"data/products/fluxes_month_era5.RDATA"</span>)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(era5_ppt_monthly, <span class="st">"data/products/era5_ppt_monthly.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(era5_tmean_c, <span class="st">"data/products/era5_tmean_monthly.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure. Take note of the difference between joining site based static data versus site based data that changes over time. In your next in class assessment, you will build a file with all of the data you want to use to develop your methane model. To prepare for this, find and obtain your data sources.</p>
 
 
 </section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-          // target, if specified
-          link.setAttribute("target", "_blank");
-          if (link.getAttribute("rel") === null) {
-            link.setAttribute("rel", "noopener");
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
         }
-        return container.innerHTML
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1237,185 +1504,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>Introduction to Simple Features in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -21,8 +24,9 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +37,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -65,15 +69,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-c27a0819adbec56e9d03f3e11156bb0e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -105,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar docked">
+<body class="nav-sidebar docked quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -129,7 +134,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
+      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">ENV 730</a> 
@@ -288,17 +294,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
   <li><a href="#geometrical-operations" id="toc-geometrical-operations" class="nav-link" data-scroll-target="#geometrical-operations">Geometrical Operations</a>
   <ul class="collapse">
-  <li><a href="#change-the-crs-to-a-projected-epgs-with-st_transform." id="toc-change-the-crs-to-a-projected-epgs-with-st_transform." class="nav-link" data-scroll-target="#change-the-crs-to-a-projected-epgs-with-st_transform.">Change the CRS to a projected EPGS with st_transform.</a></li>
+  <li><a href="#change-the-crs-to-a-projected-epsg-with-st_transform." id="toc-change-the-crs-to-a-projected-epsg-with-st_transform." class="nav-link" data-scroll-target="#change-the-crs-to-a-projected-epsg-with-st_transform.">Change the CRS to a projected EPSG with st_transform.</a></li>
   </ul></li>
-  <li><a href="#the-package-aoi" id="toc-the-package-aoi" class="nav-link" data-scroll-target="#the-package-aoi">The package AOI</a>
+  <li><a href="#getting-country-and-state-boundaries-with-rnaturalearth" id="toc-getting-country-and-state-boundaries-with-rnaturalearth" class="nav-link" data-scroll-target="#getting-country-and-state-boundaries-with-rnaturalearth">Getting country and state boundaries with rnaturalearth</a>
   <ul class="collapse">
-  <li><a href="#key-feature-of-the-aoi-package" id="toc-key-feature-of-the-aoi-package" class="nav-link" data-scroll-target="#key-feature-of-the-aoi-package">Key Feature of the AOI Package:</a></li>
-  <li><a href="#key-function-of-the-aoi-package" id="toc-key-function-of-the-aoi-package" class="nav-link" data-scroll-target="#key-function-of-the-aoi-package">Key Function of the AOI Package:</a></li>
-  <li><a href="#what-is-union-t-doing" id="toc-what-is-union-t-doing" class="nav-link" data-scroll-target="#what-is-union-t-doing">What is union =T doing?</a></li>
-  </ul></li>
-  <li><a href="#how-many-towers-are-in-south-america" id="toc-how-many-towers-are-in-south-america" class="nav-link" data-scroll-target="#how-many-towers-are-in-south-america">How many towers are in South America?</a>
-  <ul class="collapse">
+  <li><a href="#key-functions" id="toc-key-functions" class="nav-link" data-scroll-target="#key-functions">Key functions:</a></li>
+  <li><a href="#how-many-features-does-south_america_countries-have-versus-south_america-why" id="toc-how-many-features-does-south_america_countries-have-versus-south_america-why" class="nav-link" data-scroll-target="#how-many-features-does-south_america_countries-have-versus-south_america-why">How many features does south_america_countries have, versus south_america? Why?</a></li>
+  <li><a href="#how-many-towers-are-in-south-america" id="toc-how-many-towers-are-in-south-america" class="nav-link" data-scroll-target="#how-many-towers-are-in-south-america">How many towers are in South America?</a></li>
   <li><a href="#how-many-towers-are-in-brazil" id="toc-how-many-towers-are-in-brazil" class="nav-link" data-scroll-target="#how-many-towers-are-in-brazil">How many towers are in Brazil?</a></li>
+  <li><a href="#visualize-the-global-distribution-of-towers" id="toc-visualize-the-global-distribution-of-towers" class="nav-link" data-scroll-target="#visualize-the-global-distribution-of-towers">Visualize the global distribution of towers:</a></li>
   <li><a href="#writing-files-using-st_write" id="toc-writing-files-using-st_write" class="nav-link" data-scroll-target="#writing-files-using-st_write">Writing files using st_write:</a></li>
   <li><a href="#additional-reading" id="toc-additional-reading" class="nav-link" data-scroll-target="#additional-reading">Additional Reading:</a></li>
   </ul></li>
@@ -331,30 +335,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="install-libraries-for-this-workshop" class="level3">
 <h3 class="anchored" data-anchor-id="install-libraries-for-this-workshop">Install libraries for this workshop</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'sf'</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'devtools'</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"mikejohnson51/AOI"</span>, <span class="at">force =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"valentinitnelav/plotbiomes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sf"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rnaturalearth"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"ropensci/rnaturalearthhires"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"valentinitnelav/plotbiomes"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="load-the-required-libraries-for-this-workshop" class="level3">
 <h3 class="anchored" data-anchor-id="load-the-required-libraries-for-this-workshop">Load the required libraries for this workshop</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AOI)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearthhires)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="goals" class="level1">
 <h1>Goals</h1>
-<p>The goals of this workshop are to: 1. Become familiar with simple features 2. Master simple feature manipulation 3. Visualize simple features</p>
+<p>The goals of this workshop are to:</p>
+<ol type="1">
+<li>Become familiar with simple features</li>
+<li>Master simple feature manipulation</li>
+<li>Visualize simple features</li>
+</ol>
 </section>
 <section id="data" class="level1">
 <h1>Data</h1>
 <p>Import FluxNet_Sites_2024.csv. This table was created from the FLUXNET site list found at <a href="https://fluxnet.org/sites/site-list-and-pages/?view=table" class="uri">https://fluxnet.org/sites/site-list-and-pages/?view=table</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">'data/FluxNet_Sites_2024.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/FluxNet_Sites_2024.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This dataset includes:</p>
 <table class="caption-top table">
@@ -413,11 +424,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>Take a look at the file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(FluxNet) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(fluxnet_sites)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Look at the tower site locations:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( ) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>( <span class="at">x=</span>LOCATION_LONG , <span class="at">y=</span>LOCATION_LAT))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> LOCATION_LONG, <span class="at">y =</span> LOCATION_LAT))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -432,10 +443,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Look at the elevation, mean annual temperature, and mean annual precipitation for the tower site locations:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>LOCATION_ELEV)) <span class="sc">+</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> LOCATION_ELEV)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 50 rows containing non-finite outside the scale range
@@ -448,10 +459,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT)) <span class="sc">+</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> MAT)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 59 rows containing non-finite outside the scale range
@@ -464,10 +475,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>FluxNet <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAP)) <span class="sc">+</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> MAP)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 60 rows containing non-finite outside the scale range
@@ -481,30 +492,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We are interested in exploring the sites with methane data. Lets subset by FLUXNET-CH4.</p>
+<p>We are interested in exploring the sites with methane data. Let’s subset by FLUXNET-CH4 (read into R as the column <code>FLUXNET.CH4</code>, since R replaces the hyphen with a dot).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4 <span class="ot">&lt;-</span> FluxNet <span class="sc">%&gt;%</span> <span class="fu">filter</span>( FLUXNET.CH4 <span class="sc">!=</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4 <span class="ot">&lt;-</span> fluxnet_sites <span class="sc">%&gt;%</span> <span class="fu">filter</span>(FLUXNET.CH4 <span class="sc">!=</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(FLUXNET.CH4 )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(fluxnet_ch4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This object is currently a dataframe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.CH4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fluxnet_ch4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
 </div>
-<p>Lets make it a simple feature using <code>st_as_sf()</code>.</p>
+<p>Let’s make it a simple feature using <code>st_as_sf()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="at">x =</span> FLUXNET.CH4,                         </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LOCATION_LONG"</span>,  <span class="st">"LOCATION_LAT"</span>),</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="st">"+init=epsg:4326"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is
-deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>FLUXNET.CH4.shp ) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(<span class="at">x =</span> fluxnet_ch4,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LOCATION_LONG"</span>, <span class="st">"LOCATION_LAT"</span>),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> fluxnet_ch4_sf) <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -513,9 +521,9 @@ deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></
 </div>
 </div>
 </div>
-<p>check the class:</p>
+<p>Check the class:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "sf"         "data.frame"</code></pre>
 </div>
@@ -523,7 +531,7 @@ deprecated. It might return a CRS with a non-EPSG compliant axis order.</code></
 <p>Simple features describe how objects in the real world can be represented in computers. They have a geometry describing where on earth the feature is located, and they have attributes, which describe other properties about the feature.</p>
 <p>Look at the information about the geometry:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>geometry</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>geometry</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Geometry set for 81 features 
 Geometry type: POINT
@@ -550,7 +558,7 @@ First 5 geometries:</code></pre>
 </div>
 <p>If we print the first three features, we see their attribute values and an abridged version of the geometry.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(FLUXNET.CH4.shp, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fluxnet_ch4_sf, <span class="at">n =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 81 features and 8 fields
 Geometry type: POINT
@@ -573,73 +581,74 @@ First 3 features:
 <h1>Geometrical Operations</h1>
 <p>There are many geometrical operations that can be used to achieve simple feature manipulation.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"sf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">methods</span>(<span class="at">class =</span> <span class="st">"sf"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] [                            [[&lt;-                        
   [3] [&lt;-                          $&lt;-                         
   [5] aggregate                    anti_join                   
   [7] arrange                      as.data.frame               
   [9] cbind                        coerce                      
- [11] dbDataType                   dbWriteTable                
- [13] distinct                     dplyr_reconstruct           
- [15] drop_na                      duplicated                  
- [17] filter                       full_join                   
- [19] gather                       group_by                    
- [21] group_split                  identify                    
- [23] initialize                   inner_join                  
- [25] left_join                    merge                       
- [27] mutate                       nest                        
- [29] pivot_longer                 pivot_wider                 
- [31] plot                         points                      
- [33] print                        rbind                       
- [35] rename_with                  rename                      
- [37] right_join                   rowwise                     
- [39] sample_frac                  sample_n                    
- [41] select                       semi_join                   
- [43] separate_rows                separate                    
- [45] show                         slice                       
- [47] slotsFromS3                  spread                      
- [49] st_agr                       st_agr&lt;-                    
- [51] st_area                      st_as_s2                    
- [53] st_as_sf                     st_as_sfc                   
- [55] st_bbox                      st_boundary                 
- [57] st_break_antimeridian        st_buffer                   
- [59] st_cast                      st_centroid                 
- [61] st_collection_extract        st_concave_hull             
- [63] st_convex_hull               st_coordinates              
- [65] st_crop                      st_crs                      
- [67] st_crs&lt;-                     st_difference               
- [69] st_drop_geometry             st_exterior_ring            
- [71] st_filter                    st_geometry                 
- [73] st_geometry&lt;-                st_inscribed_circle         
- [75] st_interpolate_aw            st_intersection             
- [77] st_intersects                st_is_full                  
- [79] st_is_valid                  st_is                       
- [81] st_join                      st_line_merge               
- [83] st_m_range                   st_make_valid               
- [85] st_minimum_rotated_rectangle st_nearest_points           
- [87] st_node                      st_normalize                
- [89] st_point_on_surface          st_polygonize               
- [91] st_precision                 st_reverse                  
- [93] st_sample                    st_segmentize               
- [95] st_set_precision             st_shift_longitude          
- [97] st_simplify                  st_snap                     
- [99] st_sym_difference            st_transform                
-[101] st_triangulate_constrained   st_triangulate              
-[103] st_union                     st_voronoi                  
-[105] st_wrap_dateline             st_write                    
-[107] st_z_range                   st_zm                       
-[109] summarise                    text                        
-[111] transform                    transmute                   
-[113] ungroup                      unite                       
-[115] unnest                      
+ [11] count                        dbDataType                  
+ [13] dbWriteTable                 distinct                    
+ [15] dplyr_reconstruct            drop_na                     
+ [17] duplicated                   filter                      
+ [19] full_join                    gather                      
+ [21] group_by                     group_split                 
+ [23] identify                     initialize                  
+ [25] inner_join                   left_join                   
+ [27] merge                        mutate                      
+ [29] nest                         pivot_longer                
+ [31] pivot_wider                  plot                        
+ [33] points                       print                       
+ [35] rbind                        rename_with                 
+ [37] rename                       right_join                  
+ [39] rowwise                      sample_frac                 
+ [41] sample_n                     select                      
+ [43] semi_join                    separate_rows               
+ [45] separate                     show                        
+ [47] slice                        slotsFromS3                 
+ [49] spread                       st_agr                      
+ [51] st_agr&lt;-                     st_area                     
+ [53] st_as_s2                     st_as_sf                    
+ [55] st_as_sfc                    st_bbox                     
+ [57] st_boundary                  st_break_antimeridian       
+ [59] st_buffer                    st_cast                     
+ [61] st_centroid                  st_collection_extract       
+ [63] st_concave_hull              st_convex_hull              
+ [65] st_coordinates               st_crop                     
+ [67] st_crs                       st_crs&lt;-                    
+ [69] st_difference                st_drop_geometry            
+ [71] st_exterior_ring             st_filter                   
+ [73] st_geometry                  st_geometry&lt;-               
+ [75] st_inscribed_circle          st_interpolate_aw           
+ [77] st_intersection              st_intersects               
+ [79] st_is_full                   st_is_valid                 
+ [81] st_is                        st_join                     
+ [83] st_line_merge                st_m_range                  
+ [85] st_make_valid                st_minimum_bounding_circle  
+ [87] st_minimum_rotated_rectangle st_nearest_points           
+ [89] st_node                      st_normalize                
+ [91] st_point_on_surface          st_polygonize               
+ [93] st_precision                 st_reverse                  
+ [95] st_sample                    st_segmentize               
+ [97] st_set_precision             st_shift_longitude          
+ [99] st_simplify                  st_snap                     
+[101] st_sym_difference            st_transform                
+[103] st_triangulate_constrained   st_triangulate              
+[105] st_union                     st_voronoi                  
+[107] st_wrap_dateline             st_write                    
+[109] st_z_range                   st_zm                       
+[111] summarise                    text                        
+[113] transform                    transmute                   
+[115] ungroup                      unite                       
+[117] unnest                      
 see '?methods' for accessing help and source code</code></pre>
 </div>
 </div>
 <p>Below we will explore a few methods:</p>
 <p><code>st_is_valid()</code> and <code>st_is_simple()</code> return a boolean indicating whether a geometry is valid or simple.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_is_valid</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
 [16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
@@ -649,16 +658,16 @@ see '?methods' for accessing help and source code</code></pre>
 [76] TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
 </div>
 </div>
-<p>If there were any issues with the geometery you can use <code>st_make_valid()</code> to fix. Since this is a point file there will be no issues with the geometry.</p>
-<section id="change-the-crs-to-a-projected-epgs-with-st_transform." class="level3">
-<h3 class="anchored" data-anchor-id="change-the-crs-to-a-projected-epgs-with-st_transform.">Change the CRS to a projected EPGS with st_transform.</h3>
-<p><a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf"> Coordinate reference systems (CRS) </a> are like measurement units for coordinates: they specify which location on Earth a particular coordinate pair refers to. Simple feature have two attributes to store a CRS: epsg and proj4string. This implies that all geometries in a geometry list-column must have the same CRS. Both may be NA, e.g.&nbsp;in case the CRS is unknown, or when we work with local coordinate systems (e.g.&nbsp;inside a building, a body, or an abstract space).</p>
+<p>If there were any issues with the geometry you can use <code>st_make_valid()</code> to fix it. Since this is a point file there will be no issues with the geometry.</p>
+<section id="change-the-crs-to-a-projected-epsg-with-st_transform." class="level3">
+<h3 class="anchored" data-anchor-id="change-the-crs-to-a-projected-epsg-with-st_transform.">Change the CRS to a projected EPSG with st_transform.</h3>
+<p><a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf"> Coordinate reference systems (CRS) </a> are like measurement units for coordinates: they specify which location on Earth a particular coordinate pair refers to. Simple features have two attributes to store a CRS: epsg and proj4string. This implies that all geometries in a geometry list-column must have the same CRS. Both may be NA, e.g.&nbsp;in case the CRS is unknown, or when we work with local coordinate systems (e.g.&nbsp;inside a building, a body, or an abstract space).</p>
 <p>proj4string is a generic, string-based description of a CRS, understood by the PROJ library. It defines projection types and (often) defines parameter values for particular projections, and hence can cover an infinite amount of different projections. This library (also used by GDAL) provides functions to convert or transform between different CRS. epsg is the integer ID for a particular, known CRS that can be resolved into a proj4string. Some proj4string values can be resolved back into their corresponding epsg ID, but this does not always work.</p>
-<p>The importance of having epsg values stored with data besides proj4string values is that the epsg refers to particular, well-known CRS, whose parameters may change (improve) over time; fixing only the proj4string may remove the possibility to benefit from such improvements, and limit some of the provenance of datasets, but may help reproducibility. Coordinate reference system transformations can be carried out using st_transform</p>
+<p>The importance of having epsg values stored with data besides proj4string values is that the epsg refers to a particular, well-known CRS, whose parameters may change (improve) over time; fixing only the proj4string may remove the possibility to benefit from such improvements, and limit some of the provenance of datasets, but may help reproducibility. Coordinate reference system transformations can be carried out using st_transform.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="ot">=</span> <span class="fu">st_transform</span>(FLUXNET.CH4.shp, <span class="st">'+init=epsg:4087'</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="dv">4087</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 81 features and 8 fields
 Geometry type: POINT
@@ -690,12 +699,12 @@ First 10 features:
 10  1.5  747.0  POINT (11420267 3656322)</code></pre>
 </div>
 </div>
-<p>Now the Projected CRS is WGS 84 / World Equidistant Cylindrical.</p>
+<p>Now the projected CRS is WGS 84 / World Equidistant Cylindrical.</p>
 <p><code>st_distance()</code> returns a dense numeric matrix with distances between geometries:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>MeanDistance_km <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(FLUXNET.CH4.shp, FLUXNET.CH4.shp) <span class="sc">%&gt;%</span> <span class="fu">rowMeans</span>()<span class="sc">/</span><span class="dv">1000</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">col =</span> MeanDistance_km ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>mean_distance_km <span class="ot">&lt;-</span> <span class="fu">st_distance</span>(fluxnet_ch4_sf, fluxnet_ch4_sf) <span class="sc">%&gt;%</span> <span class="fu">rowMeans</span>() <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">col =</span> mean_distance_km))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -703,10 +712,10 @@ First 10 features:
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>( <span class="fu">aes</span>(<span class="at">x=</span>MeanDistance_km)) <span class="sc">+</span> </span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color=</span><span class="st">"black"</span>, <span class="at">fill=</span><span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> mean_distance_km)) <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value `binwidth`.</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -718,26 +727,24 @@ First 10 features:
 </div>
 </section>
 </section>
-<section id="the-package-aoi" class="level1">
-<h1>The package AOI</h1>
-<p>The AOI package in R stands for Area of Interest. It is primarily used for geographic or spatial data analysis, particularly in defining, visualizing, and working with specific regions or “areas of interest” on maps. The package facilitates interaction with various geographic data sources, allowing users to work with location-based data in a flexible and intuitive way.</p>
-<section id="key-feature-of-the-aoi-package" class="level3">
-<h3 class="anchored" data-anchor-id="key-feature-of-the-aoi-package">Key Feature of the AOI Package:</h3>
-<p>Define Areas of Interest (AOIs): Users can define specific geographic regions of interest using coordinates, addresses, or administrative boundaries (e.g., cities, countries).</p>
-</section>
-<section id="key-function-of-the-aoi-package" class="level3">
-<h3 class="anchored" data-anchor-id="key-function-of-the-aoi-package">Key Function of the AOI Package:</h3>
-<p><code>aoi_get()</code>: Defines an Area of Interest based on a variety of inputs such as bounding box coordinates, administrative boundaries, or addresses.</p>
+<section id="getting-country-and-state-boundaries-with-rnaturalearth" class="level1">
+<h1>Getting country and state boundaries with rnaturalearth</h1>
+<p>rnaturalearth provides world map data at several resolutions, including country boundaries with a <code>continent</code> attribute you can filter or group by. Its companion package, rnaturalearthhires, adds higher-resolution boundaries down to the state/province level for individual countries. Together they’re a good general-purpose source for the kind of reference boundaries you’ll often need to visualize or subset other spatial data against.</p>
+<section id="key-functions" class="level3">
+<h3 class="anchored" data-anchor-id="key-functions">Key functions:</h3>
+<p><code>ne_countries()</code>: Returns country boundaries as an sf object, with a <code>continent</code> column you can filter or group by.</p>
+<p><code>ne_states()</code>: Returns state/province boundaries for a given country (from rnaturalearthhires).</p>
 <p>Example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(AOI)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Define an area of interest by coordinates</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># aoi.NY.bb &lt;- aoi_get("New York")</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>aoi.NY <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">state=</span><span class="st">"New York"</span>)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co"># aoi.NY.bb %&gt;% ggplot() + geom_sf()</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>aoi.NY <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearthhires)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Get New York state from the US</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>us_states <span class="ot">&lt;-</span> <span class="fu">ne_states</span>(<span class="at">country =</span> <span class="st">"United States of America"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>new_york <span class="ot">&lt;-</span> us_states <span class="sc">%&gt;%</span> <span class="fu">filter</span>(name <span class="sc">==</span> <span class="st">"New York"</span>)</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>new_york <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -746,10 +753,11 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Creates a simple feature of South America:</p>
+<p>Get a simple feature of every country in South America, and one that unions them into a single South America polygon:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>s.america <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="st">"South America"</span>, <span class="at">union=</span>T)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>s.america <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>south_america_countries <span class="ot">&lt;-</span> world <span class="sc">%&gt;%</span> <span class="fu">filter</span>(continent <span class="sc">==</span> <span class="st">"South America"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>south_america <span class="ot">&lt;-</span> south_america_countries <span class="sc">%&gt;%</span> <span class="fu">st_union</span>() <span class="sc">%&gt;%</span> <span class="fu">st_as_sf</span>()</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>south_america <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -759,16 +767,16 @@ First 10 features:
 </div>
 </div>
 </section>
-<section id="what-is-union-t-doing" class="level3">
-<h3 class="anchored" data-anchor-id="what-is-union-t-doing">What is union =T doing?</h3>
+<section id="how-many-features-does-south_america_countries-have-versus-south_america-why" class="level3">
+<h3 class="anchored" data-anchor-id="how-many-features-does-south_america_countries-have-versus-south_america-why">How many features does south_america_countries have, versus south_america? Why?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore what happens when union = F here</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare nrow() of the two objects here</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Re-project the s.america to match Fluxnet.ch4:</p>
+<p>Re-project south_america to match fluxnet_ch4_sf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica <span class="ot">&lt;-</span> <span class="fu">st_transform</span>( s.america , <span class="st">'+init=epsg:4087'</span>) </span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>aoi_south_america <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(south_america, <span class="at">crs =</span> <span class="dv">4087</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>aoi_south_america <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -777,24 +785,23 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Create a simple feature of Brazil and re-project it to match Fluxnet.ch4:</p>
+<p>Create a simple feature of Brazil and re-project it to match fluxnet_ch4_sf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your simple feature object here</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create your simple feature object here</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The functions <code>st_intersects()</code>, <code>st_disjoint()</code>, <code>st_touches()</code>, <code>st_crosses()</code>, <code>st_within()</code>, <code>st_contains()</code>, <code>st_overlaps()</code>, <code>st_equals()</code>, <code>st_covers()</code>, <code>st_covered_by()</code>, <code>st_equals_exact()</code> and <code>st_is_within_distance()</code> all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:</p>
 </section>
-</section>
-<section id="how-many-towers-are-in-south-america" class="level1">
-<h1>How many towers are in South America?</h1>
+<section id="how-many-towers-are-in-south-america" class="level3">
+<h3 class="anchored" data-anchor-id="how-many-towers-are-in-south-america">How many towers are in South America?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi_south_america, fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sparse geometry binary predicate list of length 1, where the predicate
 was `intersects'
  1: 2</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi.SAmerica, FLUXNET.CH4.shp, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_intersects</span>(aoi_south_america, fluxnet_ch4_sf, <span class="at">sparse =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      [,1] [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10] [,11] [,12]
 [1,] FALSE TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
@@ -812,33 +819,35 @@ was `intersects'
 [1,] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</code></pre>
 </div>
 </div>
+</section>
 <section id="how-many-towers-are-in-brazil" class="level3">
 <h3 class="anchored" data-anchor-id="how-many-towers-are-in-brazil">How many towers are in Brazil?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find out how many towers are in Brazil here</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find out how many towers are in Brazil here</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Where possible geometric operations such as <code>st_distance()</code>, <code>st_length()</code> and <code>st_area()</code> report results with a units attribute appropriate for the CRS.</p>
 <p>Calculate the area of South America:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(aoi.SAmerica )</span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>aoi.SAmerica<span class="sc">$</span>Area</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>aoi_south_america<span class="sc">$</span>area <span class="ot">&lt;-</span> <span class="fu">st_area</span>(aoi_south_america)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>aoi_south_america<span class="sc">$</span>area</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>1.918234e+13 [m^2]</code></pre>
+<pre><code>1.897703e+13 [m^2]</code></pre>
 </div>
 </div>
 <p>Calculate the area of Brazil:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the area here</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the area here</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<section id="visualize-the-global-distribution-of-towers" class="level4">
-<h4 class="anchored" data-anchor-id="visualize-the-global-distribution-of-towers">Visualize the global distribution of towers:</h4>
-<p>First create a simple feature for all large terrestrial regions in Europe, Asia, the Americas, Africa, Australia and New Zealand:</p>
+</section>
+<section id="visualize-the-global-distribution-of-towers" class="level3">
+<h3 class="anchored" data-anchor-id="visualize-the-global-distribution-of-towers">Visualize the global distribution of towers:</h3>
+<p>First create a simple feature for every country in Europe, Asia, the Americas, Africa, and Oceania (i.e.&nbsp;all inhabited continents except Antarctica):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>))</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial  <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>aoi_terrestrial <span class="ot">&lt;-</span> world <span class="sc">%&gt;%</span> <span class="fu">filter</span>(continent <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Europe"</span>, <span class="st">"Asia"</span>, <span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Africa"</span>, <span class="st">"Oceania"</span>))</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>aoi_terrestrial <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -849,56 +858,737 @@ was `intersects'
 </div>
 <p>Look at the CRS:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>aoi_terrestrial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 171 features and 1 field
+<pre><code>Simple feature collection with 233 features and 168 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: -180 ymin: -55.61183 xmax: 180 ymax: 83.64513
+Bounding box:  xmin: -180 ymin: -55.8917 xmax: 180 ymax: 83.59961
 Geodetic CRS:  WGS 84
 First 10 features:
-                       name                       geometry
-2                  Tanzania MULTIPOLYGON (((33.90371 -0...
-3                 W. Sahara MULTIPOLYGON (((-8.66559 27...
-4                    Canada MULTIPOLYGON (((-122.84 49,...
-5  United States of America MULTIPOLYGON (((-122.84 49,...
-6                Kazakhstan MULTIPOLYGON (((87.35997 49...
-7                Uzbekistan MULTIPOLYGON (((55.96819 41...
-9                 Indonesia MULTIPOLYGON (((141.0002 -2...
-10                Argentina MULTIPOLYGON (((-68.63401 -...
-11                    Chile MULTIPOLYGON (((-68.63401 -...
-12          Dem. Rep. Congo MULTIPOLYGON (((29.34 -4.49...</code></pre>
+        featurecla scalerank labelrank                     sovereignt sov_a3
+1  Admin-0 country         1         3                       Zimbabwe    ZWE
+2  Admin-0 country         1         3                         Zambia    ZMB
+3  Admin-0 country         1         3                          Yemen    YEM
+4  Admin-0 country         3         2                        Vietnam    VNM
+5  Admin-0 country         5         3                      Venezuela    VEN
+6  Admin-0 country         6         6                        Vatican    VAT
+7  Admin-0 country         1         4                        Vanuatu    VUT
+8  Admin-0 country         1         3                     Uzbekistan    UZB
+9  Admin-0 country         1         4                        Uruguay    URY
+10 Admin-0 country         3         6 Federated States of Micronesia    FSM
+   adm0_dif level              type tlc                          admin adm0_a3
+1         0     2 Sovereign country   1                       Zimbabwe     ZWE
+2         0     2 Sovereign country   1                         Zambia     ZMB
+3         0     2 Sovereign country   1                          Yemen     YEM
+4         0     2 Sovereign country   1                        Vietnam     VNM
+5         0     2 Sovereign country   1                      Venezuela     VEN
+6         0     2 Sovereign country   1                        Vatican     VAT
+7         0     2 Sovereign country   1                        Vanuatu     VUT
+8         0     2 Sovereign country   1                     Uzbekistan     UZB
+9         0     2 Sovereign country   1                        Uruguay     URY
+10        0     2 Sovereign country   1 Federated States of Micronesia     FSM
+   geou_dif                        geounit gu_a3 su_dif
+1         0                       Zimbabwe   ZWE      0
+2         0                         Zambia   ZMB      0
+3         0                          Yemen   YEM      0
+4         0                        Vietnam   VNM      0
+5         0                      Venezuela   VEN      0
+6         0                        Vatican   VAT      0
+7         0                        Vanuatu   VUT      0
+8         0                     Uzbekistan   UZB      0
+9         0                        Uruguay   URY      0
+10        0 Federated States of Micronesia   FSM      0
+                          subunit su_a3 brk_diff       name
+1                        Zimbabwe   ZWE        0   Zimbabwe
+2                          Zambia   ZMB        0     Zambia
+3                           Yemen   YEM        0      Yemen
+4                         Vietnam   VNM        0    Vietnam
+5                       Venezuela   VEN        0  Venezuela
+6                         Vatican   VAT        0    Vatican
+7                         Vanuatu   VUT        0    Vanuatu
+8                      Uzbekistan   UZB        0 Uzbekistan
+9                         Uruguay   URY        0    Uruguay
+10 Federated States of Micronesia   FSM        0 Micronesia
+                        name_long brk_a3   brk_name brk_group abbrev postal
+1                        Zimbabwe    ZWE   Zimbabwe      &lt;NA&gt;  Zimb.     ZW
+2                          Zambia    ZMB     Zambia      &lt;NA&gt; Zambia     ZM
+3                           Yemen    YEM      Yemen      &lt;NA&gt;   Yem.     YE
+4                         Vietnam    VNM    Vietnam      &lt;NA&gt;  Viet.     VN
+5                       Venezuela    VEN  Venezuela      &lt;NA&gt;   Ven.     VE
+6                         Vatican    VAT    Vatican      &lt;NA&gt;   Vat.      V
+7                         Vanuatu    VUT    Vanuatu      &lt;NA&gt;   Van.     VU
+8                      Uzbekistan    UZB Uzbekistan      &lt;NA&gt;   Uzb.     UZ
+9                         Uruguay    URY    Uruguay      &lt;NA&gt;   Ury.     UY
+10 Federated States of Micronesia    FSM Micronesia      &lt;NA&gt; F.S.M.    FSM
+                          formal_en                          formal_fr
+1              Republic of Zimbabwe                               &lt;NA&gt;
+2                Republic of Zambia                               &lt;NA&gt;
+3                 Republic of Yemen                               &lt;NA&gt;
+4     Socialist Republic of Vietnam                               &lt;NA&gt;
+5  Bolivarian Republic of Venezuela República Bolivariana de Venezuela
+6         State of the Vatican City                               &lt;NA&gt;
+7               Republic of Vanuatu                               &lt;NA&gt;
+8            Republic of Uzbekistan                               &lt;NA&gt;
+9      Oriental Republic of Uruguay                               &lt;NA&gt;
+10   Federated States of Micronesia                               &lt;NA&gt;
+                        name_ciawf note_adm0 note_brk
+1                         Zimbabwe      &lt;NA&gt;     &lt;NA&gt;
+2                           Zambia      &lt;NA&gt;     &lt;NA&gt;
+3                            Yemen      &lt;NA&gt;     &lt;NA&gt;
+4                          Vietnam      &lt;NA&gt;     &lt;NA&gt;
+5                        Venezuela      &lt;NA&gt;     &lt;NA&gt;
+6          Holy See (Vatican City)      &lt;NA&gt;     &lt;NA&gt;
+7                          Vanuatu      &lt;NA&gt;     &lt;NA&gt;
+8                       Uzbekistan      &lt;NA&gt;     &lt;NA&gt;
+9                          Uruguay      &lt;NA&gt;     &lt;NA&gt;
+10 Micronesia, Federated States of      &lt;NA&gt;     &lt;NA&gt;
+                         name_sort name_alt mapcolor7 mapcolor8 mapcolor9
+1                         Zimbabwe     &lt;NA&gt;         1         5         3
+2                           Zambia     &lt;NA&gt;         5         8         5
+3                      Yemen, Rep.     &lt;NA&gt;         5         3         3
+4                          Vietnam     &lt;NA&gt;         5         6         5
+5                    Venezuela, RB     &lt;NA&gt;         1         3         1
+6               Vatican (Holy See) Holy See         1         3         4
+7                          Vanuatu     &lt;NA&gt;         6         3         7
+8                       Uzbekistan     &lt;NA&gt;         2         3         5
+9                          Uruguay     &lt;NA&gt;         1         2         2
+10 Micronesia, Federated States of     &lt;NA&gt;         5         2         4
+   mapcolor13  pop_est pop_rank pop_year gdp_md gdp_year
+1           9 14645468       14     2019  21440     2019
+2          13 17861030       14     2019  23309     2019
+3          11 29161922       15     2019  22581     2019
+4           4 96462106       16     2019 261921     2019
+5           4 28515829       15     2019 482359     2014
+6           2      825        2     2019    -99     2019
+7           3   299882       10     2019    934     2019
+8           4 33580650       15     2019  57921     2019
+9          10  3461734       12     2019  56045     2019
+10         13   113815        9     2019    401     2018
+                      economy              income_grp fips_10 iso_a2 iso_a2_eh
+1     5. Emerging region: G20           5. Low income      ZI     ZW        ZW
+2   7. Least developed region  4. Lower middle income      ZA     ZM        ZM
+3   7. Least developed region  4. Lower middle income      YM     YE        YE
+4     5. Emerging region: G20  4. Lower middle income      VM     VN        VN
+5     5. Emerging region: G20  3. Upper middle income      VE     VE        VE
+6  2. Developed region: nonG7 2. High income: nonOECD      VT     VA        VA
+7   7. Least developed region  4. Lower middle income      NH     VU        VU
+8        6. Developing region  4. Lower middle income      UZ     UZ        UZ
+9     5. Emerging region: G20  3. Upper middle income      UY     UY        UY
+10       6. Developing region  4. Lower middle income      FM     FM        FM
+   iso_a3 iso_a3_eh iso_n3 iso_n3_eh un_a3 wb_a2 wb_a3   woe_id woe_id_eh
+1     ZWE       ZWE    716       716   716    ZW   ZWE 23425004  23425004
+2     ZMB       ZMB    894       894   894    ZM   ZMB 23425003  23425003
+3     YEM       YEM    887       887   887    RY   YEM 23425002  23425002
+4     VNM       VNM    704       704   704    VN   VNM 23424984  23424984
+5     VEN       VEN    862       862   862    VE   VEN 23424982  23424982
+6     VAT       VAT    336       336   336   -99   -99 23424986  23424986
+7     VUT       VUT    548       548   548    VU   VUT 23424907  23424907
+8     UZB       UZB    860       860   860    UZ   UZB 23424980  23424980
+9     URY       URY    858       858   858    UY   URY 23424979  23424979
+10    FSM       FSM    583       583   583    FM   FSM 23424815  23424815
+                     woe_note adm0_iso adm0_diff adm0_tlc adm0_a3_us adm0_a3_fr
+1  Exact WOE match as country      ZWE      &lt;NA&gt;      ZWE        ZWE        ZWE
+2  Exact WOE match as country      ZMB      &lt;NA&gt;      ZMB        ZMB        ZMB
+3  Exact WOE match as country      YEM      &lt;NA&gt;      YEM        YEM        YEM
+4  Exact WOE match as country      VNM      &lt;NA&gt;      VNM        VNM        VNM
+5  Exact WOE match as country      VEN      &lt;NA&gt;      VEN        VEN        VEN
+6  Exact WOE match as country      VAT      &lt;NA&gt;      VAT        VAT        VAT
+7  Exact WOE match as country      VUT      &lt;NA&gt;      VUT        VUT        VUT
+8  Exact WOE match as country      UZB      &lt;NA&gt;      UZB        UZB        UZB
+9  Exact WOE match as country      URY      &lt;NA&gt;      URY        URY        URY
+10 Exact WOE match as country      FSM      &lt;NA&gt;      FSM        FSM        FSM
+   adm0_a3_ru adm0_a3_es adm0_a3_cn adm0_a3_tw adm0_a3_in adm0_a3_np adm0_a3_pk
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_de adm0_a3_gb adm0_a3_br adm0_a3_il adm0_a3_ps adm0_a3_sa adm0_a3_eg
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_ma adm0_a3_pt adm0_a3_ar adm0_a3_jp adm0_a3_ko adm0_a3_vn adm0_a3_tr
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_id adm0_a3_pl adm0_a3_gr adm0_a3_it adm0_a3_nl adm0_a3_se adm0_a3_bd
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_ua adm0_a3_un adm0_a3_wb     continent region_un          subregion
+1         ZWE        -99        -99        Africa    Africa     Eastern Africa
+2         ZMB        -99        -99        Africa    Africa     Eastern Africa
+3         YEM        -99        -99          Asia      Asia       Western Asia
+4         VNM        -99        -99          Asia      Asia South-Eastern Asia
+5         VEN        -99        -99 South America  Americas      South America
+6         VAT        -99        -99        Europe    Europe    Southern Europe
+7         VUT        -99        -99       Oceania   Oceania          Melanesia
+8         UZB        -99        -99          Asia      Asia       Central Asia
+9         URY        -99        -99 South America  Americas      South America
+10        FSM        -99        -99       Oceania   Oceania         Micronesia
+                    region_wb name_len long_len abbrev_len tiny homepart
+1          Sub-Saharan Africa        8        8          5  -99        1
+2          Sub-Saharan Africa        6        6          6  -99        1
+3  Middle East &amp; North Africa        5        5          4  -99        1
+4         East Asia &amp; Pacific        7        7          5    2        1
+5   Latin America &amp; Caribbean        9        9          4  -99        1
+6       Europe &amp; Central Asia        7        7          4    4        1
+7         East Asia &amp; Pacific        7        7          4    2        1
+8       Europe &amp; Central Asia       10       10          4    5        1
+9   Latin America &amp; Caribbean        7        7          4  -99        1
+10        East Asia &amp; Pacific       10       30          6  -99        1
+   min_zoom min_label max_label   label_x    label_y      ne_id wikidataid
+1         0       2.5       8.0  29.92544 -18.911640 1159321441       Q954
+2         0       3.0       8.0  26.39530 -14.660804 1159321439       Q953
+3         0       3.0       8.0  45.87438  15.328226 1159321425       Q805
+4         0       2.0       7.0 105.38729  21.715416 1159321417       Q881
+5         0       2.5       7.5 -64.59938   7.182476 1159321411       Q717
+6         0       5.0      10.0  12.45342  41.903323 1159321407       Q237
+7         0       4.0       9.0 166.90876 -15.371530 1159321421       Q686
+8         0       3.0       8.0  64.00543  41.693603 1159321405       Q265
+9         0       3.0       8.0 -55.96694 -32.961127 1159321353        Q77
+10        0       5.0      10.0 158.23402   6.887553 1159320691       Q702
+                     name_ar              name_bn
+1                   زيمبابوي             জিম্বাবুয়ে
+2                     زامبيا              জাম্বিয়া
+3                      اليمن               ইয়েমেন
+4                     فيتنام             ভিয়েতনাম
+5                    فنزويلا            ভেনেজুয়েলা
+6                  الفاتيكان        ভ্যাটিকান সিটি
+7                    فانواتو               ভানুয়াতু
+8                  أوزبكستان           উজবেকিস্তান
+9                 الأوروغواي                উরুগুয়ে
+10 ولايات ميكرونيسيا المتحدة মাইক্রোনেশিয়া যুক্তরাজ্য
+                              name_de                        name_en
+1                            Simbabwe                       Zimbabwe
+2                              Sambia                         Zambia
+3                               Jemen                          Yemen
+4                             Vietnam                        Vietnam
+5                           Venezuela                      Venezuela
+6                        Vatikanstadt                   Vatican City
+7                             Vanuatu                        Vanuatu
+8                          Usbekistan                     Uzbekistan
+9                             Uruguay                        Uruguay
+10 Föderierte Staaten von Mikronesien Federated States of Micronesia
+                           name_es  name_fa                     name_fr
+1                         Zimbabue زیمبابوه                    Zimbabwe
+2                           Zambia   زامبیا                      Zambie
+3                            Yemen      یمن                       Yémen
+4                          Vietnam   ویتنام                    Viêt Nam
+5                        Venezuela  ونزوئلا                   Venezuela
+6              Ciudad del Vaticano  واتیکان             Cité du Vatican
+7                          Vanuatu  وانواتو                     Vanuatu
+8                       Uzbekistán ازبکستان                 Ouzbékistan
+9                          Uruguay  اروگوئه                     Uruguay
+10 Estados Federados de Micronesia میکرونزی États fédérés de Micronésie
+                                name_el       name_he                  name_hi
+1                            Ζιμπάμπουε      זימבבואה                  ज़िम्बाब्वे
+2                                Ζάμπια         זמביה                  ज़ाम्बिया
+3                                Υεμένη          תימן                      यमन
+4                               Βιετνάμ       וייטנאם                  वियतनाम
+5                            Βενεζουέλα       ונצואלה                   वेनेज़ुएला
+6                              Βατικανό קריית הוותיקן                वैटिकन नगर
+7                             Βανουάτου        ונואטו                    वानूआटू
+8                          Ουζμπεκιστάν     אוזבקיסטן                उज़्बेकिस्तान
+9                            Ουρουγουάη     אורוגוואי                     उरुग्वे
+10 Ομόσπονδες Πολιτείες της Μικρονησίας     מיקרונזיה माइक्रोनेशिया के संघीकृत राज्य
+                          name_hu    name_id                      name_it
+1                        Zimbabwe   Zimbabwe                     Zimbabwe
+2                          Zambia     Zambia                       Zambia
+3                           Jemen      Yaman                        Yemen
+4                         Vietnám    Vietnam                      Vietnam
+5                       Venezuela  Venezuela                    Venezuela
+6                         Vatikán    Vatikan           Città del Vaticano
+7                         Vanuatu    Vanuatu                      Vanuatu
+8                     Üzbegisztán Uzbekistan                   Uzbekistan
+9                         Uruguay    Uruguay                      Uruguay
+10 Mikronéziai Szövetségi Államok Mikronesia Stati Federati di Micronesia
+            name_ja           name_ko      name_nl    name_pl     name_pt
+1        ジンバブエ          짐바브웨     Zimbabwe   Zimbabwe    Zimbábue
+2          ザンビア            잠비아       Zambia     Zambia      Zâmbia
+3          イエメン              예멘        Jemen      Jemen       Iémen
+4          ベトナム            베트남      Vietnam    Wietnam    Vietname
+5        ベネズエラ        베네수엘라    Venezuela  Wenezuela   Venezuela
+6          バチカン       바티칸 시국 Vaticaanstad    Watykan    Vaticano
+7          バヌアツ          바누아투      Vanuatu    Vanuatu     Vanuatu
+8    ウズベキスタン      우즈베키스탄  Oezbekistan Uzbekistan Uzbequistão
+9        ウルグアイ          우루과이      Uruguay    Urugwaj     Uruguai
+10 ミクロネシア連邦 미크로네시아 연방   Micronesia Mikronezja  Micronésia
+      name_ru                   name_sv    name_tr    name_uk      name_ur
+1    Зимбабве                  Zimbabwe   Zimbabve   Зімбабве      زمبابوے
+2      Замбия                    Zambia    Zambiya     Замбія       زیمبیا
+3       Йемен                     Jemen      Yemen       Ємен          یمن
+4     Вьетнам                   Vietnam    Vietnam    В'єтнам       ویتنام
+5   Венесуэла                 Venezuela  Venezuela  Венесуела    وینیزویلا
+6     Ватикан             Vatikanstaten    Vatikan    Ватикан   ویٹیکن سٹی
+7     Вануату                   Vanuatu    Vanuatu    Вануату      وانواتو
+8  Узбекистан                Uzbekistan Özbekistan Узбекистан     ازبکستان
+9     Уругвай                   Uruguay    Uruguay    Уругвай     یوراگوئے
+10 Микронезия Mikronesiska federationen Mikronezya Мікронезія مائیکرونیشیا
+         name_vi          name_zh         name_zht      fclass_iso tlc_diff
+1       Zimbabwe         津巴布韦           辛巴威 Admin-0 country     &lt;NA&gt;
+2         Zambia           赞比亚           尚比亞 Admin-0 country     &lt;NA&gt;
+3          Yemen             也门             葉門 Admin-0 country     &lt;NA&gt;
+4       Việt Nam             越南             越南 Admin-0 country     &lt;NA&gt;
+5      Venezuela         委内瑞拉         委內瑞拉 Admin-0 country     &lt;NA&gt;
+6  Thành Vatican           梵蒂冈           梵蒂岡 Admin-0 country     &lt;NA&gt;
+7        Vanuatu         瓦努阿图           萬那杜 Admin-0 country     &lt;NA&gt;
+8     Uzbekistan     乌兹别克斯坦         烏茲別克 Admin-0 country     &lt;NA&gt;
+9        Uruguay           乌拉圭           烏拉圭 Admin-0 country     &lt;NA&gt;
+10    Micronesia 密克罗尼西亚联邦 密克羅尼西亞聯邦 Admin-0 country     &lt;NA&gt;
+        fclass_tlc fclass_us fclass_fr fclass_ru fclass_es fclass_cn fclass_tw
+1  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10 Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_in fclass_np fclass_pk fclass_de fclass_gb fclass_br fclass_il
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_ps fclass_sa fclass_eg fclass_ma fclass_pt fclass_ar fclass_jp
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_ko fclass_vn fclass_tr fclass_id fclass_pl fclass_gr fclass_it
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_nl fclass_se fclass_bd fclass_ua                       geometry
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((31.28789 -2...
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((30.39609 -1...
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((53.08564 16...
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((104.064 10....
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((-60.82119 9...
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((12.43916 41...
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((166.7458 -1...
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((70.94678 42...
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((-53.37061 -...
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((162.9832 5....</code></pre>
 </div>
 </div>
-<p>Re-project the polygon to match FLUXNET.CH4.shp:</p>
+<p>Re-project the polygon to match fluxnet_ch4_sf:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="ot">&lt;-</span> <span class="fu">aoi_get</span>(<span class="at">country=</span> <span class="fu">c</span>(<span class="st">"Europe"</span>,<span class="st">"Asia"</span> ,<span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Australia"</span>,<span class="st">"Africa"</span>, <span class="st">"New Zealand"</span>)) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>( <span class="dv">4087</span> ) </span>
-<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>aoi_terrestrial <span class="ot">&lt;-</span> aoi_terrestrial <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">4087</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>aoi_terrestrial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 171 features and 1 field
+<pre><code>Simple feature collection with 233 features and 168 fields
 Geometry type: MULTIPOLYGON
 Dimension:     XY
-Bounding box:  xmin: -20037510 ymin: -6190681 xmax: 20037510 ymax: 9311333
+Bounding box:  xmin: -20037510 ymin: -6221835 xmax: 20037510 ymax: 9306266
 Projected CRS: WGS 84 / World Equidistant Cylindrical
 First 10 features:
-                       name                       geometry
-2                  Tanzania MULTIPOLYGON (((3774144 -10...
-3                 W. Sahara MULTIPOLYGON (((-964649 307...
-4                    Canada MULTIPOLYGON (((-13674486 5...
-5  United States of America MULTIPOLYGON (((-13674486 5...
-6                Kazakhstan MULTIPOLYGON (((9724867 547...
-7                Uzbekistan MULTIPOLYGON (((6230351 459...
-9                 Indonesia MULTIPOLYGON (((15696072 -2...
-10                Argentina MULTIPOLYGON (((-7640303 -5...
-11                    Chile MULTIPOLYGON (((-7640303 -5...
-12          Dem. Rep. Congo MULTIPOLYGON (((3266114 -50...</code></pre>
+        featurecla scalerank labelrank                     sovereignt sov_a3
+1  Admin-0 country         1         3                       Zimbabwe    ZWE
+2  Admin-0 country         1         3                         Zambia    ZMB
+3  Admin-0 country         1         3                          Yemen    YEM
+4  Admin-0 country         3         2                        Vietnam    VNM
+5  Admin-0 country         5         3                      Venezuela    VEN
+6  Admin-0 country         6         6                        Vatican    VAT
+7  Admin-0 country         1         4                        Vanuatu    VUT
+8  Admin-0 country         1         3                     Uzbekistan    UZB
+9  Admin-0 country         1         4                        Uruguay    URY
+10 Admin-0 country         3         6 Federated States of Micronesia    FSM
+   adm0_dif level              type tlc                          admin adm0_a3
+1         0     2 Sovereign country   1                       Zimbabwe     ZWE
+2         0     2 Sovereign country   1                         Zambia     ZMB
+3         0     2 Sovereign country   1                          Yemen     YEM
+4         0     2 Sovereign country   1                        Vietnam     VNM
+5         0     2 Sovereign country   1                      Venezuela     VEN
+6         0     2 Sovereign country   1                        Vatican     VAT
+7         0     2 Sovereign country   1                        Vanuatu     VUT
+8         0     2 Sovereign country   1                     Uzbekistan     UZB
+9         0     2 Sovereign country   1                        Uruguay     URY
+10        0     2 Sovereign country   1 Federated States of Micronesia     FSM
+   geou_dif                        geounit gu_a3 su_dif
+1         0                       Zimbabwe   ZWE      0
+2         0                         Zambia   ZMB      0
+3         0                          Yemen   YEM      0
+4         0                        Vietnam   VNM      0
+5         0                      Venezuela   VEN      0
+6         0                        Vatican   VAT      0
+7         0                        Vanuatu   VUT      0
+8         0                     Uzbekistan   UZB      0
+9         0                        Uruguay   URY      0
+10        0 Federated States of Micronesia   FSM      0
+                          subunit su_a3 brk_diff       name
+1                        Zimbabwe   ZWE        0   Zimbabwe
+2                          Zambia   ZMB        0     Zambia
+3                           Yemen   YEM        0      Yemen
+4                         Vietnam   VNM        0    Vietnam
+5                       Venezuela   VEN        0  Venezuela
+6                         Vatican   VAT        0    Vatican
+7                         Vanuatu   VUT        0    Vanuatu
+8                      Uzbekistan   UZB        0 Uzbekistan
+9                         Uruguay   URY        0    Uruguay
+10 Federated States of Micronesia   FSM        0 Micronesia
+                        name_long brk_a3   brk_name brk_group abbrev postal
+1                        Zimbabwe    ZWE   Zimbabwe      &lt;NA&gt;  Zimb.     ZW
+2                          Zambia    ZMB     Zambia      &lt;NA&gt; Zambia     ZM
+3                           Yemen    YEM      Yemen      &lt;NA&gt;   Yem.     YE
+4                         Vietnam    VNM    Vietnam      &lt;NA&gt;  Viet.     VN
+5                       Venezuela    VEN  Venezuela      &lt;NA&gt;   Ven.     VE
+6                         Vatican    VAT    Vatican      &lt;NA&gt;   Vat.      V
+7                         Vanuatu    VUT    Vanuatu      &lt;NA&gt;   Van.     VU
+8                      Uzbekistan    UZB Uzbekistan      &lt;NA&gt;   Uzb.     UZ
+9                         Uruguay    URY    Uruguay      &lt;NA&gt;   Ury.     UY
+10 Federated States of Micronesia    FSM Micronesia      &lt;NA&gt; F.S.M.    FSM
+                          formal_en                          formal_fr
+1              Republic of Zimbabwe                               &lt;NA&gt;
+2                Republic of Zambia                               &lt;NA&gt;
+3                 Republic of Yemen                               &lt;NA&gt;
+4     Socialist Republic of Vietnam                               &lt;NA&gt;
+5  Bolivarian Republic of Venezuela República Bolivariana de Venezuela
+6         State of the Vatican City                               &lt;NA&gt;
+7               Republic of Vanuatu                               &lt;NA&gt;
+8            Republic of Uzbekistan                               &lt;NA&gt;
+9      Oriental Republic of Uruguay                               &lt;NA&gt;
+10   Federated States of Micronesia                               &lt;NA&gt;
+                        name_ciawf note_adm0 note_brk
+1                         Zimbabwe      &lt;NA&gt;     &lt;NA&gt;
+2                           Zambia      &lt;NA&gt;     &lt;NA&gt;
+3                            Yemen      &lt;NA&gt;     &lt;NA&gt;
+4                          Vietnam      &lt;NA&gt;     &lt;NA&gt;
+5                        Venezuela      &lt;NA&gt;     &lt;NA&gt;
+6          Holy See (Vatican City)      &lt;NA&gt;     &lt;NA&gt;
+7                          Vanuatu      &lt;NA&gt;     &lt;NA&gt;
+8                       Uzbekistan      &lt;NA&gt;     &lt;NA&gt;
+9                          Uruguay      &lt;NA&gt;     &lt;NA&gt;
+10 Micronesia, Federated States of      &lt;NA&gt;     &lt;NA&gt;
+                         name_sort name_alt mapcolor7 mapcolor8 mapcolor9
+1                         Zimbabwe     &lt;NA&gt;         1         5         3
+2                           Zambia     &lt;NA&gt;         5         8         5
+3                      Yemen, Rep.     &lt;NA&gt;         5         3         3
+4                          Vietnam     &lt;NA&gt;         5         6         5
+5                    Venezuela, RB     &lt;NA&gt;         1         3         1
+6               Vatican (Holy See) Holy See         1         3         4
+7                          Vanuatu     &lt;NA&gt;         6         3         7
+8                       Uzbekistan     &lt;NA&gt;         2         3         5
+9                          Uruguay     &lt;NA&gt;         1         2         2
+10 Micronesia, Federated States of     &lt;NA&gt;         5         2         4
+   mapcolor13  pop_est pop_rank pop_year gdp_md gdp_year
+1           9 14645468       14     2019  21440     2019
+2          13 17861030       14     2019  23309     2019
+3          11 29161922       15     2019  22581     2019
+4           4 96462106       16     2019 261921     2019
+5           4 28515829       15     2019 482359     2014
+6           2      825        2     2019    -99     2019
+7           3   299882       10     2019    934     2019
+8           4 33580650       15     2019  57921     2019
+9          10  3461734       12     2019  56045     2019
+10         13   113815        9     2019    401     2018
+                      economy              income_grp fips_10 iso_a2 iso_a2_eh
+1     5. Emerging region: G20           5. Low income      ZI     ZW        ZW
+2   7. Least developed region  4. Lower middle income      ZA     ZM        ZM
+3   7. Least developed region  4. Lower middle income      YM     YE        YE
+4     5. Emerging region: G20  4. Lower middle income      VM     VN        VN
+5     5. Emerging region: G20  3. Upper middle income      VE     VE        VE
+6  2. Developed region: nonG7 2. High income: nonOECD      VT     VA        VA
+7   7. Least developed region  4. Lower middle income      NH     VU        VU
+8        6. Developing region  4. Lower middle income      UZ     UZ        UZ
+9     5. Emerging region: G20  3. Upper middle income      UY     UY        UY
+10       6. Developing region  4. Lower middle income      FM     FM        FM
+   iso_a3 iso_a3_eh iso_n3 iso_n3_eh un_a3 wb_a2 wb_a3   woe_id woe_id_eh
+1     ZWE       ZWE    716       716   716    ZW   ZWE 23425004  23425004
+2     ZMB       ZMB    894       894   894    ZM   ZMB 23425003  23425003
+3     YEM       YEM    887       887   887    RY   YEM 23425002  23425002
+4     VNM       VNM    704       704   704    VN   VNM 23424984  23424984
+5     VEN       VEN    862       862   862    VE   VEN 23424982  23424982
+6     VAT       VAT    336       336   336   -99   -99 23424986  23424986
+7     VUT       VUT    548       548   548    VU   VUT 23424907  23424907
+8     UZB       UZB    860       860   860    UZ   UZB 23424980  23424980
+9     URY       URY    858       858   858    UY   URY 23424979  23424979
+10    FSM       FSM    583       583   583    FM   FSM 23424815  23424815
+                     woe_note adm0_iso adm0_diff adm0_tlc adm0_a3_us adm0_a3_fr
+1  Exact WOE match as country      ZWE      &lt;NA&gt;      ZWE        ZWE        ZWE
+2  Exact WOE match as country      ZMB      &lt;NA&gt;      ZMB        ZMB        ZMB
+3  Exact WOE match as country      YEM      &lt;NA&gt;      YEM        YEM        YEM
+4  Exact WOE match as country      VNM      &lt;NA&gt;      VNM        VNM        VNM
+5  Exact WOE match as country      VEN      &lt;NA&gt;      VEN        VEN        VEN
+6  Exact WOE match as country      VAT      &lt;NA&gt;      VAT        VAT        VAT
+7  Exact WOE match as country      VUT      &lt;NA&gt;      VUT        VUT        VUT
+8  Exact WOE match as country      UZB      &lt;NA&gt;      UZB        UZB        UZB
+9  Exact WOE match as country      URY      &lt;NA&gt;      URY        URY        URY
+10 Exact WOE match as country      FSM      &lt;NA&gt;      FSM        FSM        FSM
+   adm0_a3_ru adm0_a3_es adm0_a3_cn adm0_a3_tw adm0_a3_in adm0_a3_np adm0_a3_pk
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_de adm0_a3_gb adm0_a3_br adm0_a3_il adm0_a3_ps adm0_a3_sa adm0_a3_eg
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_ma adm0_a3_pt adm0_a3_ar adm0_a3_jp adm0_a3_ko adm0_a3_vn adm0_a3_tr
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_id adm0_a3_pl adm0_a3_gr adm0_a3_it adm0_a3_nl adm0_a3_se adm0_a3_bd
+1         ZWE        ZWE        ZWE        ZWE        ZWE        ZWE        ZWE
+2         ZMB        ZMB        ZMB        ZMB        ZMB        ZMB        ZMB
+3         YEM        YEM        YEM        YEM        YEM        YEM        YEM
+4         VNM        VNM        VNM        VNM        VNM        VNM        VNM
+5         VEN        VEN        VEN        VEN        VEN        VEN        VEN
+6         VAT        VAT        VAT        VAT        VAT        VAT        VAT
+7         VUT        VUT        VUT        VUT        VUT        VUT        VUT
+8         UZB        UZB        UZB        UZB        UZB        UZB        UZB
+9         URY        URY        URY        URY        URY        URY        URY
+10        FSM        FSM        FSM        FSM        FSM        FSM        FSM
+   adm0_a3_ua adm0_a3_un adm0_a3_wb     continent region_un          subregion
+1         ZWE        -99        -99        Africa    Africa     Eastern Africa
+2         ZMB        -99        -99        Africa    Africa     Eastern Africa
+3         YEM        -99        -99          Asia      Asia       Western Asia
+4         VNM        -99        -99          Asia      Asia South-Eastern Asia
+5         VEN        -99        -99 South America  Americas      South America
+6         VAT        -99        -99        Europe    Europe    Southern Europe
+7         VUT        -99        -99       Oceania   Oceania          Melanesia
+8         UZB        -99        -99          Asia      Asia       Central Asia
+9         URY        -99        -99 South America  Americas      South America
+10        FSM        -99        -99       Oceania   Oceania         Micronesia
+                    region_wb name_len long_len abbrev_len tiny homepart
+1          Sub-Saharan Africa        8        8          5  -99        1
+2          Sub-Saharan Africa        6        6          6  -99        1
+3  Middle East &amp; North Africa        5        5          4  -99        1
+4         East Asia &amp; Pacific        7        7          5    2        1
+5   Latin America &amp; Caribbean        9        9          4  -99        1
+6       Europe &amp; Central Asia        7        7          4    4        1
+7         East Asia &amp; Pacific        7        7          4    2        1
+8       Europe &amp; Central Asia       10       10          4    5        1
+9   Latin America &amp; Caribbean        7        7          4  -99        1
+10        East Asia &amp; Pacific       10       30          6  -99        1
+   min_zoom min_label max_label   label_x    label_y      ne_id wikidataid
+1         0       2.5       8.0  29.92544 -18.911640 1159321441       Q954
+2         0       3.0       8.0  26.39530 -14.660804 1159321439       Q953
+3         0       3.0       8.0  45.87438  15.328226 1159321425       Q805
+4         0       2.0       7.0 105.38729  21.715416 1159321417       Q881
+5         0       2.5       7.5 -64.59938   7.182476 1159321411       Q717
+6         0       5.0      10.0  12.45342  41.903323 1159321407       Q237
+7         0       4.0       9.0 166.90876 -15.371530 1159321421       Q686
+8         0       3.0       8.0  64.00543  41.693603 1159321405       Q265
+9         0       3.0       8.0 -55.96694 -32.961127 1159321353        Q77
+10        0       5.0      10.0 158.23402   6.887553 1159320691       Q702
+                     name_ar              name_bn
+1                   زيمبابوي             জিম্বাবুয়ে
+2                     زامبيا              জাম্বিয়া
+3                      اليمن               ইয়েমেন
+4                     فيتنام             ভিয়েতনাম
+5                    فنزويلا            ভেনেজুয়েলা
+6                  الفاتيكان        ভ্যাটিকান সিটি
+7                    فانواتو               ভানুয়াতু
+8                  أوزبكستان           উজবেকিস্তান
+9                 الأوروغواي                উরুগুয়ে
+10 ولايات ميكرونيسيا المتحدة মাইক্রোনেশিয়া যুক্তরাজ্য
+                              name_de                        name_en
+1                            Simbabwe                       Zimbabwe
+2                              Sambia                         Zambia
+3                               Jemen                          Yemen
+4                             Vietnam                        Vietnam
+5                           Venezuela                      Venezuela
+6                        Vatikanstadt                   Vatican City
+7                             Vanuatu                        Vanuatu
+8                          Usbekistan                     Uzbekistan
+9                             Uruguay                        Uruguay
+10 Föderierte Staaten von Mikronesien Federated States of Micronesia
+                           name_es  name_fa                     name_fr
+1                         Zimbabue زیمبابوه                    Zimbabwe
+2                           Zambia   زامبیا                      Zambie
+3                            Yemen      یمن                       Yémen
+4                          Vietnam   ویتنام                    Viêt Nam
+5                        Venezuela  ونزوئلا                   Venezuela
+6              Ciudad del Vaticano  واتیکان             Cité du Vatican
+7                          Vanuatu  وانواتو                     Vanuatu
+8                       Uzbekistán ازبکستان                 Ouzbékistan
+9                          Uruguay  اروگوئه                     Uruguay
+10 Estados Federados de Micronesia میکرونزی États fédérés de Micronésie
+                                name_el       name_he                  name_hi
+1                            Ζιμπάμπουε      זימבבואה                  ज़िम्बाब्वे
+2                                Ζάμπια         זמביה                  ज़ाम्बिया
+3                                Υεμένη          תימן                      यमन
+4                               Βιετνάμ       וייטנאם                  वियतनाम
+5                            Βενεζουέλα       ונצואלה                   वेनेज़ुएला
+6                              Βατικανό קריית הוותיקן                वैटिकन नगर
+7                             Βανουάτου        ונואטו                    वानूआटू
+8                          Ουζμπεκιστάν     אוזבקיסטן                उज़्बेकिस्तान
+9                            Ουρουγουάη     אורוגוואי                     उरुग्वे
+10 Ομόσπονδες Πολιτείες της Μικρονησίας     מיקרונזיה माइक्रोनेशिया के संघीकृत राज्य
+                          name_hu    name_id                      name_it
+1                        Zimbabwe   Zimbabwe                     Zimbabwe
+2                          Zambia     Zambia                       Zambia
+3                           Jemen      Yaman                        Yemen
+4                         Vietnám    Vietnam                      Vietnam
+5                       Venezuela  Venezuela                    Venezuela
+6                         Vatikán    Vatikan           Città del Vaticano
+7                         Vanuatu    Vanuatu                      Vanuatu
+8                     Üzbegisztán Uzbekistan                   Uzbekistan
+9                         Uruguay    Uruguay                      Uruguay
+10 Mikronéziai Szövetségi Államok Mikronesia Stati Federati di Micronesia
+            name_ja           name_ko      name_nl    name_pl     name_pt
+1        ジンバブエ          짐바브웨     Zimbabwe   Zimbabwe    Zimbábue
+2          ザンビア            잠비아       Zambia     Zambia      Zâmbia
+3          イエメン              예멘        Jemen      Jemen       Iémen
+4          ベトナム            베트남      Vietnam    Wietnam    Vietname
+5        ベネズエラ        베네수엘라    Venezuela  Wenezuela   Venezuela
+6          バチカン       바티칸 시국 Vaticaanstad    Watykan    Vaticano
+7          バヌアツ          바누아투      Vanuatu    Vanuatu     Vanuatu
+8    ウズベキスタン      우즈베키스탄  Oezbekistan Uzbekistan Uzbequistão
+9        ウルグアイ          우루과이      Uruguay    Urugwaj     Uruguai
+10 ミクロネシア連邦 미크로네시아 연방   Micronesia Mikronezja  Micronésia
+      name_ru                   name_sv    name_tr    name_uk      name_ur
+1    Зимбабве                  Zimbabwe   Zimbabve   Зімбабве      زمبابوے
+2      Замбия                    Zambia    Zambiya     Замбія       زیمبیا
+3       Йемен                     Jemen      Yemen       Ємен          یمن
+4     Вьетнам                   Vietnam    Vietnam    В'єтнам       ویتنام
+5   Венесуэла                 Venezuela  Venezuela  Венесуела    وینیزویلا
+6     Ватикан             Vatikanstaten    Vatikan    Ватикан   ویٹیکن سٹی
+7     Вануату                   Vanuatu    Vanuatu    Вануату      وانواتو
+8  Узбекистан                Uzbekistan Özbekistan Узбекистан     ازبکستان
+9     Уругвай                   Uruguay    Uruguay    Уругвай     یوراگوئے
+10 Микронезия Mikronesiska federationen Mikronezya Мікронезія مائیکرونیشیا
+         name_vi          name_zh         name_zht      fclass_iso tlc_diff
+1       Zimbabwe         津巴布韦           辛巴威 Admin-0 country     &lt;NA&gt;
+2         Zambia           赞比亚           尚比亞 Admin-0 country     &lt;NA&gt;
+3          Yemen             也门             葉門 Admin-0 country     &lt;NA&gt;
+4       Việt Nam             越南             越南 Admin-0 country     &lt;NA&gt;
+5      Venezuela         委内瑞拉         委內瑞拉 Admin-0 country     &lt;NA&gt;
+6  Thành Vatican           梵蒂冈           梵蒂岡 Admin-0 country     &lt;NA&gt;
+7        Vanuatu         瓦努阿图           萬那杜 Admin-0 country     &lt;NA&gt;
+8     Uzbekistan     乌兹别克斯坦         烏茲別克 Admin-0 country     &lt;NA&gt;
+9        Uruguay           乌拉圭           烏拉圭 Admin-0 country     &lt;NA&gt;
+10    Micronesia 密克罗尼西亚联邦 密克羅尼西亞聯邦 Admin-0 country     &lt;NA&gt;
+        fclass_tlc fclass_us fclass_fr fclass_ru fclass_es fclass_cn fclass_tw
+1  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9  Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10 Admin-0 country      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_in fclass_np fclass_pk fclass_de fclass_gb fclass_br fclass_il
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_ps fclass_sa fclass_eg fclass_ma fclass_pt fclass_ar fclass_jp
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_ko fclass_vn fclass_tr fclass_id fclass_pl fclass_gr fclass_it
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;
+   fclass_nl fclass_se fclass_bd fclass_ua                       geometry
+1       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((3482952 -24...
+2       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((3383678 -17...
+3       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((5909467 185...
+4       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((11584348 11...
+5       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((-6770584 10...
+6       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((1384721 466...
+7       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((18562058 -1...
+8       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((7897759 470...
+9       &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((-5941189 -3...
+10      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt;      &lt;NA&gt; MULTIPOLYGON (((18143207 59...</code></pre>
 </div>
 </div>
 <p>Visualize the shapefile you created:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>aoi.terrestrial <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>aoi_terrestrial <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -909,7 +1599,7 @@ First 10 features:
 </div>
 <p>Use ggplot to visualize the global distribution of Fluxnet CH4 sites:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi.terrestrial) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> FLUXNET.CH4.shp) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi_terrestrial) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -918,23 +1608,29 @@ First 10 features:
 </div>
 </div>
 </div>
-<p>Extract the country from the world simple feature into FLUXNET.CH4.shp:</p>
+<p>Extract the country from the world simple feature into fluxnet_ch4_sf. A straight <code>st_intersection()</code> can return more or fewer rows than you started with (a point can sit exactly on a shared border and match two polygons, or fall outside all of them, e.g.&nbsp;small islands at this map resolution), so join back on <code>SITE_ID</code> instead of assigning the result directly:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>Country <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>( aoi.terrestrial, FLUXNET.CH4.shp)<span class="sc">$</span>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>country_lookup <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(aoi_terrestrial, fluxnet_ch4_sf) <span class="sc">%&gt;%</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SITE_ID, name) <span class="sc">%&gt;%</span></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(SITE_ID, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: attribute variables are assumed to be spatially constant throughout
 all geometries</code></pre>
 </div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> fluxnet_ch4_sf <span class="sc">%&gt;%</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(country_lookup, <span class="at">by =</span> <span class="st">"SITE_ID"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">country =</span> name)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Explore the Fluxnet CH4 sites:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "SITE_ID"         "SITE_NAME"       "FLUXNET2015"     "FLUXNET.CH4"    
- [5] "LOCATION_ELEV"   "IGBP"            "MAT"             "MAP"            
- [9] "geometry"        "MeanDistance_km" "Country"        </code></pre>
+<pre><code> [1] "SITE_ID"          "SITE_NAME"        "FLUXNET2015"      "FLUXNET.CH4"     
+ [5] "LOCATION_ELEV"    "IGBP"             "MAT"              "MAP"             
+ [9] "mean_distance_km" "country"          "geometry"        </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> fluxnet_ch4_sf) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> MAT, <span class="at">y =</span> MAP))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -946,7 +1642,7 @@ all geometries</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span> FLUXNET.CH4.shp) <span class="sc">+</span> <span class="fu">geom_point</span>( <span class="fu">aes</span>(<span class="at">x=</span>MAT, <span class="at">y=</span>MAP, <span class="at">col=</span>IGBP))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> fluxnet_ch4_sf) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> MAT, <span class="at">y =</span> MAP, <span class="at">col =</span> IGBP))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 10 rows containing missing values or values outside the scale range
 (`geom_point()`).</code></pre>
@@ -958,37 +1654,36 @@ all geometries</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>FLUXNET.CH4.shp<span class="sc">$</span>IGBP <span class="ot">&lt;-</span> <span class="fu">as.factor</span>( FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(FLUXNET.CH4.shp<span class="sc">$</span>IGBP)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf<span class="sc">$</span>IGBP <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(fluxnet_ch4_sf<span class="sc">$</span>IGBP)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fluxnet_ch4_sf<span class="sc">$</span>IGBP)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>BSV CRO CSH EBF ENF GRA  MF OSH SNO URB WAT WET WSA 
   2  13   1   4   7   9   1   2   1   1   2  37   1 </code></pre>
 </div>
 </div>
 </section>
-</section>
 <section id="writing-files-using-st_write" class="level3">
 <h3 class="anchored" data-anchor-id="writing-files-using-st_write">Writing files using st_write:</h3>
 <p>When writing, you can use the following arguments to control update and delete: update=TRUE causes an existing data source to be updated, if it exists; this option is by default TRUE for all database drivers, where the database is updated by adding a table.</p>
-<p>delete_layer=TRUE causes st_write try to open the data source and delete the layer; no errors are given if the data source is not present, or the layer does not exist in the data source.</p>
+<p>delete_layer=TRUE causes st_write to try to open the data source and delete the layer; no errors are given if the data source is not present, or the layer does not exist in the data source.</p>
 <p>delete_dsn=TRUE causes st_write to delete the data source when present, before writing the layer in a newly created data source. No error is given when the data source does not exist. This option should be handled with care, as it may wipe complete directories or databases.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_sf</span>(FLUXNET.CH4.shp, <span class="st">"data/products/FLUXNET_CH4.shp"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_sf</span>(fluxnet_ch4_sf, <span class="st">"data/products/fluxnet_ch4.shp"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>It is possible to create data.frame objects with geometry list-columns that are not of class sf by:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>Fluxnet.ch4.df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(FLUXNET.CH4.shp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(fluxnet_ch4_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Check the class:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Fluxnet.ch4.df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fluxnet_ch4_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
 </div>
-<p>Such objects: no longer register which column is the geometry list-column no longer have a plot method, and lack all of the other dedicated methods listed above for class sf. To write this object:</p>
+<p>Such objects: no longer register which column is the geometry list-column, no longer have a plot method, and lack all of the other dedicated methods listed above for class sf. To write this object:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(Fluxnet.ch4.df, <span class="st">"data/Fluxnet.ch4.df"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(fluxnet_ch4_df, <span class="st">"data/fluxnet_ch4.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="additional-reading" class="level3">
@@ -1005,244 +1700,248 @@ all geometries</code></pre>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
-  const onCopySuccess = function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    let tooltip;
-    if (window.bootstrap) {
-      button.setAttribute("data-bs-toggle", "tooltip");
-      button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
-      tooltip = new bootstrap.Tooltip(button, 
-        { trigger: "manual", 
-          customClass: "code-copy-button-tooltip",
-          offset: [0, -8]});
-      tooltip.show();    
-    }
-    setTimeout(function() {
-      if (tooltip) {
-        tooltip.hide();
-        button.removeAttribute("data-bs-title");
-        button.removeAttribute("data-bs-toggle");
-        button.removeAttribute("data-bs-placement");
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
-  });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-    var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-        // undo the damage that might have been done by quarto-nav.js in the case of
-        // links that we want to consider external
-        if (link.dataset.originalHref !== undefined) {
-          link.href = link.dataset.originalHref;
-        }
-          // target, if specified
-          link.setAttribute("target", "_blank");
-          if (link.getAttribute("rel") === null) {
-            link.setAttribute("rel", "noopener");
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
           }
-      }
-    }
-  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-    const config = {
-      allowHTML: true,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start',
-    };
-    if (contentFn) {
-      config.content = contentFn;
-    }
-    if (onTriggerFn) {
-      config.onTrigger = onTriggerFn;
-    }
-    if (onUntriggerFn) {
-      config.onUntrigger = onUntriggerFn;
-    }
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note) {
-        return note.innerHTML;
-      } else {
-        return "";
-      }
-    });
-  }
-  const xrefs = window.document.querySelectorAll('a.quarto-xref');
-  const processXRef = (id, note) => {
-    // Strip column container classes
-    const stripColumnClz = (el) => {
-      el.classList.remove("page-full", "page-columns");
-      if (el.children) {
-        for (const child of el.children) {
-          stripColumnClz(child);
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
         }
       }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
     }
-    stripColumnClz(note)
-    if (id === null || id.startsWith('sec-')) {
-      // Special case sections, only their first couple elements
-      const container = document.createElement("div");
-      if (note.children && note.children.length > 2) {
-        container.appendChild(note.children[0].cloneNode(true));
-        for (let i = 1; i < note.children.length; i++) {
-          const child = note.children[i];
-          if (child.tagName === "P" && child.innerText === "") {
-            continue;
-          } else {
-            container.appendChild(child.cloneNode(true));
-            break;
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
           }
         }
-        if (window.Quarto?.typesetMath) {
-          window.Quarto.typesetMath(container);
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
         }
-        return container.innerHTML
       } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        return note.innerHTML;
-      }
-    } else {
-      // Remove any anchor links if they are present
-      const anchorLink = note.querySelector('a.anchorjs-link');
-      if (anchorLink) {
-        anchorLink.remove();
-      }
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(note);
-      }
-      // TODO in 1.5, we should make sure this works without a callout special case
-      if (note.classList.contains("callout")) {
-        return note.outerHTML;
-      } else {
-        return note.innerHTML;
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
       }
     }
-  }
-  for (var i=0; i<xrefs.length; i++) {
-    const xref = xrefs[i];
-    tippyHover(xref, undefined, function(instance) {
-      instance.disable();
-      let url = xref.getAttribute('href');
-      let hash = undefined; 
-      if (url.startsWith('#')) {
-        hash = url;
-      } else {
-        try { hash = new URL(url).hash; } catch {}
-      }
-      if (hash) {
-        const id = hash.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note !== null) {
-          try {
-            const html = processXRef(id, note.cloneNode(true));
-            instance.setContent(html);
-          } finally {
-            instance.enable();
-            instance.show();
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
           }
         } else {
-          // See if we can fetch this
-          fetch(url.split('#')[0])
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.getElementById(id);
+            const note = htmlDoc.querySelector('main.content');
             if (note !== null) {
-              const html = processXRef(id, note);
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1250,185 +1949,161 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             instance.show();
           });
         }
-      } else {
-        // See if we can fetch a full url (with no hash to target)
-        // This is a special case and we should probably do some content thinning / targeting
-        fetch(url)
-        .then(res => res.text())
-        .then(html => {
-          const parser = new DOMParser();
-          const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.querySelector('main.content');
-          if (note !== null) {
-            // This should only happen for chapter cross references
-            // (since there is no id in the URL)
-            // remove the first header
-            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-              note.children[0].remove();
-            }
-            const html = processXRef(null, note);
-            instance.setContent(html);
-          } 
-        }).finally(() => {
-          instance.enable();
-          instance.show();
-        });
-      }
-    }, function(instance) {
-    });
-  }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            div.style.left = 0;
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-        // Handle positioning of the toggle
-    window.addEventListener(
-      "resize",
-      throttle(() => {
-        elRect = undefined;
-        if (selectedAnnoteEl) {
-          selectCodeLines(selectedAnnoteEl);
-        }
-      }, 10)
-    );
-    function throttle(fn, ms) {
-    let throttle = false;
-    let timer;
-      return (...args) => {
-        if(!throttle) { // first call gets through
-            fn.apply(this, args);
-            throttle = true;
-        } else { // all the others get throttled
-            if(timer) clearTimeout(timer); // cancel #2
-            timer = setTimeout(() => {
-              fn.apply(this, args);
-              timer = throttle = false;
-            }, ms);
-        }
-      };
-    }
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
-  const findCites = (el) => {
-    const parentEl = el.parentElement;
-    if (parentEl) {
-      const cites = parentEl.dataset.cites;
-      if (cites) {
-        return {
-          el,
-          cites: cites.split(' ')
-        };
-      } else {
-        return findCites(el.parentElement)
-      }
-    } else {
-      return undefined;
-    }
-  };
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const citeInfo = findCites(ref);
-    if (citeInfo) {
-      tippyHover(citeInfo.el, function() {
-        var popup = window.document.createElement('div');
-        citeInfo.cites.forEach(function(cite) {
-          var citeDiv = window.document.createElement('div');
-          citeDiv.classList.add('hanging-indent');
-          citeDiv.classList.add('csl-entry');
-          var biblioDiv = window.document.getElementById('ref-' + cite);
-          if (biblioDiv) {
-            citeDiv.innerHTML = biblioDiv.innerHTML;
-          }
-          popup.appendChild(citeDiv);
-        });
-        return popup.innerHTML;
+      }, function(instance) {
       });
     }
-  }
-});
-</script>
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
