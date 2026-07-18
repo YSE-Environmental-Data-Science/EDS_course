@@ -1,8 +1,28 @@
 ---
-title: "Introduction to Simple Features in R"
+title: "Vector Data: Mapping Gaps in the Global Methane Tower Network"
 editor:
   mode: source
 ---
+
+## Mapping methane observations
+
+Models are only as good as the places where we collect data. FLUXNET towers provide direct measurements of ecosystem-atmosphere exchange, and FLUXNET-CH4 towers are especially important for understanding methane emissions from natural ecosystems. But the tower network is not evenly distributed across the planet.
+
+In this workshop, we will use vector data to ask:
+
+> If FLUXNET CH4 towers are used to understand natural methane emissions, where are we observing the planet, and where are we guessing?
+
+By the end of the workshop, you will be able to:
+
+1.  Convert tabular coordinates into simple feature objects.
+2.  Inspect geometries and coordinate reference systems.
+3.  Transform vector data into an appropriate projected CRS.
+4.  Measure distances among point locations.
+5.  Use country and continent polygons from `rnaturalearth`.
+6.  Use spatial predicates and spatial joins to count towers inside regions.
+7.  Calculate polygon area and tower density.
+8.  Evaluate basic representativeness of the CH4 tower network.
+9.  Write spatial outputs for later workshops.
 
 ### Install libraries for this workshop
 
@@ -10,33 +30,23 @@ editor:
 #| eval: false
 install.packages("sf")
 install.packages("rnaturalearth")
-install.packages("devtools")
-devtools::install_github("ropensci/rnaturalearthhires")
-devtools::install_github("valentinitnelav/plotbiomes")
+install.packages("tidyverse")
+install.packages("ggplot2")
 ```
 
-### Load the required libraries for this workshop
+### Load the required libraries
 
 ```{r}
 #| output: false
 library(sf)
 library(rnaturalearth)
-library(rnaturalearthhires)
 library(tidyverse)
 library(ggplot2)
 ```
 
-# Goals
-
-The goals of this workshop are to:
-
-1. Become familiar with simple features
-2. Master simple feature manipulation
-3. Visualize simple features
-
 # Data
 
-Import FluxNet_Sites_2024.csv. This table was created from the FLUXNET site list found at <https://fluxnet.org/sites/site-list-and-pages/?view=table>.
+Import `FluxNet_Sites_2024.csv`. This table was created from the FLUXNET site list found at <https://fluxnet.org/sites/site-list-and-pages/?view=table>.
 
 ```{r}
 fluxnet_sites <- read.csv("data/FluxNet_Sites_2024.csv")
@@ -46,15 +56,15 @@ This dataset includes:
 
 | Column Name | Description |
 |---------------------------:|--------------------------------------------|
-| SITE_ID | Unique site id |
+| SITE_ID | Unique site ID |
 | SITE_NAME | Site name |
-| FLUXNET2015 | License information for the data for the two FLUXNET Products |
-| FLUXNET-CH4 | License information for the data for the two FLUXNET Products |
-| LOCATION_LAT | Location information |
-| LOCATION_LONG | Location information |
+| FLUXNET2015 | License information for FLUXNET2015 |
+| FLUXNET-CH4 | License information for FLUXNET-CH4 |
+| LOCATION_LAT | Latitude |
+| LOCATION_LONG | Longitude |
 | LOCATION_ELEV | Elevation in meters |
 | IGBP | Vegetation type |
-| MAT | Mean annual temperature in Celsius |
+| MAT | Mean annual temperature in degrees C |
 | MAP | Mean annual precipitation in mm |
 
 Take a look at the file:
@@ -64,278 +74,430 @@ Take a look at the file:
 View(fluxnet_sites)
 ```
 
-Look at the tower site locations:
+Start with a non-spatial view of the tower locations. At this stage, latitude and longitude are just numbers:
 
 ```{r}
-fluxnet_sites %>% ggplot() + geom_point(aes(x = LOCATION_LONG, y = LOCATION_LAT))
+ggplot(data = fluxnet_sites,
+       aes(x = LOCATION_LONG, y = LOCATION_LAT)) +
+  geom_point() +
+  labs(title = "FLUXNET tower locations as longitude and latitude",
+       x = "Longitude",
+       y = "Latitude")
 ```
 
-Look at the elevation, mean annual temperature, and mean annual precipitation for the tower site locations:
+Look at the climate and elevation conditions represented by the full tower list:
 
 ```{r}
-fluxnet_sites %>% ggplot(aes(x = LOCATION_ELEV)) +
-  geom_histogram(color = "black", fill = "white")
+ggplot(data = fluxnet_sites, aes(x = LOCATION_ELEV)) +
+  geom_histogram(color = "black", fill = "white") +
+  labs(title = "Elevation of FLUXNET tower sites",
+       x = "Elevation (m)",
+       y = "Count")
 
-fluxnet_sites %>% ggplot(aes(x = MAT)) +
-  geom_histogram(color = "black", fill = "white")
+ggplot(data = fluxnet_sites, aes(x = MAT)) +
+  geom_histogram(color = "black", fill = "white") +
+  labs(title = "Mean annual temperature of FLUXNET tower sites",
+       x = "Mean annual temperature (degrees C)",
+       y = "Count")
 
-fluxnet_sites %>% ggplot(aes(x = MAP)) +
-  geom_histogram(color = "black", fill = "white")
+ggplot(data = fluxnet_sites, aes(x = MAP)) +
+  geom_histogram(color = "black", fill = "white") +
+  labs(title = "Mean annual precipitation of FLUXNET tower sites",
+       x = "Mean annual precipitation (mm)",
+       y = "Count")
 ```
 
-We are interested in exploring the sites with methane data. Let's subset by FLUXNET-CH4 (read into R as the column `FLUXNET.CH4`, since R replaces the hyphen with a dot).
+# From tables to simple features
+
+We are interested in the sites with methane data. The column `FLUXNET-CH4` is read into R as `FLUXNET.CH4`, because R replaces the hyphen with a dot.
 
 ```{r}
-fluxnet_ch4 <- fluxnet_sites %>% filter(FLUXNET.CH4 != "")
+fluxnet_ch4 <- fluxnet_sites %>%
+  filter(FLUXNET.CH4 != "")
 ```
+
+How many total FLUXNET sites are in the table? How many have CH4 data?
 
 ```{r}
-#| eval: false
-View(fluxnet_ch4)
+nrow(fluxnet_sites)
+nrow(fluxnet_ch4)
 ```
 
-This object is currently a dataframe.
+This object is still a data frame:
 
 ```{r}
 class(fluxnet_ch4)
 ```
 
-Let's make it a simple feature using `st_as_sf()`.
+Latitude and longitude become spatial data when we tell R which columns contain coordinates and what coordinate reference system they use. A few rows in the full FLUXNET table may be missing coordinates, so remove those before converting the table to points. These coordinates are in WGS84 longitude/latitude, EPSG 4326.
 
 ```{r}
-fluxnet_ch4_sf <- st_as_sf(x = fluxnet_ch4,
-                            coords = c("LOCATION_LONG", "LOCATION_LAT"),
-                            crs = 4326)
+fluxnet_sites_located <- fluxnet_sites %>%
+  filter(!is.na(LOCATION_LONG), !is.na(LOCATION_LAT))
 
-ggplot(data = fluxnet_ch4_sf) + geom_sf()
+fluxnet_ch4_located <- fluxnet_ch4 %>%
+  filter(!is.na(LOCATION_LONG), !is.na(LOCATION_LAT))
 ```
 
-Check the class:
+```{r}
+fluxnet_sites_sf <- st_as_sf(x = fluxnet_sites_located,
+                              coords = c("LOCATION_LONG", "LOCATION_LAT"),
+                              crs = 4326)
+
+fluxnet_ch4_sf <- st_as_sf(x = fluxnet_ch4_located,
+                            coords = c("LOCATION_LONG", "LOCATION_LAT"),
+                            crs = 4326)
+```
+
+Now map the full FLUXNET network and the CH4 subset:
+
+```{r}
+ggplot() +
+  geom_sf(data = fluxnet_sites_sf, color = "gray75", size = 1) +
+  geom_sf(data = fluxnet_ch4_sf, color = "red", size = 1.6) +
+  labs(title = "FLUXNET CH4 towers are a subset of the full FLUXNET network")
+```
+
+Check the class and geometry:
 
 ```{r}
 class(fluxnet_ch4_sf)
-```
-
-Simple features describe how objects in the real world can be represented in computers. They have a geometry describing where on earth the feature is located, and they have attributes, which describe other properties about the feature.
-
-Look at the information about the geometry:
-
-```{r}
 fluxnet_ch4_sf$geometry
-```
-
-If we print the first three features, we see their attribute values and an abridged version of the geometry.
-
-```{r}
 print(fluxnet_ch4_sf, n = 3)
 ```
 
-# Geometrical Operations
+Simple features describe real-world objects with both attributes and geometry. In this case, the attributes describe tower names, climate, elevation, and vegetation type, while the geometry records each tower's location.
 
-There are many geometrical operations that can be used to achieve simple feature manipulation.
+# Geometry checks and coordinate reference systems
 
-```{r}
-methods(class = "sf")
-```
-
-Below we will explore a few methods:
-
-`st_is_valid()` and `st_is_simple()` return a boolean indicating whether a geometry is valid or simple.
+`st_is_valid()` checks whether geometries are valid. Points are usually simple, but it is still a good habit to check spatial data before using it.
 
 ```{r}
 st_is_valid(fluxnet_ch4_sf)
 ```
 
-If there were any issues with the geometry you can use `st_make_valid()` to fix it. Since this is a point file there will be no issues with the geometry.
-
-### Change the CRS to a projected EPSG with st_transform.
-
-<a href="https://www.nceas.ucsb.edu/sites/default/files/2020-04/OverviewCoordinateReferenceSystems.pdf"> Coordinate reference systems (CRS) </a> are like measurement units for coordinates: they specify which location on Earth a particular coordinate pair refers to. Simple features have two attributes to store a CRS: epsg and proj4string. This implies that all geometries in a geometry list-column must have the same CRS. Both may be NA, e.g. in case the CRS is unknown, or when we work with local coordinate systems (e.g. inside a building, a body, or an abstract space).
-
-proj4string is a generic, string-based description of a CRS, understood by the PROJ library. It defines projection types and (often) defines parameter values for particular projections, and hence can cover an infinite amount of different projections. This library (also used by GDAL) provides functions to convert or transform between different CRS. epsg is the integer ID for a particular, known CRS that can be resolved into a proj4string. Some proj4string values can be resolved back into their corresponding epsg ID, but this does not always work.
-
-The importance of having epsg values stored with data besides proj4string values is that the epsg refers to a particular, well-known CRS, whose parameters may change (improve) over time; fixing only the proj4string may remove the possibility to benefit from such improvements, and limit some of the provenance of datasets, but may help reproducibility. Coordinate reference system transformations can be carried out using st_transform.
+Coordinate reference systems (CRS) define how coordinates map to locations on Earth. Longitude/latitude coordinates are useful for storing global locations, but projected coordinates are better when measuring area and distance. We will transform the tower data to World Equidistant Cylindrical, EPSG 4087, so distance and area operations use meters.
 
 ```{r}
+fluxnet_sites_sf <- st_transform(fluxnet_sites_sf, crs = 4087)
 fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = 4087)
 
 fluxnet_ch4_sf
 ```
 
-Now the projected CRS is WGS 84 / World Equidistant Cylindrical.
+# Are methane towers clustered?
 
-`st_distance()` returns a dense numeric matrix with distances between geometries:
+If methane towers are clustered, models may describe those places well while leaving other climate or ecosystem conditions underrepresented. Use `st_distance()` to calculate the distance among CH4 towers, then identify each tower's nearest neighbor.
 
 ```{r}
-fluxnet_ch4_sf$mean_distance_km <- st_distance(fluxnet_ch4_sf, fluxnet_ch4_sf) %>% rowMeans() / 1000
+distance_matrix_km <- as.matrix(st_distance(fluxnet_ch4_sf)) / 1000
+diag(distance_matrix_km) <- NA
 
-fluxnet_ch4_sf %>% ggplot() + geom_sf(aes(col = mean_distance_km))
-
-fluxnet_ch4_sf %>% ggplot(aes(x = mean_distance_km)) +
-  geom_histogram(color = "black", fill = "white")
+fluxnet_ch4_sf$nearest_neighbor_km <- apply(distance_matrix_km, 1, min, na.rm = TRUE)
 ```
 
-# Getting country and state boundaries with rnaturalearth
-
-rnaturalearth provides world map data at several resolutions, including country boundaries with a `continent` attribute you can filter or group by. Its companion package, rnaturalearthhires, adds higher-resolution boundaries down to the state/province level for individual countries. Together they're a good general-purpose source for the kind of reference boundaries you'll often need to visualize or subset other spatial data against.
-
-### Key functions:
-
-`ne_countries()`: Returns country boundaries as an sf object, with a `continent` column you can filter or group by.
-
-`ne_states()`: Returns state/province boundaries for a given country (from rnaturalearthhires).
-
-Example:
+Map nearest-neighbor distance. Larger values identify more isolated towers:
 
 ```{r}
-library(rnaturalearth)
-library(rnaturalearthhires)
-
-world <- ne_countries(scale = "medium", returnclass = "sf")
-
-# Get New York state from the US
-us_states <- ne_states(country = "United States of America", returnclass = "sf")
-new_york <- us_states %>% filter(name == "New York")
-new_york %>% ggplot() + geom_sf()
+ggplot(data = fluxnet_ch4_sf) +
+  geom_sf(aes(color = nearest_neighbor_km), size = 2) +
+  labs(title = "Nearest CH4 tower distance",
+       color = "Nearest tower (km)")
 ```
 
-Get a simple feature of every country in South America, and one that unions them into a single South America polygon:
+Look at the distribution:
 
 ```{r}
-south_america_countries <- world %>% filter(continent == "South America")
-south_america <- south_america_countries %>% st_union() %>% st_as_sf()
-south_america %>% ggplot() + geom_sf()
+ggplot(data = fluxnet_ch4_sf,
+       aes(x = nearest_neighbor_km)) +
+  geom_histogram(color = "black", fill = "white") +
+  labs(title = "Distribution of nearest-neighbor distances",
+       x = "Distance to nearest CH4 tower (km)",
+       y = "Count")
 ```
 
-### How many features does south_america_countries have, versus south_america? Why?
+Which towers are most isolated?
 
 ```{r}
-# Compare nrow() of the two objects here
-# ...
-```
-
-Re-project south_america to match fluxnet_ch4_sf:
-
-```{r}
-aoi_south_america <- st_transform(south_america, crs = 4087)
-aoi_south_america %>% ggplot() + geom_sf()
-```
-
-Create a simple feature of Brazil and re-project it to match fluxnet_ch4_sf:
-
-```{r}
-# Create your simple feature object here
-# ...
-```
-
-The functions `st_intersects()`, `st_disjoint()`, `st_touches()`, `st_crosses()`, `st_within()`, `st_contains()`, `st_overlaps()`, `st_equals()`, `st_covers()`, `st_covered_by()`, `st_equals_exact()` and `st_is_within_distance()` all return a sparse matrix with matching (TRUE) indexes, or a full logical matrix:
-
-### How many towers are in South America?
-
-```{r}
-st_intersects(aoi_south_america, fluxnet_ch4_sf)
-st_intersects(aoi_south_america, fluxnet_ch4_sf, sparse = FALSE)
-```
-
-### How many towers are in Brazil?
-
-```{r}
-# Find out how many towers are in Brazil here
-# ...
-```
-
-Where possible geometric operations such as `st_distance()`, `st_length()` and `st_area()` report results with a units attribute appropriate for the CRS.
-
-Calculate the area of South America:
-
-```{r}
-aoi_south_america$area <- st_area(aoi_south_america)
-aoi_south_america$area
-```
-
-Calculate the area of Brazil:
-
-```{r}
-# Calculate the area here
-# ...
-```
-
-### Visualize the global distribution of towers:
-
-First create a simple feature for every country in Europe, Asia, the Americas, Africa, and Oceania (i.e. all inhabited continents except Antarctica):
-
-```{r}
-aoi_terrestrial <- world %>% filter(continent %in% c("Europe", "Asia", "North America", "South America", "Africa", "Oceania"))
-
-aoi_terrestrial %>% ggplot() + geom_sf()
-```
-
-Look at the CRS:
-
-```{r}
-aoi_terrestrial
-```
-
-Re-project the polygon to match fluxnet_ch4_sf:
-
-```{r}
-aoi_terrestrial <- aoi_terrestrial %>% st_transform(4087)
-
-aoi_terrestrial
-```
-
-Visualize the shapefile you created:
-
-```{r}
-aoi_terrestrial %>% ggplot() + geom_sf()
-```
-
-Use ggplot to visualize the global distribution of Fluxnet CH4 sites:
-
-```{r}
-ggplot() + geom_sf(data = aoi_terrestrial) + geom_sf(data = fluxnet_ch4_sf)
-```
-
-Extract the country from the world simple feature into fluxnet_ch4_sf. A straight `st_intersection()` can return more or fewer rows than you started with (a point can sit exactly on a shared border and match two polygons, or fall outside all of them, e.g. small islands at this map resolution), so join back on `SITE_ID` instead of assigning the result directly:
-
-```{r}
-country_lookup <- st_intersection(aoi_terrestrial, fluxnet_ch4_sf) %>%
+fluxnet_ch4_sf %>%
   st_drop_geometry() %>%
-  select(SITE_ID, name) %>%
-  distinct(SITE_ID, .keep_all = TRUE)
+  select(SITE_ID, SITE_NAME, IGBP, MAT, MAP, nearest_neighbor_km) %>%
+  arrange(desc(nearest_neighbor_km)) %>%
+  head()
+```
+
+# Add country and continent context
+
+Point locations become more useful when we attach contextual information. We will get country polygons from `rnaturalearth` and spatially join each tower to a country and continent.
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  filter(continent %in% c("Europe", "Asia", "North America",
+                          "South America", "Africa", "Oceania")) %>%
+  st_transform(crs = 4087) %>%
+  st_make_valid()
+```
+
+Map the global land polygons:
+
+```{r}
+ggplot(data = world) +
+  geom_sf(fill = "gray95", color = "gray70") +
+  labs(title = "Country polygons from rnaturalearth")
+```
+
+Attach country and continent to all FLUXNET sites and to CH4 sites:
+
+```{r}
+world_context <- world %>%
+  select(country = name, continent, geometry)
+
+fluxnet_sites_sf <- fluxnet_sites_sf %>%
+  st_join(world_context, join = st_within)
 
 fluxnet_ch4_sf <- fluxnet_ch4_sf %>%
-  left_join(country_lookup, by = "SITE_ID") %>%
-  rename(country = name)
+  st_join(world_context, join = st_within)
 ```
 
-Explore the Fluxnet CH4 sites:
+Look at the new columns:
 
 ```{r}
-names(fluxnet_ch4_sf)
-
-ggplot(data = fluxnet_ch4_sf) + geom_point(aes(x = MAT, y = MAP))
-
-ggplot(data = fluxnet_ch4_sf) + geom_point(aes(x = MAT, y = MAP, col = IGBP))
-
-fluxnet_ch4_sf$IGBP <- as.factor(fluxnet_ch4_sf$IGBP)
-summary(fluxnet_ch4_sf$IGBP)
+fluxnet_ch4_sf %>%
+  st_drop_geometry() %>%
+  select(SITE_ID, SITE_NAME, country, continent) %>%
+  head()
 ```
 
-### Writing files using st_write:
+Map the CH4 tower network with country context in the background:
 
-When writing, you can use the following arguments to control update and delete: update=TRUE causes an existing data source to be updated, if it exists; this option is by default TRUE for all database drivers, where the database is updated by adding a table.
+```{r}
+ggplot() +
+  geom_sf(data = world, fill = "gray95", color = "white") +
+  geom_sf(data = fluxnet_ch4_sf, aes(color = continent), size = 1.8) +
+  labs(title = "Global distribution of FLUXNET CH4 towers",
+       color = "Continent")
+```
 
-delete_layer=TRUE causes st_write to try to open the data source and delete the layer; no errors are given if the data source is not present, or the layer does not exist in the data source.
+# Case study: South America and Brazil
 
-delete_dsn=TRUE causes st_write to delete the data source when present, before writing the layer in a newly created data source. No error is given when the data source does not exist. This option should be handled with care, as it may wipe complete directories or databases.
+Tropical and subtropical wetlands are important to the global methane cycle. South America is a useful case study because it includes large wetland systems and major climate gradients.
+
+Create a simple feature object for South America, and a second object that unions all South American countries into one polygon:
+
+```{r}
+south_america_countries <- world %>%
+  filter(continent == "South America")
+
+south_america <- south_america_countries %>%
+  st_union() %>%
+  st_as_sf() %>%
+  rename(geometry = x)
+
+ggplot(data = south_america) +
+  geom_sf() +
+  labs(title = "South America as one polygon")
+```
+
+How many features does `south_america_countries` have, versus `south_america`? Why?
+
+```{r}
+nrow(south_america_countries)
+nrow(south_america)
+```
+
+Create a Brazil polygon:
+
+```{r}
+brazil <- world %>%
+  filter(name == "Brazil")
+
+ggplot(data = brazil) +
+  geom_sf() +
+  labs(title = "Brazil")
+```
+
+The functions `st_intersects()`, `st_within()`, `st_contains()`, `st_disjoint()`, and related predicates tell us whether spatial features have a specific relationship. Use `st_intersects()` to identify CH4 towers in South America:
+
+```{r}
+south_america_intersections <- st_intersects(south_america, fluxnet_ch4_sf)
+south_america_intersections
+
+south_america_tower_count <- lengths(south_america_intersections)
+south_america_tower_count
+```
+
+Count towers in Brazil:
+
+```{r}
+brazil_intersections <- st_intersects(brazil, fluxnet_ch4_sf)
+brazil_tower_count <- lengths(brazil_intersections)
+brazil_tower_count
+```
+
+Calculate area and tower density. Area is easier to interpret in million square kilometers:
+
+```{r}
+south_america_area_million_km2 <- as.numeric(st_area(south_america)) / 1e12
+brazil_area_million_km2 <- as.numeric(st_area(brazil)) / 1e12
+
+south_america_density <- south_america_tower_count / south_america_area_million_km2
+brazil_density <- brazil_tower_count / brazil_area_million_km2
+
+south_america_density
+brazil_density
+```
+
+Create a small comparison table:
+
+```{r}
+regional_density <- tibble(
+  region = c("South America", "Brazil"),
+  ch4_towers = c(south_america_tower_count, brazil_tower_count),
+  area_million_km2 = c(south_america_area_million_km2, brazil_area_million_km2),
+  towers_per_million_km2 = c(south_america_density, brazil_density)
+)
+
+regional_density
+```
+
+# Basic representativeness analysis
+
+Now we can ask whether FLUXNET CH4 sites are representative of the larger FLUXNET network. This is not a complete representativeness analysis, but it is a useful first pass. We will compare:
+
+-   geographic representation by continent;
+-   ecosystem representation by `IGBP`;
+-   climate space coverage using mean annual temperature (`MAT`) and precipitation (`MAP`);
+-   elevation coverage.
+
+### Representation by continent
+
+Count all FLUXNET sites by continent and CH4 sites by continent:
+
+```{r}
+all_sites_by_continent <- fluxnet_sites_sf %>%
+  st_drop_geometry() %>%
+  count(continent, name = "all_fluxnet_sites")
+
+ch4_sites_by_continent <- fluxnet_ch4_sf %>%
+  st_drop_geometry() %>%
+  count(continent, name = "ch4_sites")
+```
+
+Join the summaries and calculate the fraction of FLUXNET sites that have CH4 data:
+
+```{r}
+representation_by_continent <- all_sites_by_continent %>%
+  full_join(ch4_sites_by_continent, by = "continent") %>%
+  mutate(ch4_sites = replace_na(ch4_sites, 0),
+         ch4_fraction = ch4_sites / all_fluxnet_sites) %>%
+  arrange(desc(ch4_fraction))
+
+representation_by_continent
+```
+
+Visualize the result:
+
+```{r}
+ggplot(data = representation_by_continent,
+       aes(x = reorder(continent, ch4_fraction), y = ch4_fraction)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Fraction of FLUXNET sites with CH4 data by continent",
+       x = "Continent",
+       y = "CH4 sites / all FLUXNET sites")
+```
+
+### Representation by ecosystem type
+
+Compare ecosystem representation using `IGBP`:
+
+```{r}
+all_sites_by_igbp <- fluxnet_sites_sf %>%
+  st_drop_geometry() %>%
+  count(IGBP, name = "all_fluxnet_sites")
+
+ch4_sites_by_igbp <- fluxnet_ch4_sf %>%
+  st_drop_geometry() %>%
+  count(IGBP, name = "ch4_sites")
+
+representation_by_igbp <- all_sites_by_igbp %>%
+  full_join(ch4_sites_by_igbp, by = "IGBP") %>%
+  mutate(ch4_sites = replace_na(ch4_sites, 0),
+         ch4_fraction = ch4_sites / all_fluxnet_sites) %>%
+  arrange(desc(ch4_sites))
+
+representation_by_igbp
+```
+
+Visualize CH4 tower counts by ecosystem type:
+
+```{r}
+ggplot(data = representation_by_igbp,
+       aes(x = reorder(IGBP, ch4_sites), y = ch4_sites)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "FLUXNET CH4 tower count by ecosystem type",
+       x = "IGBP",
+       y = "CH4 tower count")
+```
+
+### Climate space coverage
+
+A spatial network can be geographically widespread but still miss important climate conditions. Compare all FLUXNET sites to CH4 sites in climate space:
+
+```{r}
+ggplot() +
+  geom_point(data = fluxnet_sites,
+             aes(x = MAT, y = MAP),
+             color = "gray70") +
+  geom_point(data = fluxnet_ch4,
+             aes(x = MAT, y = MAP, color = IGBP)) +
+  labs(title = "Climate space represented by FLUXNET CH4 towers",
+       subtitle = "Gray points show all FLUXNET sites; colored points show CH4 sites",
+       x = "Mean annual temperature (degrees C)",
+       y = "Mean annual precipitation (mm)",
+       color = "IGBP")
+```
+
+Compare elevation distributions:
+
+```{r}
+fluxnet_site_type <- bind_rows(
+  fluxnet_sites %>%
+    mutate(site_type = "All FLUXNET sites"),
+  fluxnet_ch4 %>%
+    mutate(site_type = "CH4 sites")
+)
+
+ggplot(data = fluxnet_site_type,
+       aes(x = LOCATION_ELEV, fill = site_type)) +
+  geom_density(alpha = 0.45) +
+  labs(title = "Elevation conditions represented by FLUXNET and CH4 towers",
+       x = "Elevation (m)",
+       y = "Density",
+       fill = "Site type")
+```
+
+### Interpreting representation
+
+Use the tables and figures above to answer:
+
+1.  Which continents have many CH4 towers?
+2.  Which continents have a low fraction of CH4 towers relative to all FLUXNET sites?
+3.  Which ecosystem types dominate the CH4 network?
+4.  Are CH4 towers missing any obvious climate space in the `MAT` and `MAP` plot?
+5.  If you could add one new tower, where would you prioritize it?
+
+# Writing spatial files
+
+We will use the CH4 tower simple feature in later workshops. Save a shapefile version:
 
 ```{r}
 #| eval: false
 write_sf(fluxnet_ch4_sf, "data/products/fluxnet_ch4.shp")
 ```
 
-It is possible to create data.frame objects with geometry list-columns that are not of class sf by:
+It is also possible to convert a simple feature object back to a data frame:
 
 ```{r}
 fluxnet_ch4_df <- as.data.frame(fluxnet_ch4_sf)
@@ -347,17 +509,24 @@ Check the class:
 class(fluxnet_ch4_df)
 ```
 
-Such objects: no longer register which column is the geometry list-column, no longer have a plot method, and lack all of the other dedicated methods listed above for class sf. To write this object:
+Once the object is a data frame, it no longer has dedicated `sf` methods. The geometry column is still present, but R no longer treats the object as a spatial layer. Write a CSV version:
 
 ```{r}
 #| eval: false
 write.csv(fluxnet_ch4_df, "data/fluxnet_ch4.csv")
 ```
 
-### Additional Reading:
+### Additional reading
 
-S. Scheider, B. Gräler, E. Pebesma, C. Stasch, 2016. Modelling spatio-temporal information generation. Int J of Geographic Information Science, 30 (10), 1980-2008. (open access) Stasch, C., S. Scheider, E. Pebesma, W. Kuhn, 2014. Meaningful Spatial Prediction and Aggregation. Environmental Modelling & Software, 51, (149–165, open access).
+S. Scheider, B. Graler, E. Pebesma, C. Stasch, 2016. Modelling spatio-temporal information generation. International Journal of Geographic Information Science, 30 (10), 1980-2008. Stasch, C., S. Scheider, E. Pebesma, W. Kuhn, 2014. Meaningful Spatial Prediction and Aggregation. Environmental Modelling & Software, 51, 149-165.
 
-# Assignment:
+# Assignment
 
-Write a 3-page report on the distribution of tower sites discussing the strengths and weakness of the current tower representation. Please create 2 visualizations. You are welcome to use any additional data.
+Write a short FLUXNET CH4 representation audit. Your report should answer:
+
+1.  Where are CH4 towers geographically concentrated?
+2.  Which continents, countries, ecosystem types, or climate spaces seem underrepresented?
+3.  What do the nearest-neighbor distances suggest about clustering or isolation in the network?
+4.  Based on your analysis, where would you place one new methane tower and why?
+
+Include at least two maps and one non-map figure. You are welcome to use additional data, but your report should include evidence from the spatial and representativeness analyses in this workshop.

@@ -1,10 +1,29 @@
 ---
-title: "Introduction to Machine Learning with RandomForest"
+title: "Random Forest Models: Predicting Methane Flux"
 editor:
   mode: source
 ---
 
-### Install Packages:
+## From integrated data to prediction
+
+In Data Integration, we built the kind of table needed for methane flux modeling: one row per site-month, with methane flux as the response and climate, vegetation, and ecosystem variables as candidate predictors.
+
+In this workshop, we will ask:
+
+> Can we use climate, vegetation, and ecosystem predictors to estimate monthly methane flux, and how do we know whether the model is useful?
+
+By the end of this workshop, you will be able to:
+
+1.  Identify a response variable and candidate predictors.
+2.  Prepare a model-ready table for random forest regression.
+3.  Compare candidate random forest models.
+4.  Evaluate train and test performance using RMSE, MAE, R-squared, and bias.
+5.  Interpret variable importance without treating it as causation.
+6.  Compare random row splits with leave-one-site-out assessment.
+7.  Build a final model by selecting the best predictor from each category.
+8.  Save a final model object for sensitivity analysis and spatial prediction.
+
+### Install packages
 
 ```{r}
 #| eval: false
@@ -13,7 +32,7 @@ install.packages("tidyverse")
 install.packages("GGally")
 ```
 
-### Load Libraries:
+### Load libraries
 
 ```{r}
 #| output: false
@@ -22,116 +41,493 @@ library(tidyverse)
 library(GGally)
 ```
 
-Boosted regression trees (BRT) represent a versatile machine learning technique applicable to both classification and regression tasks. This approach facilitates the assessment of the relative significance of numerous variables associated with a target response variable. In this workshop, our focus will be on utilizing BRT to develop a model for monthly methane fluxes originating from natural ecosystems. We'll leverage climate and moisture conditions within these ecosystems to enhance predictive accuracy and understanding.
+# Random forests
 
-Read in the data. The chunk below loads it silently so the rest of this document has the data available; the next chunk shows the same command for you to run in your own session (it's set not to re-run here since the data is already loaded):
+Random forests are ensembles of decision trees. Each tree is fit to a bootstrap sample of the data, and each split considers only a random subset of predictors. The final prediction is the average prediction across many trees.
+
+Random forests are useful for environmental data because they can model nonlinear relationships and interactions without requiring us to specify those relationships in advance. They are still models, though. They can overfit, they can inherit bias from the training data, and they cannot reliably predict conditions not represented in the data.
+
+# Load the modeling data
+
+This workshop uses a model-ready version of the methane flux dataset. The same structure is what you are building toward in your final project.
 
 ```{r}
-#| include: false
 load("data/RANDOMFOREST_DATASET.RDATA")
 ```
 
+Inspect the data:
+
 ```{r}
-#| eval: false
-load("data/RANDOMFOREST_DATASET.RDATA")
+glimpse(fluxnet)
+names(fluxnet)
 ```
 
-Our ultimate interest is in predicting monthly methane fluxes using both dynamic and static attributes of ecosystems. Before we start modeling with the data, it is a good practice to first visualize the variables. The `ggpairs()` function from the GGally package is a useful tool that visualizes the distribution and correlation between variables in a single grid of plots:
+The response variable is monthly methane flux:
+
+```{r}
+summary(fluxnet$FCH4_F_gC)
+```
+
+# Modeling checklist
+
+Before fitting any model, identify:
+
+-   response variable: `FCH4_F_gC`;
+-   climate predictors: `P_F`, `TA_F`, `VPD_F`;
+-   vegetation predictors: `NDVI`, `EVI`;
+-   ecosystem predictor: `IGBP`;
+-   grouping variable for site-level assessment: `SITE`.
+
+Prepare the modeling table:
+
+```{r}
+model_data <- fluxnet %>%
+  ungroup() %>%
+  select(SITE, YearMon, FCH4_F_gC,
+         P_F, TA_F, VPD_F,
+         NDVI, EVI,
+         IGBP) %>%
+  drop_na()
+```
+
+Check the table:
+
+```{r}
+nrow(model_data)
+n_distinct(model_data$SITE)
+summary(model_data)
+```
+
+Some ecosystem classes occur at only one site. That causes problems for leave-one-site-out prediction: if the held-out site is the only example of an ecosystem class, the training set has never seen that class. Collapse rare classes into `Other`.
+
+```{r}
+common_igbp <- model_data %>%
+  distinct(SITE, IGBP) %>%
+  count(IGBP, name = "n_sites") %>%
+  filter(n_sites >= 3) %>%
+  pull(IGBP)
+
+model_data <- model_data %>%
+  mutate(IGBP_model = if_else(IGBP %in% common_igbp, IGBP, "Other"),
+         IGBP_model = as.factor(IGBP_model))
+```
+
+Check the collapsed ecosystem classes:
+
+```{r}
+model_data %>%
+  distinct(SITE, IGBP_model) %>%
+  count(IGBP_model, name = "n_sites") %>%
+  arrange(desc(n_sites))
+```
+
+# Explore the predictors
+
+Visualize key variables before modeling:
 
 ```{r}
 #| message: false
-ggpairs(fluxnet, columns = c(3:7, 12:13))
+ggpairs(model_data,
+        columns = c("FCH4_F_gC", "P_F", "TA_F", "VPD_F", "NDVI", "EVI"))
 ```
 
-Next we need to divide the data into testing (20%) and training (80%) sets in a reproducible way:
+Look at methane flux by ecosystem type:
 
 ```{r}
-set.seed(111) # set the random number generator
-
-# create ID column
-fluxnet$id <- 1:nrow(fluxnet)
-
-# use 80% of dataset as training set and 20% as test set
-train <- fluxnet %>% dplyr::sample_frac(0.80)
-test <- dplyr::anti_join(fluxnet, train, by = "id")
+ggplot(model_data, aes(x = IGBP_model, y = FCH4_F_gC)) +
+  geom_boxplot() +
+  coord_flip() +
+  labs(title = "Monthly methane flux by ecosystem class",
+       x = "IGBP",
+       y = "FCH4_F_gC")
 ```
 
-We will use the `randomForest()` function to predict monthly natural methane efflux using several variables in the dataset. A few other key statements to use in the `randomForest()` function are:
+# Evaluation metrics
 
-1. keep.forest = TRUE: This will save the random forest output, which will be helpful in summarizing the results.
-2. importance = TRUE: This will assess the importance of each of the predictors, essential output in random forests.
-3. mtry = 1: This tells the function to randomly sample one variable at each split in the random forest. For applications in regression, the default value is the number of predictor variables divided by three (and rounded down). In the modeling, several small samples of the entire data set are taken. Any observations that are not taken are called "out-of-bag" samples.
-4. ntree = 500: This tells the function to grow 500 trees. Generally, a larger number of trees will produce more stable estimates. However, increasing the number of trees needs to be done with consideration of time and memory issues when dealing with large data sets.
+We will evaluate models using four metrics:
 
-Our response variable in the random forests model is FCH4_F_gC and predictors are P_F, TA_F, VPD_F, IGBP, NDVI, and EVI. We will only explore a few of these variables below:
+-   RMSE: root mean squared error; lower is better.
+-   MAE: mean absolute error; lower is better.
+-   R-squared: squared correlation between observed and predicted; higher is better.
+-   Bias: mean predicted minus observed; closer to zero is better.
 
 ```{r}
-fch4_rf <- randomForest(FCH4_F_gC ~ P_F + TA_F + VPD_F,
-                         data = train,
-                         keep.forest = TRUE,
-                         importance = TRUE,
-                         mtry = 1,
-                         ntree = 500,
-                         keep.inbag = TRUE)
+model_metrics <- function(observed, predicted) {
+  tibble(
+    rmse = sqrt(mean((observed - predicted)^2, na.rm = TRUE)),
+    mae = mean(abs(observed - predicted), na.rm = TRUE),
+    r2 = cor(observed, predicted, use = "complete.obs")^2,
+    bias = mean(predicted - observed, na.rm = TRUE)
+  )
+}
+```
+
+# Train/test split
+
+A random row split asks: can the model predict new months from a network of sites that are mostly represented in the training data?
+
+```{r}
+set.seed(111)
+
+model_data <- model_data %>%
+  mutate(row_id = row_number())
+
+train <- model_data %>%
+  sample_frac(0.80)
+
+test <- model_data %>%
+  anti_join(train %>% select(row_id), by = "row_id")
+
+nrow(train)
+nrow(test)
+```
+
+# Candidate models
+
+Fit three candidate models:
+
+1.  Climate-only model.
+2.  Climate + vegetation model.
+3.  Climate + vegetation + ecosystem model.
+
+```{r}
+candidate_formulas <- list(
+  climate = FCH4_F_gC ~ P_F + TA_F + VPD_F,
+  climate_vegetation = FCH4_F_gC ~ P_F + TA_F + VPD_F + NDVI + EVI,
+  climate_vegetation_ecosystem = FCH4_F_gC ~ P_F + TA_F + VPD_F + NDVI + EVI + IGBP_model
+)
+```
+
+Fit each model:
+
+```{r}
+set.seed(111)
+
+candidate_models <- lapply(candidate_formulas, function(formula) {
+  randomForest(formula,
+               data = train,
+               keep.forest = TRUE,
+               importance = TRUE,
+               mtry = 2,
+               ntree = 300)
+})
+```
+
+Compare train and test performance:
+
+```{r}
+candidate_metrics <- imap_dfr(candidate_models, function(model, model_name) {
+  train_pred <- predict(model, train)
+  test_pred <- predict(model, test)
+
+  bind_rows(
+    model_metrics(train$FCH4_F_gC, train_pred) %>%
+      mutate(model = model_name, dataset = "train"),
+    model_metrics(test$FCH4_F_gC, test_pred) %>%
+      mutate(model = model_name, dataset = "test")
+  )
+})
+
+candidate_metrics
+```
+
+Visualize model performance:
+
+```{r}
+candidate_metrics %>%
+  pivot_longer(cols = c(rmse, mae, r2, bias),
+               names_to = "metric",
+               values_to = "value") %>%
+  ggplot(aes(x = model, y = value, fill = dataset)) +
+  geom_col(position = "dodge") +
+  facet_wrap(~ metric, scales = "free_y") +
+  coord_flip() +
+  labs(title = "Train and test performance for candidate random forest models",
+       x = "Model",
+       y = "Metric value")
+```
+
+Select the best candidate model by test RMSE:
+
+```{r}
+best_candidate_name <- candidate_metrics %>%
+  filter(dataset == "test") %>%
+  arrange(rmse) %>%
+  slice(1) %>%
+  pull(model)
+
+best_candidate_name
+```
+
+# Diagnose the best candidate model
+
+```{r}
+best_candidate_model <- candidate_models[[best_candidate_name]]
+
+test$pred_fch4 <- predict(best_candidate_model, test)
+```
+
+Observed vs. predicted:
+
+```{r}
+ggplot(test, aes(x = FCH4_F_gC, y = pred_fch4)) +
+  geom_point(alpha = 0.65) +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  labs(title = "Observed vs. predicted methane flux",
+       x = "Observed FCH4_F_gC",
+       y = "Predicted FCH4_F_gC")
+```
+
+Residuals:
+
+```{r}
+test <- test %>%
+  mutate(residual = FCH4_F_gC - pred_fch4)
+
+ggplot(test, aes(x = pred_fch4, y = residual)) +
+  geom_point(alpha = 0.65) +
+  geom_hline(yintercept = 0, color = "red") +
+  labs(title = "Residuals vs. predicted methane flux",
+       x = "Predicted FCH4_F_gC",
+       y = "Residual")
+
+ggplot(test, aes(x = residual)) +
+  geom_histogram(color = "black", fill = "white") +
+  labs(title = "Residual distribution",
+       x = "Residual",
+       y = "Count")
+```
+
+Variable importance:
+
+```{r}
+importance(best_candidate_model)
+varImpPlot(best_candidate_model)
+```
+
+::: {.callout-note}
+## Importance is not causation
+Variable importance tells us which predictors helped this model make predictions, given this dataset and the other predictors in the model. It does not prove that a predictor causes methane flux to change.
+:::
+
+# Leave-one-site-out assessment
+
+A random row split is useful, but it can be optimistic because rows from the same tower may appear in both training and testing. A harder question is:
+
+> Can the model predict methane flux at a tower site it has never seen?
+
+Leave-one-site-out assessment fits one model per site. Each time, one site is held out for testing and all other sites are used for training.
+
+To keep the workshop renderable, we use fewer trees for this assessment.
+
+```{r}
+leave_one_site_out <- function(formula, data, ntree = 150, mtry = 2) {
+  sites <- sort(unique(data$SITE))
+
+  map_dfr(sites, function(site_id) {
+    train_site <- data %>% filter(SITE != site_id)
+    test_site <- data %>% filter(SITE == site_id)
+
+    fit <- randomForest(formula,
+                        data = train_site,
+                        keep.forest = TRUE,
+                        importance = FALSE,
+                        mtry = mtry,
+                        ntree = ntree)
+
+    pred <- predict(fit, test_site)
+
+    model_metrics(test_site$FCH4_F_gC, pred) %>%
+      mutate(SITE = site_id,
+             n_test = nrow(test_site))
+  })
+}
+```
+
+Run leave-one-site-out assessment for the best candidate model:
+
+```{r}
+set.seed(111)
+
+loso_metrics <- leave_one_site_out(candidate_formulas[[best_candidate_name]],
+                                   model_data,
+                                   ntree = 150,
+                                   mtry = 2)
+
+loso_metrics %>%
+  arrange(rmse) %>%
+  head(10)
+```
+
+Which sites are hardest to predict?
+
+```{r}
+loso_metrics %>%
+  arrange(desc(rmse)) %>%
+  head(10)
+```
+
+Summarize leave-one-site-out performance across sites:
+
+```{r}
+loso_metrics %>%
+  summarize(mean_rmse = mean(rmse, na.rm = TRUE),
+            median_rmse = median(rmse, na.rm = TRUE),
+            mean_mae = mean(mae, na.rm = TRUE),
+            median_r2 = median(r2, na.rm = TRUE),
+            mean_bias = mean(bias, na.rm = TRUE))
+```
+
+Visualize site-level RMSE:
+
+```{r}
+ggplot(loso_metrics,
+       aes(x = reorder(SITE, rmse), y = rmse)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Leave-one-site-out RMSE by held-out site",
+       x = "Held-out site",
+       y = "RMSE")
+```
+
+::: {.callout-note}
+## Two meanings of prediction
+A random row split evaluates prediction for new observations from a familiar network of sites. Leave-one-site-out evaluates prediction for a new site. For final projects, be clear about which kind of prediction you want your model to support.
+:::
+
+# Select the best predictor from each category
+
+For final model development, we will choose one strong predictor from each category:
+
+-   climate: `P_F`, `TA_F`, or `VPD_F`;
+-   vegetation: `NDVI` or `EVI`;
+-   ecosystem: `IGBP_model`.
+
+We will screen individual predictors using test RMSE. This is a simple strategy, not the only valid one.
+
+```{r}
+screen_predictor <- function(predictor, category) {
+  formula <- reformulate(predictor, response = "FCH4_F_gC")
+
+  set.seed(111)
+  fit <- randomForest(formula,
+                      data = train,
+                      keep.forest = TRUE,
+                      importance = TRUE,
+                      mtry = 1,
+                      ntree = 300)
+
+  pred <- predict(fit, test)
+
+  model_metrics(test$FCH4_F_gC, pred) %>%
+    mutate(category = category,
+           predictor = predictor)
+}
+
+predictor_screen <- bind_rows(
+  map_dfr(c("P_F", "TA_F", "VPD_F"), screen_predictor, category = "climate"),
+  map_dfr(c("NDVI", "EVI"), screen_predictor, category = "vegetation"),
+  screen_predictor("IGBP_model", category = "ecosystem")
+)
+
+predictor_screen
+```
+
+Select the best predictor from each category:
+
+```{r}
+best_predictors <- predictor_screen %>%
+  group_by(category) %>%
+  arrange(rmse, .by_group = TRUE) %>%
+  slice(1) %>%
+  ungroup()
+
+best_predictors
+```
+
+Build the final formula:
+
+```{r}
+final_predictors <- best_predictors$predictor
+final_formula <- reformulate(final_predictors, response = "FCH4_F_gC")
+final_formula
+```
+
+Fit the final model:
+
+```{r}
+set.seed(111)
+
+fch4_rf <- randomForest(final_formula,
+                        data = train,
+                        keep.forest = TRUE,
+                        importance = TRUE,
+                        mtry = max(1, floor(length(final_predictors) / 3)),
+                        ntree = 500,
+                        keep.inbag = TRUE)
+
 fch4_rf
 ```
 
-Note the mean of squared residuals and the percent variation explained (analogous to R-squared) provided in the output.
-
-Visualize the out-of-bag error rates of the random forests models using the `plot()` function. In this application, although we specified 500 trees, the out-of-bag error generally stabilizes after 100 trees:
+Evaluate the final model on train and test data:
 
 ```{r}
-plot(fch4_rf)
+train$pred_final <- predict(fch4_rf, train)
+test$pred_final <- predict(fch4_rf, test)
+
+final_metrics <- bind_rows(
+  model_metrics(train$FCH4_F_gC, train$pred_final) %>%
+    mutate(dataset = "train"),
+  model_metrics(test$FCH4_F_gC, test$pred_final) %>%
+    mutate(dataset = "test")
+)
+
+final_metrics
 ```
 
-Some of the most helpful output in random forests is the importance of each of the predictor variables. The importance score is calculated by evaluating the regression tree with and without that variable. When evaluating the regression tree, the mean square error (MSE) will go up, down, or stay the same.
+Plot final model predictions:
 
-If the percent increase in MSE after removing the variable is large, it indicates an important variable. If the percent increase in MSE after removing the variable is small, it's less important.
+```{r}
+ggplot(test, aes(x = FCH4_F_gC, y = pred_final)) +
+  geom_point(alpha = 0.65) +
+  geom_abline(slope = 1, intercept = 0, color = "red") +
+  labs(title = "Final selected random forest model",
+       x = "Observed FCH4_F_gC",
+       y = "Predicted FCH4_F_gC")
+```
 
-The `importance()` function prints the importance scores for each variable and the `varImpPlot()` function plots them:
+Inspect final model importance:
 
 ```{r}
 importance(fch4_rf)
-
 varImpPlot(fch4_rf)
 ```
 
-Another aspect of model evaluation is comparing predictions. Although random forests models are often considered a "black box" method because their results are not easily interpreted, the `predict()` function provides predictions of total tree mass:
+# Save your final model
 
-```{r}
-train$pred_fch4 <- predict(fch4_rf, train)
-head(train$pred_fch4)
-```
-
-Compare the observed (FCH4_F_gC) versus predicted (pred_fch4):
-
-```{r}
-ggplot() + geom_point(data = train, aes(x = FCH4_F_gC, y = pred_fch4)) +
-  geom_smooth(method = "lm")
-
-summary(lm(data = train, pred_fch4 ~ FCH4_F_gC))
-```
-
-See how well the model performs on data that was not used to train the model:
-
-```{r}
-test$pred_fch4 <- predict(fch4_rf, test)
-
-ggplot() + geom_point(data = test, aes(x = FCH4_F_gC, y = pred_fch4)) +
-  geom_smooth(method = "lm")
-
-summary(lm(data = test, pred_fch4 ~ FCH4_F_gC))
-```
-
-# Final Model Development:
-
-The current model includes only climate variables from the tower. Use either a forward or backward selection method to develop your final model using your own data sets.
-
-The forward selection approach starts with no variables and adds each new variable incrementally, testing for statistical significance, while the backward elimination method begins with a full model and then removes the least statistically significant variables one at a time.
-
-Save your final model and datasets in a .Rdata object for next class where we will perform sensitivity analyses on the models.
+Save the final model and associated objects for sensitivity analysis and spatial projection. The object is named `fch4_rf` so later workshops can use it.
 
 ```{r}
 #| eval: false
-save(fch4_rf, file = "data/products/random_forest_model.RDATA")
+save(fch4_rf, train, test, final_formula, final_predictors,
+     final_metrics, predictor_screen, loso_metrics,
+     file = "data/products/random_forest_model.RDATA")
 ```
+
+# Assignment
+
+Build and compare at least three random forest models for methane flux:
+
+1.  A climate-only model.
+2.  A climate + vegetation model.
+3.  A final model that selects the best predictor from each category.
+
+Include:
+
+1.  The model formulas.
+2.  Train/test performance metrics.
+3.  Leave-one-site-out performance for your preferred model.
+4.  Observed vs. predicted plots.
+5.  Variable importance for your final model.
+6.  One paragraph explaining which model you would use and why.
+7.  One paragraph explaining whether the model should be trusted for new tower sites.

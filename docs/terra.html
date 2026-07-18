@@ -2,16 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Introduction to rasters with the terra package</title>
+<title>Raster Data: Climate Exposure and Tower Similarity</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -24,9 +21,8 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -37,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -69,16 +65,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c27a0819adbec56e9d03f3e11156bb0e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -110,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar docked quarto-light">
+<body class="nav-sidebar docked">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -134,8 +129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">ENV 730</a> 
@@ -288,10 +282,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#install-libraries-for-this-workshop" id="toc-install-libraries-for-this-workshop" class="nav-link active" data-scroll-target="#install-libraries-for-this-workshop">Install libraries for this workshop:</a></li>
-  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">Load libraries:</a></li>
-  <li><a href="#rasters" id="toc-rasters" class="nav-link" data-scroll-target="#rasters">Rasters</a></li>
-  <li><a href="#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment." id="toc-download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment." class="nav-link" data-scroll-target="#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment.">Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.</a></li>
+  <li><a href="#mapping-climate-surfaces" id="toc-mapping-climate-surfaces" class="nav-link active" data-scroll-target="#mapping-climate-surfaces">Mapping climate surfaces</a>
+  <ul class="collapse">
+  <li><a href="#install-libraries-for-this-workshop" id="toc-install-libraries-for-this-workshop" class="nav-link" data-scroll-target="#install-libraries-for-this-workshop">Install libraries for this workshop</a></li>
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">Load libraries</a></li>
+  </ul></li>
+  <li><a href="#what-is-a-raster" id="toc-what-is-a-raster" class="nav-link" data-scroll-target="#what-is-a-raster">What is a raster?</a></li>
+  <li><a href="#read-climate-rasters" id="toc-read-climate-rasters" class="nav-link" data-scroll-target="#read-climate-rasters">Read climate rasters</a></li>
+  <li><a href="#raster-algebra" id="toc-raster-algebra" class="nav-link" data-scroll-target="#raster-algebra">Raster algebra</a></li>
+  <li><a href="#crop-and-mask-to-an-area-of-interest" id="toc-crop-and-mask-to-an-area-of-interest" class="nav-link" data-scroll-target="#crop-and-mask-to-an-area-of-interest">Crop and mask to an area of interest</a></li>
+  <li><a href="#zonal-summaries" id="toc-zonal-summaries" class="nav-link" data-scroll-target="#zonal-summaries">Zonal summaries</a></li>
+  <li><a href="#connecticut-and-yale-myers-forest" id="toc-connecticut-and-yale-myers-forest" class="nav-link" data-scroll-target="#connecticut-and-yale-myers-forest">Connecticut and Yale-Myers Forest</a></li>
+  <li><a href="#extract-raster-climate-to-tower-sites" id="toc-extract-raster-climate-to-tower-sites" class="nav-link" data-scroll-target="#extract-raster-climate-to-tower-sites">Extract raster climate to tower sites</a></li>
+  <li><a href="#raster-based-representativeness" id="toc-raster-based-representativeness" class="nav-link" data-scroll-target="#raster-based-representativeness">Raster-based representativeness</a></li>
+  <li><a href="#environmental-dissimilarity-among-ch4-towers" id="toc-environmental-dissimilarity-among-ch4-towers" class="nav-link" data-scroll-target="#environmental-dissimilarity-among-ch4-towers">Environmental dissimilarity among CH4 towers</a></li>
+  <li><a href="#mds-visualization" id="toc-mds-visualization" class="nav-link" data-scroll-target="#mds-visualization">MDS visualization</a></li>
   <li><a href="#assignment" id="toc-assignment" class="nav-link" data-scroll-target="#assignment">Assignment</a></li>
   </ul>
 </nav>
@@ -301,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data_basics.html">Introduction to R</a></li><li class="breadcrumb-item"><a href="./terra.html">Raster Data</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Introduction to rasters with the terra package</h1>
+<h1 class="title">Raster Data: Climate Exposure and Tower Similarity</h1>
 </div>
 
 
@@ -318,165 +323,174 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="mapping-climate-surfaces" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-climate-surfaces">Mapping climate surfaces</h2>
+<p>Vector data told us where FLUXNET CH4 towers are located. Raster data lets us ask what environmental conditions surround those towers. In this workshop, we will use gridded climate layers to evaluate the climate exposure represented by methane tower sites and to identify towers that may be useful analogs for thinking about methane fluxes in Yale-Myers Forest wetlands.</p>
+<p>We will ask:</p>
+<blockquote class="blockquote">
+<p>What climate conditions do FLUXNET CH4 towers represent, and which towers are most similar to Yale-Myers Forest?</p>
+</blockquote>
+<p>By the end of this workshop, you will be able to:</p>
+<ol type="1">
+<li>Read and inspect raster data with <code>terra</code>.</li>
+<li>Understand <code>SpatRaster</code> and <code>SpatVector</code> objects.</li>
+<li>Crop and mask rasters to an area of interest.</li>
+<li>Use raster algebra to create new climate layers.</li>
+<li>Summarize raster values globally and by polygon zones.</li>
+<li>Extract raster values to point locations.</li>
+<li>Compare tower-site climate exposure to gridded climate space.</li>
+<li>Calculate environmental dissimilarity among tower sites.</li>
+<li>Use multidimensional scaling (MDS) to visualize which towers are more or less similar.</li>
+</ol>
 <section id="install-libraries-for-this-workshop" class="level3">
-<h3 class="anchored" data-anchor-id="install-libraries-for-this-workshop">Install libraries for this workshop:</h3>
+<h3 class="anchored" data-anchor-id="install-libraries-for-this-workshop">Install libraries for this workshop</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sf"</span>)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sf"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"terra"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyterra"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rnaturalearth"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"geodata"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rnaturalearth"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="load-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="load-libraries">Load libraries:</h3>
+<h3 class="anchored" data-anchor-id="load-libraries">Load libraries</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geodata)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyterra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="rasters" class="level2">
-<h2 class="anchored" data-anchor-id="rasters">Rasters</h2>
-<p>A raster is a spatial data structure that subdivides an extent into rectangles known as “cells” (or “pixels”). Each cell has the capacity to store one or more values. This type of data structure is commonly referred to as a “grid” and is frequently juxtaposed with simple features.</p>
-<p>The terra package offers functions designed for the creation, reading, manipulation, and writing of raster data. The terra package is built around a number of “classes” of which the SpatRaster and SpatVector are the most important.</p>
-<section id="spatraster" class="level4">
-<h4 class="anchored" data-anchor-id="spatraster">SpatRaster</h4>
-<p>A SpatRaster object stores a number of fundamental parameters that describe it. These include the number of columns and rows, the coordinates of its spatial extent, and the coordinate reference system. In addition, a SpatRaster can store information about the file(s) in which the raster cell values are stored.</p>
 </section>
-<section id="spatvector" class="level4">
-<h4 class="anchored" data-anchor-id="spatvector">SpatVector</h4>
-<p>A SpatVector represents “vector” data, that is, points, lines or polygon geometries and their tabular attributes.</p>
+<section id="what-is-a-raster" class="level1">
+<h1>What is a raster?</h1>
+<p>A raster is a spatial data structure that subdivides an area into cells, often called pixels. Each cell stores one or more values. Climate rasters are useful because they let us describe environmental gradients everywhere, not only at point locations.</p>
+<p>The <code>terra</code> package is built around two important classes:</p>
+<ul>
+<li><code>SpatRaster</code>: gridded raster data.</li>
+<li><code>SpatVector</code>: vector data such as points, lines, or polygons.</li>
+</ul>
 </section>
-<section id="working-with-climate-data" class="level4">
-<h4 class="anchored" data-anchor-id="working-with-climate-data">Working with climate data:</h4>
-<p>To become familiar with working with rasters, we will download climate data for an area of interest (AOI).</p>
+<section id="read-climate-rasters" class="level1">
+<h1>Read climate rasters</h1>
+<p>This course includes a global climate raster with four layers:</p>
+<ul>
+<li><code>MAP</code>: mean annual precipitation in mm.</li>
+<li><code>TMIN</code>: mean minimum temperature in degrees C.</li>
+<li><code>TMAX</code>: mean maximum temperature in degrees C.</li>
+<li><code>MAT</code>: mean annual temperature in degrees C.</li>
+</ul>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First create an AOI</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>aoi_global <span class="ot">&lt;-</span> world <span class="sc">%&gt;%</span> <span class="fu">filter</span>(continent <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Europe"</span>, <span class="st">"Asia"</span>, <span class="st">"North America"</span>, <span class="st">"South America"</span>, <span class="st">"Africa"</span>, <span class="st">"Oceania"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Visualize your AOI:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize it here</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>We will use WorldClim, a set of global climate layers at spatial resolutions from 30 arc-seconds (~1 km) down to 10 arc-minutes. Its values represent average monthly climate normals for 1970-2000 (Fick &amp; Hijmans, 2017).</p>
-<p>Download climate data using the geodata package. For this exercise we will use climate normals, multi-decadal averages for climate variables like temperature and precipitation. They provide a baseline that allows us to understand the location’s average condition. geodata always downloads the full global raster, so we crop and mask it down to our AOI afterward.</p>
-<p>You can access monthly precipitation (“prec”), monthly minimum temperature (“tmin”), monthly maximum temperature (“tmax”) climate normals and more.</p>
-<p>Download monthly precipitation (prec), then crop and mask it to the AOI:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>normals_ppt <span class="ot">&lt;-</span> <span class="fu">worldclim_global</span>(<span class="at">var =</span> <span class="st">"prec"</span>, <span class="at">res =</span> <span class="dv">10</span>, <span class="at">path =</span> <span class="fu">tempdir</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(aoi_global) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(aoi_global)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Cached as: /var/folders/9m/5sf47rls6b738n39cy9zj5ps6hq5rh/T//RtmpCKkF7z/climate/wc2.1_10m//wc2.1_10m_prec.zip</code></pre>
-</div>
-</div>
-<p>What is this object:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(normals_ppt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>global_climate <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"data/GlobalClimate.tif"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>global_climate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "SpatRaster"
-attr(,"package")
-[1] "terra"</code></pre>
+<pre><code>class       : SpatRaster 
+size        : 3343, 8640, 4  (nrow, ncol, nlyr)
+resolution  : 0.04166667, 0.04166667  (x, y)
+extent      : -180, 180, -55.625, 83.66667  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +ellps=WGS84 +no_defs 
+source      : GlobalClimate.tif 
+names       :     MAP,      TMIN,      TMAX,       MAT 
+min values  :     0.0,     -50.4,      -9.3, -27.10833 
+max values  : 12390.2,      26.6,      53.7,  34.14167 
+unit        :      mm, Degrees C, Degrees C, Degrees C </code></pre>
 </div>
 </div>
-<p>A SpatRaster with multiple layers holds one raster per time step (here, one per calendar month) that all share the same spatial extent and resolution.</p>
-<p>To access the raster stack:</p>
+<p>Look at the layer names:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>normals_ppt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(global_climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster
-size        : 837, 2160, 12  (nrow, ncol, nlyr)
-resolution  : 0.1666667, 0.1666667  (x, y)
-extent      : -180, 180, -55.83333, 83.66667  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326)
-source(s)   : memory
-names       : wc2.1~ec_01, wc2.1~ec_02, wc2.1~ec_03, wc2.1~ec_04, wc2.1~ec_05, wc2.1~ec_06, ...
-min values  :           0,           0,           0,           0,           0,           0, ...
-max values  :         908,         793,         720,         680,         772,        1457, ...</code></pre>
+<pre><code>[1] "MAP"  "TMIN" "TMAX" "MAT" </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>normals_ppt <span class="sc">%&gt;%</span> <span class="fu">names</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "wc2.1_10m_prec_01" "wc2.1_10m_prec_02" "wc2.1_10m_prec_03"
- [4] "wc2.1_10m_prec_04" "wc2.1_10m_prec_05" "wc2.1_10m_prec_06"
- [7] "wc2.1_10m_prec_07" "wc2.1_10m_prec_08" "wc2.1_10m_prec_09"
-[10] "wc2.1_10m_prec_10" "wc2.1_10m_prec_11" "wc2.1_10m_prec_12"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_spatraster</span>(<span class="at">data =</span> normals_ppt[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">na.value =</span> <span class="st">"transparent"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>&lt;SpatRaster&gt; resampled to 500976 cells.</code></pre>
-</div>
+<p>Plot mean annual precipitation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(global_climate<span class="sc">$</span>MAP,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Mean annual precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="terra_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>What is the <code>+ scale_fill_gradient(na.value = "transparent")</code> doing?</p>
-</section>
-<section id="raster-algebra" class="level4">
-<h4 class="anchored" data-anchor-id="raster-algebra">Raster algebra</h4>
-<p>Many generic functions that allow for simple and elegant raster algebra have been implemented for SpatRaster objects, including the normal algebraic operators such as +, -, *, /, logical operators such as &gt;, &gt;=, &lt;, ==, ! and functions such as abs, round, ceiling, floor, trunc, sqrt, log, log10, exp, cos, sin, max, min, range, prod, sum, any, all. In these functions you can mix terra objects with numbers, as long as the first argument is a terra object. If you use multiple SpatRaster objects, all objects must have the same resolution and origin.</p>
-<p>Let’s summarize monthly data to annual normals:</p>
+<p>Plot mean annual temperature:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>normals_ppt_annual <span class="ot">&lt;-</span> normals_ppt <span class="sc">%&gt;%</span> <span class="fu">sum</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># look at the object</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>normals_ppt_annual <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(global_climate<span class="sc">$</span>MAT,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Mean annual temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="terra_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the name of the layers:</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(normals_ppt_annual)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "sum"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># re-name the layers:</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(normals_ppt_annual) <span class="ot">&lt;-</span> <span class="st">"ppt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Summary functions (<code>min()</code>, <code>max()</code>, <code>mean()</code>, <code>prod()</code>, <code>sum()</code>, <code>median()</code>, <code>cv()</code>, <code>range()</code>, <code>any()</code>, <code>all()</code>) always return a SpatRaster object.</p>
-<p>Use global if instead of a SpatRaster you want a single number summarizing the cell values of each layer.</p>
+</section>
+<section id="raster-algebra" class="level1">
+<h1>Raster algebra</h1>
+<p>Raster algebra lets us create new layers from existing layers. Temperature range is a simple measure of climate exposure:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>normals_ppt_annual <span class="sc">%&gt;%</span> <span class="fu">global</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>, mean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>temp_range <span class="ot">&lt;-</span> global_climate<span class="sc">$</span>TMAX <span class="sc">-</span> global_climate<span class="sc">$</span>TMIN</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(temp_range) <span class="ot">&lt;-</span> <span class="st">"temp_range"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Combine the original climate layers with the new temperature range layer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>climate_stack <span class="ot">&lt;-</span> <span class="fu">c</span>(global_climate, temp_range)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(climate_stack)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>        mean
-ppt 708.2135</code></pre>
+<pre><code>[1] "MAP"        "TMIN"       "TMAX"       "MAT"        "temp_range"</code></pre>
+</div>
+</div>
+<p>Plot the new raster:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(climate_stack<span class="sc">$</span>temp_range,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Temperature range"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Use <code>global()</code> when you want one summary value for an entire raster layer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(climate_stack, <span class="at">fun =</span> <span class="st">"mean"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 mean
+MAP        703.303657
+TMIN        -7.993425
+TMAX        26.229376
+MAT          8.737725
+temp_range  34.222801</code></pre>
 </div>
 </div>
 </section>
-<section id="spatial-summaries" class="level4">
-<h4 class="anchored" data-anchor-id="spatial-summaries">Spatial Summaries</h4>
-<p>You might also find it useful to create zonal summaries for each polygon within the simple feature. To do this we can use the function zonal, which takes a SpatRast and a SpatVect. Since aoi_global has one feature per country, this gives us a country-level summary:</p>
+<section id="crop-and-mask-to-an-area-of-interest" class="level1">
+<h1>Crop and mask to an area of interest</h1>
+<p>Cropping trims a raster to a rectangular extent. Masking removes cells outside an area of interest. Here we use countries from <code>rnaturalearth</code> to create a South America polygon and summarize climate over that region.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>normals_ppt_annual_country <span class="ot">&lt;-</span> <span class="fu">zonal</span>(<span class="at">x =</span> normals_ppt_annual,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">z =</span> <span class="fu">vect</span>(aoi_global), <span class="at">fun =</span> <span class="st">"mean"</span>, <span class="at">as.polygons =</span> <span class="cn">TRUE</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continent <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Europe"</span>, <span class="st">"Asia"</span>, <span class="st">"North America"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"South America"</span>, <span class="st">"Africa"</span>, <span class="st">"Oceania"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_make_valid</span>()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>south_america <span class="ot">&lt;-</span> world <span class="sc">%&gt;%</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continent <span class="sc">==</span> <span class="st">"South America"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_union</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>What did the function return?</p>
+<p>Crop and mask mean annual precipitation to South America:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(normals_ppt_annual_country)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "SpatVector"
-attr(,"package")
-[1] "terra"</code></pre>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>south_america_ppt <span class="ot">&lt;-</span> climate_stack<span class="sc">$</span>MAP <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(south_america) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(south_america)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: [mask] CRS do not match</code></pre>
 </div>
-</div>
-<p>Convert the SpatVect back to a simple feature and plot it.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>normals_ppt_annual_country_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(normals_ppt_annual_country)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> normals_ppt_annual_country_sf) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> ppt))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(south_america_ppt,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Mean annual precipitation in South America"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -485,80 +499,61 @@ attr(,"package")
 </div>
 </div>
 </div>
-</section>
-<section id="extracting-information-to-a-point-file" class="level4">
-<h4 class="anchored" data-anchor-id="extracting-information-to-a-point-file">Extracting information to a point file:</h4>
-<p>For this exercise you will use your fluxnet_ch4_sf vector file you saved last week and the monthly precipitation data downloaded (normals_ppt).</p>
-<p>Import your point file fluxnet_ch4_sf:</p>
+<p>What did the crop and mask operations return?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/products"</span>, <span class="at">layer =</span> <span class="st">"fluxnet_ch4"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(south_america_ppt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `fluxnet_ch4' from data source 
-  `/Users/sm3466/Library/CloudStorage/Dropbox-YSE/Sparkle Malone/Teaching/EDS_course/data/products' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 81 features and 9 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: -18223020 ymin: -4162002 xmax: 19542570 ymax: 7939774
-Projected CRS: WGS 84 / World Equidistant Cylindrical</code></pre>
+<pre><code>[1] "SpatRaster"
+attr(,"package")
+[1] "terra"</code></pre>
 </div>
-</div>
-<p>Ensure both files have the same coordinate reference system (CRS):</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>south_america_ppt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Simple feature collection with 81 features and 9 fields
-Geometry type: POINT
-Dimension:     XY
-Bounding box:  xmin: -18223020 ymin: -4162002 xmax: 19542570 ymax: 7939774
-Projected CRS: WGS 84 / World Equidistant Cylindrical
-First 10 features:
-   SITE_ID                   SITE_NA  FLUXNET2  FLUXNET_ LOCATIO IGBP  MAT
-1   AT-Neu                  Neustift CC-BY-4.0 CC-BY-4.0     970  GRA  6.5
-2   BR-Npw Northern Pantanal Wetland      &lt;NA&gt; CC-BY-4.0     120  WSA 24.9
-3   BW-Gum                      Guma      &lt;NA&gt; CC-BY-4.0     950  WET 21.0
-4   BW-Nxr                   Nxaraga      &lt;NA&gt; CC-BY-4.0     950  GRA 21.0
-5   CA-SCB          Scotty Creek Bog      &lt;NA&gt; CC-BY-4.0     280  WET -2.8
-6   CA-SCC    Scotty Creek Landscape      &lt;NA&gt; CC-BY-4.0     285  ENF -2.8
-7   CH-Cha                    Chamau CC-BY-4.0 CC-BY-4.0     393  GRA  9.5
-8   CH-Dav                     Davos CC-BY-4.0 CC-BY-4.0    1639  ENF  2.8
-9   CH-Oe2            Oensingen crop CC-BY-4.0 CC-BY-4.0     452  CRO  9.8
-10  CN-Hgu                  Hongyuan      &lt;NA&gt; CC-BY-4.0    3500  GRA  1.5
-      MAP     country                  geometry
-1   852.0     Austria   POINT (1259858 5245007)
-2  1486.0      Brazil POINT (-6279755 -1836549)
-3   460.0    Botswana  POINT (2490339 -2111141)
-4   460.0    Botswana  POINT (2580297 -2176085)
-5   388.0      Canada POINT (-13502876 6824876)
-6   387.6      Canada POINT (-13502965 6824764)
-7  1136.0 Switzerland  POINT (936241.4 5255415)
-8  1062.0 Switzerland   POINT (1097154 5211455)
-9  1155.0 Switzerland  POINT (860911.5 5263898)
-10  747.0       China  POINT (11420267 3656322)</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>normals_ppt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster
-size        : 837, 2160, 12  (nrow, ncol, nlyr)
-resolution  : 0.1666667, 0.1666667  (x, y)
-extent      : -180, 180, -55.83333, 83.66667  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326)
+<pre><code>class       : SpatRaster 
+size        : 1633, 1791, 1  (nrow, ncol, nlyr)
+resolution  : 0.04166667, 0.04166667  (x, y)
+extent      : -109.4167, -34.79167, -55.625, 12.41667  (xmin, xmax, ymin, ymax)
+coord. ref. : +proj=longlat +ellps=WGS84 +no_defs 
 source(s)   : memory
-names       : wc2.1~ec_01, wc2.1~ec_02, wc2.1~ec_03, wc2.1~ec_04, wc2.1~ec_05, wc2.1~ec_06, ...
-min values  :           0,           0,           0,           0,           0,           0, ...
-max values  :         908,         793,         720,         680,         772,        1457, ...</code></pre>
+varname     : GlobalClimate 
+name        :    MAP 
+min value   :    0.0 
+max value   : 7358.6 
+unit        :     mm </code></pre>
 </div>
 </div>
-<p>You can transform one of the files if they don’t match. Here I transform the vector:</p>
+</section>
+<section id="zonal-summaries" class="level1">
+<h1>Zonal summaries</h1>
+<p>Zonal summaries calculate raster statistics inside polygon zones. Here we calculate mean annual precipitation for each country in South America. Keeping the example regional makes the computation faster while preserving the same workflow.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_sf <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(fluxnet_ch4_sf, <span class="at">crs =</span> <span class="fu">crs</span>(normals_ppt))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>south_america_countries <span class="ot">&lt;-</span> world <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(continent <span class="sc">==</span> <span class="st">"South America"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>country_ppt <span class="ot">&lt;-</span> <span class="fu">zonal</span>(<span class="at">x =</span> south_america_ppt,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">z =</span> <span class="fu">vect</span>(south_america_countries),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fun =</span> <span class="st">"mean"</span>,</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">as.polygons =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To check to see if everything lines up, I plot the files together:</p>
+<p>What did <code>zonal()</code> return?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_spatraster</span>(<span class="at">data =</span> normals_ppt[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> fluxnet_ch4_sf) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">na.value =</span> <span class="st">"transparent"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>&lt;SpatRaster&gt; resampled to 500976 cells.</code></pre>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(country_ppt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "SpatVector"
+attr(,"package")
+[1] "terra"</code></pre>
 </div>
+</div>
+<p>Convert the result back to an <code>sf</code> object and map it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>country_ppt_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(country_ppt)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> country_ppt_sf) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> MAP), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">na.value =</span> <span class="st">"transparent"</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Country-level mean annual precipitation in South America"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"MAP (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -567,78 +562,457 @@ max values  :         908,         793,         720,         680,         772,  
 </div>
 </div>
 </div>
-<p>Extract information from your raster stack using <code>terra::extract()</code></p>
+<p>Which South American countries have the highest mean annual precipitation in this dataset?</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_ppt <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(normals_ppt, fluxnet_ch4_sf)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fluxnet_ch4_ppt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>country_ppt_sf <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, continent, MAP) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(MAP)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  ID wc2.1_10m_prec_01 wc2.1_10m_prec_02 wc2.1_10m_prec_03 wc2.1_10m_prec_04
-1  1                61                56                76                85
-2  2               215               190               174               112
-3  3               111               102                61                21
-4  4               110                91                59                19
-5  5                20                17                16                19
-6  6                20                17                16                19
-  wc2.1_10m_prec_05 wc2.1_10m_prec_06 wc2.1_10m_prec_07 wc2.1_10m_prec_08
-1               101               129               136               123
-2                57                25                20                20
-3                 2                 1                 0                 1
-4                 2                 1                 0                 1
-5                40                60                74                62
-6                40                60                74                62
-  wc2.1_10m_prec_09 wc2.1_10m_prec_10 wc2.1_10m_prec_11 wc2.1_10m_prec_12
-1                90                75                81                69
-2                53               102               163               202
-3                 4                24                48                83
-4                 4                21                44                79
-5                34                31                23                19
-6                34                31                23                19</code></pre>
+<pre><code>       name     continent      MAP
+1  Colombia South America 2679.383
+2  Suriname South America 2102.898
+3   Ecuador South America 1963.294
+4    Guyana South America 1952.710
+5 Venezuela South America 1906.277
+6    Brazil South America 1741.940</code></pre>
 </div>
 </div>
-<p>What did the extract function return?</p>
+</section>
+<section id="connecticut-and-yale-myers-forest" class="level1">
+<h1>Connecticut and Yale-Myers Forest</h1>
+<p>This course also includes Connecticut climate rasters for 2021. We can use them to practice with multi-layer rasters and to extract climate information for Yale-Myers Forest.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(fluxnet_ch4_ppt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>ct_ppt_2021 <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"data/TERRA_PPT_2021_CT.tif"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ct_tmean_2021 <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"data/TERRA_TMEAN_2021_CT.tif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Each raster has one layer per month. Keep the 2021 months:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ct_ppt_2021 <span class="ot">&lt;-</span> ct_ppt_2021[[<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]]</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>ct_tmean_2021 <span class="ot">&lt;-</span> ct_tmean_2021[[<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]]</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ct_ppt_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "data.frame"</code></pre>
+<pre><code> [1] "ppt_2021-01-01_total" "ppt_2021-02-01_total" "ppt_2021-03-01_total"
+ [4] "ppt_2021-04-01_total" "ppt_2021-05-01_total" "ppt_2021-06-01_total"
+ [7] "ppt_2021-07-01_total" "ppt_2021-08-01_total" "ppt_2021-09-01_total"
+[10] "ppt_2021-10-01_total" "ppt_2021-11-01_total" "ppt_2021-12-01_total"</code></pre>
 </div>
-</div>
-<p>Combine extracted information to the simple feature:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>fluxnet_ch4_ppt_sf <span class="ot">&lt;-</span> fluxnet_ch4_sf <span class="sc">%&gt;%</span> <span class="fu">cbind</span>(fluxnet_ch4_ppt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Visualize your work. Each extracted column is named after its WorldClim layer (e.g.&nbsp;<code>wc2.1_10m_prec_01</code>), so look it up with <code>names()</code> instead of typing it in by hand:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fluxnet_ch4_ppt_sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ct_tmean_2021)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "SITE_ID"           "SITE_NA"           "FLUXNET2"         
- [4] "FLUXNET_"          "LOCATIO"           "IGBP"             
- [7] "MAT"               "MAP"               "country"          
-[10] "ID"                "wc2.1_10m_prec_01" "wc2.1_10m_prec_02"
-[13] "wc2.1_10m_prec_03" "wc2.1_10m_prec_04" "wc2.1_10m_prec_05"
-[16] "wc2.1_10m_prec_06" "wc2.1_10m_prec_07" "wc2.1_10m_prec_08"
-[19] "wc2.1_10m_prec_09" "wc2.1_10m_prec_10" "wc2.1_10m_prec_11"
-[22] "wc2.1_10m_prec_12" "geometry"         </code></pre>
+<pre><code> [1] "tmin_2021-01-01_total" "tmin_2021-02-01_total" "tmin_2021-03-01_total"
+ [4] "tmin_2021-04-01_total" "tmin_2021-05-01_total" "tmin_2021-06-01_total"
+ [7] "tmin_2021-07-01_total" "tmin_2021-08-01_total" "tmin_2021-09-01_total"
+[10] "tmin_2021-10-01_total" "tmin_2021-11-01_total" "tmin_2021-12-01_total"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ppt_col <span class="ot">&lt;-</span> <span class="fu">names</span>(fluxnet_ch4_ppt_sf)[<span class="fu">grepl</span>(<span class="st">"prec"</span>, <span class="fu">names</span>(fluxnet_ch4_ppt_sf))][<span class="dv">1</span>]</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> aoi_global) <span class="sc">+</span> <span class="fu">geom_sf</span>(<span class="at">data =</span> fluxnet_ch4_ppt_sf, <span class="fu">aes</span>(<span class="at">col =</span> .data[[ppt_col]]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Summarize monthly Connecticut layers to annual precipitation and mean temperature:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>ct_annual_ppt_2021 <span class="ot">&lt;-</span> <span class="fu">sum</span>(ct_ppt_2021, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ct_annual_ppt_2021) <span class="ot">&lt;-</span> <span class="st">"ppt_2021"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>ct_mean_tmean_2021 <span class="ot">&lt;-</span> <span class="fu">mean</span>(ct_tmean_2021, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(ct_mean_tmean_2021) <span class="ot">&lt;-</span> <span class="st">"tmean_2021"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot the Connecticut rasters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ct_annual_ppt_2021,</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Connecticut 2021 annual precipitation"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="terra_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="terra_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ct_mean_tmean_2021,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Connecticut 2021 mean temperature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-21-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>FLUXNET data can be used to understand patterns in natural methane fluxes. Evaluating the conditions where measurements are taken is essential to designing a useful model.</p>
+<p>Create a Yale-Myers Forest point. These are the same coordinates used in the Data Basics workshop:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>yale_myers_sf <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">SITE_ID =</span> <span class="st">"Yale-Myers"</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">SITE_NAME =</span> <span class="st">"Yale-Myers Forest wetlands"</span>,</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">IGBP =</span> <span class="st">"WET"</span>,</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">LOCATION_LAT =</span> <span class="fl">41.952909</span>,</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">LOCATION_LONG =</span> <span class="sc">-</span><span class="fl">72.123859</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LOCATION_LONG"</span>, <span class="st">"LOCATION_LAT"</span>),</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">crs =</span> <span class="dv">4326</span>,</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">remove =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extract 2021 Connecticut climate values for Yale-Myers:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>yale_myers_ct_climate <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(<span class="fu">c</span>(ct_annual_ppt_2021, ct_mean_tmean_2021),</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="fu">vect</span>(yale_myers_sf))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: [extract] transforming vector data to the CRS of the raster</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>yale_myers_ct_climate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ID ppt_2021 tmean_2021
+1  1   1354.7     9.8125</code></pre>
+</div>
+</div>
+<p>Map Yale-Myers on the Connecticut precipitation raster:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>ct_annual_ppt_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ct_annual_ppt_2021,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">xy =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ct_annual_ppt_df) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> ppt_2021)) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> yale_myers_sf,</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">3</span>,</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">na.value =</span> <span class="st">"transparent"</span>) <span class="sc">+</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Yale-Myers Forest on Connecticut 2021 precipitation"</span>,</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Precipitation (mm)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
+<section id="extract-raster-climate-to-tower-sites" class="level1">
+<h1>Extract raster climate to tower sites</h1>
+<p>Read the FLUXNET site table and create point locations for all sites with coordinates:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>fluxnet_sites <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/FluxNet_Sites_2024.csv"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>fluxnet_sites_located <span class="ot">&lt;-</span> fluxnet_sites <span class="sc">%&gt;%</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LOCATION_LONG), <span class="sc">!</span><span class="fu">is.na</span>(LOCATION_LAT)) <span class="sc">%&gt;%</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site_group =</span> <span class="fu">if_else</span>(FLUXNET.CH4 <span class="sc">!=</span> <span class="st">""</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"CH4 site"</span>,</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"Other FLUXNET site"</span>))</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>fluxnet_sites_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(fluxnet_sites_located,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>                              <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"LOCATION_LONG"</span>, <span class="st">"LOCATION_LAT"</span>),</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">crs =</span> <span class="dv">4326</span>,</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>                              <span class="at">remove =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Extract the global climate layers to each tower point:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>tower_climate_values <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate_stack,</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="fu">vect</span>(fluxnet_sites_sf)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"raster_"</span>, .x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: [extract] transforming vector data to the CRS of the raster</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>tower_climate <span class="ot">&lt;-</span> fluxnet_sites_sf <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(tower_climate_values)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at the extracted values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>tower_climate <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SITE_ID, SITE_NAME, site_group, IGBP,</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>         raster_MAP, raster_MAT, raster_TMIN, raster_TMAX, raster_temp_range) <span class="sc">%&gt;%</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  SITE_ID      SITE_NAME         site_group IGBP raster_MAP raster_MAT
+1  AR-SLu       San Luis Other FLUXNET site   MF      418.1   18.07500
+2  AR-Vir       Virasoro Other FLUXNET site  ENF     1591.6   20.94583
+3  AT-Neu       Neustift           CH4 site  GRA     1000.3    5.30000
+4  AU-ASM  Alice Springs Other FLUXNET site  SAV      324.4   22.76250
+5  AU-Ade Adelaide River Other FLUXNET site  WSA     1409.4   27.30417
+6  AU-Cpr       Calperum Other FLUXNET site  SAV      248.5   17.49583
+  raster_TMIN raster_TMAX raster_temp_range
+1         2.2        33.2              31.0
+2         9.6        32.8              23.2
+3        -7.2        19.6              26.8
+4         7.0        36.3              29.3
+5        16.5        36.3              19.8
+6         4.8        33.4              28.6</code></pre>
+</div>
+</div>
+<p>Add Yale-Myers Forest to the extracted climate table:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>yale_myers_global_values <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(climate_stack,</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="fu">vect</span>(yale_myers_sf)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename_with</span>(<span class="sc">~</span> <span class="fu">paste0</span>(<span class="st">"raster_"</span>, .x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: [extract] transforming vector data to the CRS of the raster</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>yale_myers_climate <span class="ot">&lt;-</span> yale_myers_sf <span class="sc">%&gt;%</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">site_group =</span> <span class="st">"Yale-Myers reference"</span>,</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">FLUXNET.CH4 =</span> <span class="st">"Yale-Myers reference"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(yale_myers_global_values)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>climate_context <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  tower_climate,</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  yale_myers_climate</span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment." class="level2">
-<h2 class="anchored" data-anchor-id="download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment.">Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.</h2>
+<section id="raster-based-representativeness" class="level1">
+<h1>Raster-based representativeness</h1>
+<p>Compare CH4 tower climate conditions with all FLUXNET tower locations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> tower_climate,</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> raster_MAT, <span class="at">y =</span> raster_MAP, <span class="at">color =</span> site_group)) <span class="sc">+</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Climate space represented by FLUXNET tower sites"</span>,</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean annual temperature (degrees C)"</span>,</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean annual precipitation (mm)"</span>,</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Site group"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Add Yale-Myers Forest:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> climate_context,</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> raster_MAT, <span class="at">y =</span> raster_MAP, <span class="at">color =</span> site_group)) <span class="sc">+</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> yale_myers_climate,</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Yale-Myers Forest in raster-derived climate space"</span>,</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean annual temperature (degrees C)"</span>,</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean annual precipitation (mm)"</span>,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Site group"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Compare tower locations with a sample of global raster cells:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">730</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>global_climate_sample <span class="ot">&lt;-</span> <span class="fu">spatSample</span>(climate_stack[[<span class="fu">c</span>(<span class="st">"MAT"</span>, <span class="st">"MAP"</span>)]],</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">size =</span> <span class="dv">1000</span>,</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">method =</span> <span class="st">"regular"</span>,</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">na.rm =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">as.df =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(MAT, MAP)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> global_climate_sample,</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> MAT, <span class="at">y =</span> MAP),</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"gray85"</span>,</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> tower_climate <span class="sc">%&gt;%</span> <span class="fu">filter</span>(site_group <span class="sc">==</span> <span class="st">"CH4 site"</span>),</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> raster_MAT, <span class="at">y =</span> raster_MAP, <span class="at">color =</span> IGBP),</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> yale_myers_climate,</span>
+<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> raster_MAT, <span class="at">y =</span> raster_MAP),</span>
+<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"CH4 towers and Yale-Myers relative to sampled global climate space"</span>,</span>
+<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Gray points are sampled raster cells"</span>,</span>
+<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Mean annual temperature (degrees C)"</span>,</span>
+<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Mean annual precipitation (mm)"</span>,</span>
+<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"IGBP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
-<section id="assignment" class="level2">
-<h2 class="anchored" data-anchor-id="assignment">Assignment</h2>
-<p>We will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.</p>
+<section id="environmental-dissimilarity-among-ch4-towers" class="level1">
+<h1>Environmental dissimilarity among CH4 towers</h1>
+<p>To identify which towers are more or less similar to Yale-Myers Forest, we can compare sites using their raster-derived climate variables. We will use standardized Euclidean distance so variables with large units, such as precipitation, do not dominate the comparison only because of scale.</p>
+<p>For this first-pass analysis, we will compare sites using:</p>
+<ul>
+<li><code>raster_MAP</code>;</li>
+<li><code>raster_MAT</code>;</li>
+<li><code>raster_TMIN</code>;</li>
+<li><code>raster_TMAX</code>;</li>
+<li><code>raster_temp_range</code>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>climate_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"raster_MAP"</span>, <span class="st">"raster_MAT"</span>, <span class="st">"raster_TMIN"</span>,</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"raster_TMAX"</span>, <span class="st">"raster_temp_range"</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>analog_candidates <span class="ot">&lt;-</span> climate_context <span class="sc">%&gt;%</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(site_group <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"CH4 site"</span>, <span class="st">"Yale-Myers reference"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SITE_ID, SITE_NAME, IGBP, site_group, <span class="fu">all_of</span>(climate_vars)) <span class="sc">%&gt;%</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Scale the variables and calculate distances:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>scaled_climate <span class="ot">&lt;-</span> analog_candidates <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(climate_vars)) <span class="sc">%&gt;%</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale</span>()</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>climate_distance <span class="ot">&lt;-</span> <span class="fu">dist</span>(scaled_climate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Calculate each CH4 tower’s distance from Yale-Myers Forest:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>yale_index <span class="ot">&lt;-</span> <span class="fu">which</span>(analog_candidates<span class="sc">$</span>SITE_ID <span class="sc">==</span> <span class="st">"Yale-Myers"</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>distance_to_yale <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(climate_distance)[yale_index, ]</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>yale_myers_analogs <span class="ot">&lt;-</span> analog_candidates <span class="sc">%&gt;%</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">distance_to_yale =</span> <span class="fu">as.numeric</span>(distance_to_yale)) <span class="sc">%&gt;%</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SITE_ID <span class="sc">!=</span> <span class="st">"Yale-Myers"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(distance_to_yale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Which CH4 towers are most similar to Yale-Myers based on these raster climate variables?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>yale_myers_analogs <span class="sc">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SITE_ID, SITE_NAME, IGBP,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>         raster_MAP, raster_MAT, raster_temp_range, distance_to_yale) <span class="sc">%&gt;%</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   SITE_ID                                  SITE_NAME IGBP raster_MAP
+1   JP-SwL                                  Suwa Lake  WAT     1191.7
+2   KR-CRK                        Cheorwon Rice paddy  CRO     1289.0
+3   JP-BBY                                  Bibai bog  WET     1128.5
+4   US-OWC                            Old Woman Creek  WET      921.8
+5   US-MRM Marsh Resource Meadowlands Mitigation Bank  WET     1204.9
+6   US-WPT                   Winous Point North Marsh  WET      902.0
+7   US-ORv      Olentangy River Wetland Research Park  WET      968.5
+8   US-CRT             Curtice Walter-Berger cropland  CRO      872.4
+9   US-Ho1                Howland Forest (main tower)  ENF     1091.0
+10  US-StJ                           St Jones Reserve  WET     1130.0
+   raster_MAT raster_temp_range distance_to_yale
+1   10.050000              35.0        0.2927306
+2   10.329166              39.5        0.3866336
+3    6.995833              36.9        0.4132268
+4   10.133333              35.4        0.6681738
+5   12.237500              33.9        0.6834487
+6   10.141666              35.5        0.6965766
+7   11.195833              35.8        0.6970053
+8    9.954166              36.7        0.7464651
+9    5.983333              41.4        0.7499126
+10  13.200000              33.6        0.8358843</code></pre>
+</div>
+</div>
+<p>Because Yale-Myers wetlands are wetlands, it may be useful to separately inspect wetland towers:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>yale_myers_analogs <span class="sc">%&gt;%</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(IGBP <span class="sc">==</span> <span class="st">"WET"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(SITE_ID, SITE_NAME, IGBP,</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>         raster_MAP, raster_MAT, raster_temp_range, distance_to_yale) <span class="sc">%&gt;%</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   SITE_ID                                  SITE_NAME IGBP raster_MAP
+1   JP-BBY                                  Bibai bog  WET     1128.5
+2   US-OWC                            Old Woman Creek  WET      921.8
+3   US-MRM Marsh Resource Meadowlands Mitigation Bank  WET     1204.9
+4   US-WPT                   Winous Point North Marsh  WET      902.0
+5   US-ORv      Olentangy River Wetland Research Park  WET      968.5
+6   US-StJ                           St Jones Reserve  WET     1130.0
+7   DE-SfN                          Schechenfilz Nord  WET     1104.9
+8   US-Los                                 Lost Creek  WET      829.3
+9   FI-Si2                            Siikaneva-2 Bog  WET      673.7
+10  US-NC4                          NC_AlligatorRiver  WET     1322.4
+   raster_MAT raster_temp_range distance_to_yale
+1    6.995833              36.9        0.4132268
+2   10.133333              35.4        0.6681738
+3   12.237500              33.9        0.6834487
+4   10.141666              35.5        0.6965766
+5   11.195833              35.8        0.6970053
+6   13.200000              33.6        0.8358843
+7    8.720834              27.6        1.1275138
+8    4.429167              41.5        1.1571608
+9    3.525000              33.5        1.4264502
+10  16.733334              28.9        1.4403105</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interpret analogs carefully
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is a climate-similarity analysis, not proof that a tower is a perfect analog for Yale-Myers wetlands. Methane fluxes also depend on water table depth, wetland type, soils, vegetation, disturbance history, and measurement design. The goal is to identify towers that may be useful starting points for comparison.</p>
+</div>
+</div>
+</section>
+<section id="mds-visualization" class="level1">
+<h1>MDS visualization</h1>
+<p>Multidimensional scaling (MDS) takes a distance matrix and places sites into a low-dimensional space. Sites that plot closer together are more similar based on the variables used to calculate the distance.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>mds <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(climate_distance, <span class="at">k =</span> <span class="dv">2</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>mds_scores <span class="ot">&lt;-</span> analog_candidates <span class="sc">%&gt;%</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">as.data.frame</span>(mds) <span class="sc">%&gt;%</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">rename</span>(<span class="at">MDS1 =</span> V1, <span class="at">MDS2 =</span> V2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Label Yale-Myers and the five most similar CH4 towers:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>label_sites <span class="ot">&lt;-</span> mds_scores <span class="sc">%&gt;%</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SITE_ID <span class="sc">==</span> <span class="st">"Yale-Myers"</span> <span class="sc">|</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>           SITE_ID <span class="sc">%in%</span> yale_myers_analogs<span class="sc">$</span>SITE_ID[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot the MDS:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> mds_scores,</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> MDS1, <span class="at">y =</span> MDS2)) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> site_group, <span class="at">shape =</span> IGBP <span class="sc">==</span> <span class="st">"WET"</span>),</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">alpha =</span> <span class="fl">0.75</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> label_sites,</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">label =</span> SITE_ID),</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">nudge_y =</span> <span class="fl">0.12</span>,</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"MDS of CH4 tower climate similarity"</span>,</span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Distance calculated from raster-derived climate variables"</span>,</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"MDS axis 1"</span>,</span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"MDS axis 2"</span>,</span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Site group"</span>,</span>
+<span id="cb64-15"><a href="#cb64-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">shape =</span> <span class="st">"Wetland tower"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="terra_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="assignment" class="level1">
+<h1>Assignment</h1>
+<p>Create a short raster evidence brief that evaluates climate exposure and tower similarity for Yale-Myers Forest wetlands.</p>
+<p>Your report should answer:</p>
+<ol type="1">
+<li>What precipitation and temperature conditions are represented by FLUXNET CH4 tower sites?</li>
+<li>Where does Yale-Myers Forest fall in raster-derived climate space?</li>
+<li>Which CH4 towers are most climatically similar to Yale-Myers Forest?</li>
+<li>Which wetland CH4 towers are most similar to Yale-Myers Forest?</li>
+<li>Based on the MDS plot and distance table, which towers would you prioritize as analogs for estimating or contextualizing methane fluxes from Yale-Myers wetlands?</li>
+<li>What important wetland controls are missing from this raster-only similarity analysis?</li>
+</ol>
+<p>Include at least:</p>
+<ul>
+<li>one raster map;</li>
+<li>one climate-space plot;</li>
+<li>one distance or MDS figure;</li>
+<li>one table of candidate analog towers.</li>
+</ul>
 <section id="references" class="level4">
 <h4 class="anchored" data-anchor-id="references">References</h4>
 <p>Fick, S.E. and R.J. Hijmans, 2017. WorldClim 2: new 1km spatial resolution climate surfaces for global land areas. International Journal of Climatology 37 (12): 4302-4315. <a href="https://doi.org/10.1002/joc.5086" class="uri">https://doi.org/10.1002/joc.5086</a></p>
@@ -649,248 +1023,244 @@ max values  :         908,         793,         720,         680,         772,  
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
     }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
     }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-            // target, if specified
-            link.setAttribute("target", "_blank");
-            if (link.getAttribute("rel") === null) {
-              link.setAttribute("rel", "noopener");
-            }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
         }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
       }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
     }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
     }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
-        }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
-            }
-          }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
-          }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
-          }
-          return note.innerHTML;
-        }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
       } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
         }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
-        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
       }
     }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
-            }
-          } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
-            });
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
           }
         } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
+          // See if we can fetch this
+          fetch(url.split('#')[0])
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
+            const note = htmlDoc.getElementById(id);
             if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
+              const html = processXRef(id, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -898,161 +1268,185 @@ max values  :         908,         793,         720,         680,         772,  
             instance.show();
           });
         }
-      }, function(instance) {
-      });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
       } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
             }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
         });
       }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
     }
-  });
-  </script>
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">

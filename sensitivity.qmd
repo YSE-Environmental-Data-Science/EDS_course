@@ -1,158 +1,479 @@
 ---
-title: "Sensitivity Analysis"
+title: "Sensitivity Analysis: Stress Testing a Methane Flux Model"
 editor:
   mode: source
 ---
 
-A sensitivity analysis is a technique used to understand how changes in the inputs of a mathematical model or system affect the output. In the context of a model, such as a simulation or a statistical model, sensitivity analysis helps to identify which input parameters have the most significant influence on the results.
+## From prediction to model trust
 
-To begin load the model and dataset we will use for this workshop:
+In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where the model is being asked to extrapolate beyond the data it learned from.
+
+In this workshop, we will ask:
+
+> What does our methane model believe about climate, vegetation, and ecosystem controls, and can we trust those beliefs for Yale-Myers-like wetland conditions?
+
+By the end of this workshop, you will be able to:
+
+1.  Identify which predictors are used by a fitted random forest model.
+2.  Summarize the training conditions used to fit the model.
+3.  Build one-at-a-time sensitivity curves.
+4.  Compare realistic methane flux scenarios.
+5.  Flag scenarios that fall outside the model's training range.
+6.  Build two-way sensitivity heatmaps to explore interactions.
+7.  Compare sensitivity results with random forest variable importance.
+8.  Write a short model-risk interpretation for final project reporting.
+
+### Install packages
 
 ```{r}
-load("data/SensitivityProducts.RDATA")
-
-# The saved model object is called FCH4_F_gC.rf; alias it to match this course's naming convention
-fch4_rf <- FCH4_F_gC.rf
+#| eval: false
+install.packages("randomForest")
+install.packages("tidyverse")
+install.packages("ggplot2")
 ```
 
-We will use the following packages:
+### Load libraries
 
 ```{r}
 #| output: false
 library(randomForest)
 library(tidyverse)
-library(gtools)
 library(ggplot2)
 ```
 
-In this workshop, we will prepare a sensitivity analysis for the model fch4_rf. Take a look at the model:
+# Load the model
+
+This workshop first looks for the model saved by the updated Random Forest workshop. If that file has not been created yet, it uses the original course sensitivity model.
 
 ```{r}
-fch4_rf
+if (file.exists("data/products/random_forest_model.RDATA")) {
+  load("data/products/random_forest_model.RDATA")
+  sensitivity_source <- "data/products/random_forest_model.RDATA"
+} else {
+  load("data/SensitivityProducts.RDATA")
+  fch4_rf <- FCH4_F_gC.rf
+  final_formula <- formula(fch4_rf)
+  final_predictors <- attr(terms(fch4_rf), "term.labels")
+  sensitivity_source <- "data/SensitivityProducts.RDATA"
+}
+
+sensitivity_source
 ```
 
-The model includes monthly precipitation (P_F), mean temperature (TA_F), and a binary indicator for upland (1 = upland ecosystem and 0 = aquatic ecosystem).
-
-Explore the conditions present within the dataset (fluxnet.new) used to build the model. First subset only the variables used in the final model:
+Inspect the model without printing the full forest object:
 
 ```{r}
-model_vars <- fluxnet.new %>% as.data.frame() %>% select(P_F, TA_F, Upland)
+final_formula
+final_predictors
+fch4_rf$ntree
+fch4_rf$mtry
 ```
 
-Next, we will summarize the conditions within the dataset by quantiles (0.25, 0.5, 0.75): note that your categorical variables need to be listed in .by=c().
+Prepare the training data as a regular data frame:
 
 ```{r}
-model_vars_lower <- model_vars %>% reframe(.by = Upland, P_F = quantile(P_F, 0.25),
-                                            TA_F = quantile(TA_F, 0.25),
-                                            Quantile = as.factor(0.25)) %>% as.data.frame()
+train_data <- train %>%
+  as.data.frame() %>%
+  drop_na(FCH4_F_gC, all_of(final_predictors))
 
-model_vars_median <- model_vars %>% reframe(.by = Upland, P_F = quantile(P_F, 0.5),
-                                             TA_F = quantile(TA_F, 0.5),
-                                             Quantile = as.factor(0.5)) %>% as.data.frame()
-
-model_vars_upper <- model_vars %>% reframe(.by = Upland, P_F = quantile(P_F, 0.75),
-                                            TA_F = quantile(TA_F, 0.75),
-                                            Quantile = as.factor(0.75)) %>% as.data.frame()
+nrow(train_data)
+n_distinct(train_data$SITE)
 ```
 
-Combine the individual summaries into one dataframe using `smartbind()` (from the gtools package), which row-binds data frames even when their columns don't line up exactly, filling in NA for anything missing:
+# Training domain
+
+Sensitivity analysis should begin with the range of conditions the model actually saw. These ranges define the training domain. Predictions outside these ranges are extrapolations.
 
 ```{r}
-condition_summary <- smartbind(model_vars_lower, model_vars_median, model_vars_upper)
-condition_summary
+numeric_predictors <- final_predictors[
+  map_lgl(train_data[final_predictors], is.numeric)
+]
+
+categorical_predictors <- setdiff(final_predictors, numeric_predictors)
+
+numeric_domain <- train_data %>%
+  summarize(across(all_of(numeric_predictors),
+                   list(min = min,
+                        q25 = ~ quantile(.x, 0.25),
+                        median = median,
+                        q75 = ~ quantile(.x, 0.75),
+                        max = max),
+                   .names = "{.col}_{.fn}")) %>%
+  pivot_longer(everything(),
+               names_to = c("predictor", "summary"),
+               names_pattern = "(.+)_(min|q25|median|q75|max)",
+               values_to = "value") %>%
+  pivot_wider(names_from = summary, values_from = value)
+
+numeric_domain
 ```
 
-Now, choose the variable you want to explore: TA_F
-
-Look at the conditions present within the dataset for TA_F
+For categorical predictors, list the levels represented in training:
 
 ```{r}
-summary(fluxnet.new$TA_F)
+categorical_domain <- map_dfr(categorical_predictors, function(predictor) {
+  tibble(
+    predictor = predictor,
+    level = as.character(sort(unique(train_data[[predictor]])))
+  )
+})
+
+categorical_domain
 ```
 
-Look at the range in values for TA_F:
+Visualize the numeric training domain:
 
 ```{r}
-range(fluxnet.new$TA_F)
+numeric_domain %>%
+  pivot_longer(c(min, q25, median, q75, max),
+               names_to = "summary",
+               values_to = "value") %>%
+  mutate(summary = factor(summary, levels = c("min", "q25", "median", "q75", "max"))) %>%
+  ggplot(aes(x = summary, y = value, group = predictor)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ predictor, scales = "free_y") +
+  labs(title = "Training domain for model predictors",
+       x = "Summary statistic",
+       y = "Value")
 ```
 
-Access each individual range value:
+# A reference condition
+
+We need a baseline row that contains one value for every predictor in the model. Numeric predictors are set to their median training value. Categorical predictors are set to their most common training level.
 
 ```{r}
-range(fluxnet.new$TA_F)[1]
+mode_value <- function(x) {
+  tab <- sort(table(x), decreasing = TRUE)
+  names(tab)[1]
+}
 
-range(fluxnet.new$TA_F)[2]
+make_reference_row <- function(data, predictors) {
+  reference <- map(predictors, function(predictor) {
+    x <- data[[predictor]]
+    if (is.numeric(x)) {
+      median(x, na.rm = TRUE)
+    } else {
+      mode_value(x)
+    }
+  })
+
+  names(reference) <- predictors
+  as_tibble(reference)
+}
+
+reference_row <- make_reference_row(train_data, final_predictors)
+
+reference_row <- reference_row %>%
+  mutate(across(all_of(categorical_predictors), ~ factor(.x, levels = levels(train_data[[cur_column()]]))))
+
+reference_row
 ```
 
-Use the range to generate a sequence of values going from the highest to lowest:
+Predict methane flux for the reference condition:
 
 ```{r}
-ta_f_seq <- seq(range(fluxnet.new$TA_F)[1], range(fluxnet.new$TA_F)[2], by = 5)
+reference_row$predicted_flux <- predict(fch4_rf, newdata = reference_row)
+reference_row
 ```
 
-Create a dataframe:
+# One-at-a-time sensitivity
+
+One-at-a-time sensitivity varies one predictor across its observed training range while holding the other predictors constant. This is a simple way to ask how strongly the model responds to each variable.
 
 ```{r}
-ta_f_seq_df <- data.frame(TA_F = ta_f_seq)
+make_oat_grid <- function(predictor, data, reference, n = 60) {
+  x <- data[[predictor]]
+
+  if (!is.numeric(x)) {
+    return(NULL)
+  }
+
+  varied_values <- tibble(
+    !!predictor := seq(min(x, na.rm = TRUE),
+                       max(x, na.rm = TRUE),
+                       length.out = n)
+  )
+
+  reference %>%
+    select(-all_of(predictor)) %>%
+    slice(rep(1, n)) %>%
+    bind_cols(varied_values)
+}
+
+oat_predictions <- map_dfr(numeric_predictors, function(predictor) {
+  grid <- make_oat_grid(predictor, train_data, reference_row)
+  grid$predicted_flux <- predict(fch4_rf, newdata = grid)
+  grid$varied_predictor <- predictor
+  grid$varied_value <- grid[[predictor]]
+  grid
+})
+
+oat_predictions %>%
+  select(varied_predictor, varied_value, predicted_flux) %>%
+  head()
 ```
 
-Next we will take condition_summary, remove the values for TA_F and replace it with the generated range using `cross_join()`, which returns every combination of rows between the two data frames (the Cartesian product):
+Plot the one-at-a-time sensitivity curves:
 
 ```{r}
-ta_f_one_at_a_time <- condition_summary %>% select(-TA_F) %>% cross_join(ta_f_seq_df)
+ggplot(oat_predictions, aes(x = varied_value, y = predicted_flux)) +
+  geom_line(linewidth = 1) +
+  facet_wrap(~ varied_predictor, scales = "free_x") +
+  labs(title = "One-at-a-time sensitivity curves",
+       x = "Predictor value",
+       y = "Predicted methane flux")
 ```
 
-In this dataframe, all other variables in the model are held at their quantile values and only temperature varies across the range of values observed. This approach is "one-at-a-time". We choose one variable to vary and hold all others at a specific value. Often the mean is chosen but using the 0.25, 0.5, and 0.75 quantile helps to visualize what the model would predict across conditions.
-
-Next, use the `predict()` function to predict values into the dataframe (ta_f_one_at_a_time) with the simulated conditions:
+Summarize how much predictions changed as each variable was varied:
 
 ```{r}
-ta_f_one_at_a_time$PRED <- predict(fch4_rf, newdata = ta_f_one_at_a_time)
-ta_f_one_at_a_time$PRED
+oat_sensitivity_summary <- oat_predictions %>%
+  group_by(varied_predictor) %>%
+  summarize(
+    min_pred = min(predicted_flux),
+    max_pred = max(predicted_flux),
+    sensitivity_range = max_pred - min_pred,
+    .groups = "drop"
+  ) %>%
+  arrange(desc(sensitivity_range))
+
+oat_sensitivity_summary
 ```
 
-Let's look at the predictions.
+# Yale-Myers-style scenarios
+
+Scenario analysis asks how the model responds to meaningful combinations of conditions. The exact Yale-Myers methane flux is unknown here, so these are modeling scenarios, not field observations.
 
 ```{r}
-ggplot() + geom_point(data = ta_f_one_at_a_time, aes(x = TA_F, y = PRED))
+q_value <- function(predictor, probability) {
+  quantile(train_data[[predictor]], probability, na.rm = TRUE)
+}
+
+set_if_present <- function(data, predictor, value) {
+  if (predictor %in% names(data)) {
+    data[[predictor]] <- value
+  }
+  data
+}
+
+scenario_row <- function(name, temperature_q, precipitation_q, vpd_q = 0.5,
+                         ndvi_q = 0.5, evi_q = 0.5) {
+  row <- reference_row %>%
+    select(all_of(final_predictors))
+
+  row <- set_if_present(row, "TA_F", q_value("TA_F", temperature_q))
+  row <- set_if_present(row, "P_F", q_value("P_F", precipitation_q))
+  row <- set_if_present(row, "VPD_F", q_value("VPD_F", vpd_q))
+  row <- set_if_present(row, "NDVI", q_value("NDVI", ndvi_q))
+  row <- set_if_present(row, "EVI", q_value("EVI", evi_q))
+
+  row %>%
+    mutate(scenario = name, .before = 1)
+}
+
+scenario_table <- bind_rows(
+  scenario_row("cool wet spring", temperature_q = 0.25, precipitation_q = 0.75, vpd_q = 0.25),
+  scenario_row("hot dry summer", temperature_q = 0.90, precipitation_q = 0.10, vpd_q = 0.90),
+  scenario_row("warm wet summer", temperature_q = 0.75, precipitation_q = 0.75, vpd_q = 0.50),
+  scenario_row("Yale-Myers-like wetland month", temperature_q = 0.60, precipitation_q = 0.70, vpd_q = 0.40,
+               ndvi_q = 0.75, evi_q = 0.75),
+  scenario_row("outside training stress test", temperature_q = 1.00, precipitation_q = 1.00, vpd_q = 1.00)
+)
+
+scenario_table$predicted_flux <- predict(fch4_rf, newdata = scenario_table)
+
+scenario_table
 ```
 
-Use geom_smooth to visualize the general relationship:
+Compare the scenario predictions:
 
 ```{r}
-ggplot() + geom_smooth(data = ta_f_one_at_a_time, aes(x = TA_F, y = PRED))
+scenario_table %>%
+  mutate(scenario = reorder(scenario, predicted_flux)) %>%
+  ggplot(aes(x = scenario, y = predicted_flux)) +
+  geom_col() +
+  coord_flip() +
+  labs(title = "Predicted methane flux under model scenarios",
+       x = NULL,
+       y = "Predicted methane flux")
 ```
 
-Look at the predictions by Quantile and by the Upland indicator:
+# Training-range flags
+
+A scenario can look precise while still being outside the model's experience. This helper checks whether scenario values are inside the numeric range of the training data and whether categorical levels were observed during training.
 
 ```{r}
-ggplot() + geom_line(data = ta_f_one_at_a_time, aes(x = TA_F, y = PRED, color = Quantile, group = interaction(Quantile, Upland), linetype = Upland))
+flag_training_range <- function(scenarios, training_data, predictors) {
+  numeric_flags <- map_dfr(intersect(predictors, numeric_predictors), function(predictor) {
+    min_value <- min(training_data[[predictor]], na.rm = TRUE)
+    max_value <- max(training_data[[predictor]], na.rm = TRUE)
+
+    scenarios %>%
+      transmute(
+        scenario,
+        predictor = predictor,
+        value = as.character(.data[[predictor]]),
+        inside_training_domain = .data[[predictor]] >= min_value & .data[[predictor]] <= max_value
+      )
+  })
+
+  categorical_flags <- map_dfr(intersect(predictors, categorical_predictors), function(predictor) {
+    observed_levels <- unique(as.character(training_data[[predictor]]))
+
+    scenarios %>%
+      transmute(
+        scenario,
+        predictor = predictor,
+        value = as.character(.data[[predictor]]),
+        inside_training_domain = as.character(.data[[predictor]]) %in% observed_levels
+      )
+  })
+
+  bind_rows(numeric_flags, categorical_flags)
+}
+
+scenario_range_flags <- flag_training_range(scenario_table, train_data, final_predictors)
+
+scenario_range_flags
 ```
 
-Now explore the next variable: P_F
+Summarize whether each scenario stays inside the model's training domain:
 
 ```{r}
-summary(fluxnet.new$P_F)
+scenario_domain_summary <- scenario_range_flags %>%
+  group_by(scenario) %>%
+  summarize(
+    predictors_inside_domain = sum(inside_training_domain),
+    predictors_checked = n(),
+    fully_inside_domain = all(inside_training_domain),
+    .groups = "drop"
+  ) %>%
+  left_join(scenario_table %>% select(scenario, predicted_flux), by = "scenario") %>%
+  arrange(desc(predicted_flux))
 
-range(fluxnet.new$P_F)
-
-range(fluxnet.new$P_F)[1]
-
-range(fluxnet.new$P_F)[2]
-
-p_f_seq <- seq(range(fluxnet.new$P_F)[1], range(fluxnet.new$P_F)[2], by = 100)
-
-p_f_seq_df <- data.frame(P_F = p_f_seq)
-
-p_f_one_at_a_time <- condition_summary %>% select(-P_F) %>% cross_join(p_f_seq_df)
-
-p_f_one_at_a_time$PRED <- predict(fch4_rf, newdata = p_f_one_at_a_time)
-
-ggplot() + geom_point(data = p_f_one_at_a_time, aes(x = P_F, y = PRED))
-
-ggplot() + geom_smooth(data = p_f_one_at_a_time, aes(x = P_F, y = PRED))
-
-ggplot() + geom_line(data = p_f_one_at_a_time, aes(x = P_F, y = PRED, color = Quantile, group = interaction(Quantile, Upland), linetype = Upland))
+scenario_domain_summary
 ```
 
-Use this same workflow to explore the sensitivity of your groups project's model. Please provide a presentation explaining how you fit your model (mtry?, ntree?) and how variables where selected (forward versus backward selection). Describe your final model results (variables in the final model, their importance, the %Var, observed versus predicted for testing and training data), including a correlation plot, variance importance plots, and sensitivity analyses. This report will develop into the methods and results portion of your final project.
+# Two-way sensitivity
+
+Methane flux can respond to combinations of conditions. Two-way sensitivity varies two predictors at the same time while holding the others at their reference values.
+
+```{r}
+make_two_way_grid <- function(x_predictor, y_predictor, data, reference, n = 45) {
+  x_values <- seq(min(data[[x_predictor]], na.rm = TRUE),
+                  max(data[[x_predictor]], na.rm = TRUE),
+                  length.out = n)
+
+  y_values <- seq(min(data[[y_predictor]], na.rm = TRUE),
+                  max(data[[y_predictor]], na.rm = TRUE),
+                  length.out = n)
+
+  varied_grid <- crossing(
+    !!x_predictor := x_values,
+    !!y_predictor := y_values
+  )
+
+  reference %>%
+    select(-all_of(c(x_predictor, y_predictor))) %>%
+    slice(rep(1, nrow(varied_grid))) %>%
+    bind_cols(varied_grid)
+}
+
+two_way_pairs <- list(
+  c("TA_F", "P_F"),
+  c("TA_F", "VPD_F"),
+  c("TA_F", "NDVI")
+) %>%
+  keep(~ all(.x %in% numeric_predictors))
+
+two_way_predictions <- imap_dfr(two_way_pairs, function(pair, pair_id) {
+  grid <- make_two_way_grid(pair[1], pair[2], train_data, reference_row)
+  grid$predicted_flux <- predict(fch4_rf, newdata = grid)
+  grid$x_predictor <- pair[1]
+  grid$y_predictor <- pair[2]
+  grid$x_value <- grid[[pair[1]]]
+  grid$y_value <- grid[[pair[2]]]
+  grid$pair <- paste(pair, collapse = " x ")
+  grid
+})
+
+two_way_predictions %>%
+  select(pair, x_value, y_value, predicted_flux) %>%
+  head()
+```
+
+Plot the two-way sensitivity surfaces:
+
+```{r}
+ggplot(two_way_predictions, aes(x = x_value, y = y_value, fill = predicted_flux)) +
+  geom_raster() +
+  facet_wrap(~ pair, scales = "free") +
+  scale_fill_viridis_c() +
+  labs(title = "Two-way sensitivity of predicted methane flux",
+       x = "First predictor value",
+       y = "Second predictor value",
+       fill = "Predicted flux")
+```
+
+# Compare sensitivity with importance
+
+Variable importance ranks predictors by how much they contributed to model performance. Sensitivity curves ask how much predictions change when a predictor is varied across its training range. They are related, but they are not the same.
+
+```{r}
+importance_table <- importance(fch4_rf) %>%
+  as.data.frame() %>%
+  rownames_to_column("predictor") %>%
+  as_tibble()
+
+importance_table
+```
+
+Join importance to the sensitivity summary:
+
+```{r}
+importance_sensitivity <- oat_sensitivity_summary %>%
+  left_join(importance_table, by = c("varied_predictor" = "predictor")) %>%
+  arrange(desc(sensitivity_range))
+
+importance_sensitivity
+```
+
+Plot the comparison when an importance column is available:
+
+```{r}
+importance_column <- names(importance_table)[2]
+
+importance_sensitivity %>%
+  ggplot(aes(x = sensitivity_range, y = .data[[importance_column]], label = varied_predictor)) +
+  geom_point(size = 3) +
+  geom_text(nudge_y = 0.02, check_overlap = TRUE) +
+  labs(title = "Sensitivity range compared with random forest importance",
+       x = "Prediction range across one-at-a-time sensitivity curve",
+       y = importance_column)
+```
+
+# Model-risk memo
+
+Sensitivity analysis is not just a plot-making step. It is part of model interpretation. For Yale-Myers wetlands, we especially care about whether high-methane scenarios are supported by the training data.
+
+Use the objects created above to answer:
+
+1.  Which predictor produced the largest one-at-a-time change in predicted methane flux?
+2.  Which scenario produced the highest predicted methane flux?
+3.  Did the Yale-Myers-like wetland scenario stay inside the model's training domain?
+4.  Do variable importance and sensitivity tell the same story?
+5.  What would make you cautious about using this model to estimate methane flux for Yale-Myers wetlands?
+
+# Assignment
+
+Prepare a short sensitivity analysis report for your final methane flux model. Include:
+
+1.  The final model formula and a list of predictors.
+2.  A training-domain summary table.
+3.  One-at-a-time sensitivity curves for all numeric predictors in your model.
+4.  At least three realistic scenarios, including one that represents your target study site.
+5.  A training-range flag table for the scenarios.
+6.  One two-way sensitivity plot.
+7.  A comparison of sensitivity results and random forest variable importance.
+8.  A short model-risk memo explaining where you trust the model and where you do not.

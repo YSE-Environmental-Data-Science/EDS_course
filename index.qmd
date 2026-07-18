@@ -21,7 +21,7 @@ Teaching Fellow: TBD
 
 <b>Prerequisites:</b>
 
--   [R Series Training](https://research.computing.yale.edu/training/r-series)
+-   [R Series Training](https://www.youtube.com/watch?v=-jnDDQanALo)
 
 ## Format
 

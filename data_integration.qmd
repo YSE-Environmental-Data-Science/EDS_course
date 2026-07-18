@@ -1,18 +1,61 @@
 ---
-title: "Introduction to Data Integration in R"
+title: "Data Integration: Building a Methane Flux Modeling Table"
 editor:
   mode: source
 ---
 
-Data analysis often requires combining data from multiple sources, such as files, databases, APIs, or web scraping. R is a powerful and flexible tool for data integration, but it can also pose some challenges and pitfalls. In this workshop, you will learn some of the best ways to integrate data from multiple sources in R.
+## From data sources to a model-ready table
 
-## Getting a Climate Data Store (CDS) API key
+The final course project asks you to build a methane flux model. Before you can fit a model, you need to compile a dataset where each row is a clean observation and each column is a response variable, predictor, or useful descriptor.
 
-Later in this workshop you'll download real historical climate data (ERA5) from the Copernicus Climate Data Store (CDS). This requires a free personal account and API key, separate from anything else in this course, so set it up now — it can take a few minutes for the account to activate.
+In this workshop, we will ask:
 
-1. Create a free account at <https://cds.climate.copernicus.eu/>.
-2. Once logged in, open your user profile page and copy your **Personal Access Token** — this is your API key.
-3. In R, register it once per computer (you'll install the `ecmwfr` package later in this workshop, but you can do it now too):
+> How do we combine flux measurements, site metadata, vegetation indices, soil, climate, elevation, and reanalysis data into one table that can be used to model methane flux?
+
+The target data product is a **site-month modeling table**:
+
+-   one row = one tower site in one month;
+-   response = methane flux (`FCH4_F_gC`);
+-   dynamic predictors = monthly tower climate, MODIS vegetation indices, ERA5 climate;
+-   static predictors = ecosystem type, country, soil, climate normals, elevation.
+
+By the end of this workshop, you will be able to:
+
+1.  Identify whether a data source is tabular, vector, or raster.
+2.  Identify whether a predictor is static or dynamic.
+3.  Choose join keys for site-only and site-time datasets.
+4.  Extract raster values to tower locations.
+5.  Join static site attributes to monthly observations.
+6.  Join dynamic monthly predictors by `SITE_ID` and `YearMon`.
+7.  Check joins for missing values, duplicate keys, and row-count changes.
+8.  Save a model-ready methane flux dataset.
+
+# Data inventory
+
+Before writing code, make a data inventory. Every predictor you use in a model should have a source, units, spatial/temporal resolution, and join key.
+
+| Source | Data Type | Static or Dynamic? | What It Adds | Join Key |
+|---|---|---|---|---|
+| `FluxNet_Sites_2024.csv` | Tabular points | Static | site location, ecosystem type, site MAT/MAP | `SITE_ID` |
+| `GlobalSoil_grids.tif` | Raster | Static | soil bulk density, pH, nitrogen | location |
+| `GlobalClimate.tif` | Raster | Static | climate normals | location |
+| `Elevation.tif` | Raster | Static | elevation | location |
+| `ENV720-MOD13A3-061-results.csv` | Tabular remote sensing | Dynamic monthly | NDVI, EVI | `SITE_ID`, `YearMon` |
+| `FLUXNET_FLUXES.RDATA` | Tabular flux | Dynamic monthly | methane flux response, tower meteorology | `SITE_ID`, `YearMon` |
+| ERA5 rasters | Raster reanalysis | Dynamic monthly | gridded precipitation and air temperature | location, `YearMon` |
+
+::: {.callout-note}
+## Static versus dynamic predictors
+Static predictors describe a site and can be repeated across months. Dynamic predictors change through time and must be joined by both site and time. Accidentally joining monthly data only by `SITE_ID` is one of the easiest ways to create duplicated or incorrect model data.
+:::
+
+# Getting a Climate Data Store (CDS) API key
+
+Later in this workshop, we will use ERA5 monthly climate data from the Copernicus Climate Data Store (CDS). This requires a free personal account and API key.
+
+1.  Create a free account at <https://cds.climate.copernicus.eu/>.
+2.  Once logged in, open your user profile page and copy your **Personal Access Token**.
+3.  Register it once per computer:
 
 ```{r}
 #| eval: false
@@ -21,52 +64,12 @@ library(ecmwfr)
 wf_set_key(key = "paste-your-personal-access-token-here")
 ```
 
-`ecmwfr` stores the key in your system's secure credential manager, so you only need to do this once — every future R session on this computer will use it automatically.
-
 ::: {.callout-warning}
 ## Never save your API key in a script
-Type your key directly into the R console (or a chunk you run once and then delete), not into a `.qmd` file you save or push to GitHub. Treat it like a password — if it's ever exposed, regenerate it from your CDS profile page.
+Type your key directly into the R console, not into a `.qmd` file you save or push to GitHub. Treat it like a password.
 :::
 
-#### Workshop Goals:
-
-1. Understand techniques for data Integration.
-2. Obtain information from different data sources.
-3. Combine tabular and vector data.
-4. Combine tabular and raster data.
-5. Combine tabular data by an ID and time.
-
-#### Choose the right package
-
-R has many packages that can help you import, merge, and manipulate data from different sources. Some of the most popular and useful ones for tables include readr, dplyr, tidyr, and purrr. These packages are part of the tidyverse, a collection of packages that share a consistent and coherent syntax and philosophy for data analysis. For spatial data, the sf and terra packages are useful.
-
-| Type of Data | Library |
-|------:|-----------|
-| Tabular | tidyverse |
-| Vector | sf |
-| Raster | terra |
-
-#### Use pipes and functions
-
-One of the best features of the tidyverse is the pipe operator (%>%), which allows you to chain multiple functions together and pass the output of one function as the input of the next one. This way, you can create a data integration pipeline that is clear and logical, and that avoids intermediate variables and nested functions.
-
-#### Check and validate data
-
-Data integration can introduce errors or inconsistencies in your data, such as duplicates, mismatches, outliers, or invalid values. Therefore, it is important to check and validate your data before and after you integrate it from multiple sources. You can use various tools and techniques to do this, such as summary statistics, data visualization, data profiling, or data quality rules.
-
-In this workshop you will begin to extract information about the FLUXNET CH4 tower sites.
-
-### Install Packages:
-
-```{r}
-#| eval: false
-install.packages("zoo")
-install.packages("rnaturalearth")
-install.packages("ecmwfr")
-install.packages("lubridate")
-```
-
-# Load Libraries:
+# Load libraries
 
 ```{r}
 #| output: false
@@ -76,321 +79,322 @@ library(tidyverse)
 library(ggplot2)
 library(rnaturalearth)
 library(zoo)
-library(ecmwfr)
 library(lubridate)
 ```
 
-# Integrating information from simple features
+# Helper checks for joins
 
-Import the file FluxNet_Sites_2024.csv and call it fluxnet_sites
+We will use a few small checks repeatedly. These are habits you should use in your final project.
+
+```{r}
+count_missing <- function(data) {
+  tibble(variable = names(data),
+         missing_count = vapply(data, function(x) sum(is.na(x)), integer(1))) %>%
+    arrange(desc(missing_count))
+}
+```
+
+Check for duplicate keys:
+
+```{r}
+find_duplicate_keys <- function(data, ...) {
+  data %>%
+    count(..., name = "n") %>%
+    filter(n > 1)
+}
+```
+
+# Static site table
+
+Import the FLUXNET site table:
 
 ```{r}
 fluxnet_sites <- read.csv("data/FluxNet_Sites_2024.csv")
 ```
 
-This dataset includes:
-
-| Column Name | Description |
-|---------------------------:|--------------------------------------------|
-| SITE_ID | Unique site id |
-| SITE_NAME | Site name |
-| FLUXNET2015 | License information for the data for the two FLUXNET Products |
-| FLUXNET-CH4 | License information for the data for the two FLUXNET Products |
-| LOCATION_LAT | Location information |
-| LOCATION_LONG | Location information |
-| LOCATION_ELEV | Elevation in meters |
-| IGBP | Vegetation type |
-| MAT | Mean annual temperature in Celsius |
-| MAP | Mean annual precipitation in mm |
-
-Subset file to include only sites measuring methane:
+Keep sites with methane data and valid coordinates:
 
 ```{r}
-fluxnet_ch4 <- fluxnet_sites %>% filter(FLUXNET.CH4 == "CC-BY-4.0")
+fluxnet_ch4 <- fluxnet_sites %>%
+  filter(FLUXNET.CH4 != "",
+         !is.na(LOCATION_LONG),
+         !is.na(LOCATION_LAT))
+
+nrow(fluxnet_sites)
+nrow(fluxnet_ch4)
 ```
 
-Now that you have all of the sites measuring methane, convert fluxnet_ch4 to a sf and call it fluxnet_ch4_sf:
+Convert the methane site table to a simple feature object:
 
 ```{r}
 fluxnet_ch4_sf <- st_as_sf(x = fluxnet_ch4,
                             coords = c("LOCATION_LONG", "LOCATION_LAT"),
-                            crs = 4326)
+                            crs = 4326,
+                            remove = FALSE)
 
-ggplot(data = fluxnet_ch4_sf) + geom_sf()
+ggplot(data = fluxnet_ch4_sf) +
+  geom_sf() +
+  labs(title = "FLUXNET CH4 tower locations")
 ```
 
-Check the class and that the geometry is valid:
+# Add country and continent
 
-```{r}
-class(fluxnet_ch4_sf)
-st_is_valid(fluxnet_ch4_sf)
-```
-
-Create a global sf and extract the country into the sf
+Country and continent are static site attributes. We get them by spatially joining tower points to country polygons.
 
 ```{r}
 world_sf <- ne_countries(scale = "medium", returnclass = "sf") %>%
-  filter(continent %in% c("Europe", "Asia", "North America", "South America", "Africa", "Oceania"))
+  filter(continent %in% c("Europe", "Asia", "North America",
+                          "South America", "Africa", "Oceania")) %>%
+  st_make_valid()
 
-st_is_valid(world_sf)
-```
-
-Make the CRS match:
-
-```{r}
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = 4087)
-
-world_sf <- st_transform(world_sf, crs = 4087) %>% st_make_valid()
-
-ggplot() + geom_sf(data = world_sf) + geom_sf(data = fluxnet_ch4_sf)
-```
-
-Use st_intersection to extract the country of each tower site. A straight `st_intersection()` can return more or fewer rows than you started with (a point can sit exactly on a shared border and match two polygons, or fall outside all of them), so join back on `SITE_ID` instead of assigning the result directly:
-
-```{r}
-country_lookup <- st_intersection(world_sf, fluxnet_ch4_sf) %>%
-  st_drop_geometry() %>%
-  select(SITE_ID, name) %>%
-  distinct(SITE_ID, .keep_all = TRUE)
+world_context <- world_sf %>%
+  select(country = name, continent, geometry)
 
 fluxnet_ch4_sf <- fluxnet_ch4_sf %>%
-  left_join(country_lookup, by = "SITE_ID") %>%
-  rename(country = name)
-
-fluxnet_ch4_sf$country
+  st_join(world_context, join = st_within)
 ```
 
-# Integrating information from rasters
+Check the new attributes:
 
-Import the file GlobalSoil_grids.tif :
+```{r}
+fluxnet_ch4_sf %>%
+  st_drop_geometry() %>%
+  select(SITE_ID, SITE_NAME, country, continent) %>%
+  head()
+```
+
+# Extract static raster predictors
+
+Static raster predictors are joined by location. We will extract soil, climate normals, and elevation to each tower point.
+
+### Soil
 
 ```{r}
 soil <- terra::rast("data/GlobalSoil_grids.tif")
-soil
+names(soil)
 ```
 
-Transform fluxnet_ch4_sf to the same CRS as soil:
+Transform the tower points to the raster CRS, then extract:
 
 ```{r}
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = crs(soil))
-fluxnet_ch4_sf
+fluxnet_ch4_soil <- st_transform(fluxnet_ch4_sf, crs = crs(soil))
+
+soil_values <- terra::extract(soil, vect(fluxnet_ch4_soil)) %>%
+  select(-ID) %>%
+  rename(soil_bulk_density = BulkDensity,
+         soil_ph = PH,
+         soil_nitrogen = Nitrogen)
 ```
 
-Extract soil information to fluxnet_ch4_sf:
-
-```{r}
-fluxnet_ch4_sf$soil_bulk_density <- terra::extract(soil, fluxnet_ch4_sf)$BulkDensity
-fluxnet_ch4_sf$soil_bulk_density
-
-fluxnet_ch4_sf$soil_ph <- terra::extract(soil, fluxnet_ch4_sf)$PH
-fluxnet_ch4_sf$soil_ph
-
-fluxnet_ch4_sf$soil_nitrogen <- terra::extract(soil, fluxnet_ch4_sf)$Nitrogen
-fluxnet_ch4_sf$soil_nitrogen
-```
-
-Import the climate information (GlobalClimate.tif) :
+### Climate normals
 
 ```{r}
 climate <- terra::rast("data/GlobalClimate.tif")
-climate
-```
-
-Transform fluxnet_ch4_sf to the same CRS as climate:
-
-```{r}
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = crs(climate))
-fluxnet_ch4_sf
-```
-
-Look at the data that is available in climate:
-
-```{r}
 names(climate)
 ```
 
-Extract climate information to fluxnet_ch4_sf. Note these are named with a `climate_` prefix rather than reusing `MAT`/`MAP` — `fluxnet_sites` already has site-reported `MAT`/`MAP` columns, and this keeps the raster-extracted values available for comparison instead of silently overwriting them:
-
 ```{r}
-fluxnet_ch4_sf$climate_map <- terra::extract(climate, fluxnet_ch4_sf)$MAP
-fluxnet_ch4_sf$climate_tmin <- terra::extract(climate, fluxnet_ch4_sf)$TMIN
-fluxnet_ch4_sf$climate_tmax <- terra::extract(climate, fluxnet_ch4_sf)$TMAX
-fluxnet_ch4_sf$climate_mat <- terra::extract(climate, fluxnet_ch4_sf)$MAT
+fluxnet_ch4_climate <- st_transform(fluxnet_ch4_sf, crs = crs(climate))
 
-fluxnet_ch4_sf$climate_map
-fluxnet_ch4_sf$climate_tmin
-fluxnet_ch4_sf$climate_tmax
-fluxnet_ch4_sf$climate_mat
+climate_values <- terra::extract(climate, vect(fluxnet_ch4_climate)) %>%
+  select(-ID) %>%
+  rename(climate_map = MAP,
+         climate_tmin = TMIN,
+         climate_tmax = TMAX,
+         climate_mat = MAT)
 ```
 
-Import elevation information (Elevation.tif):
+### Elevation
 
 ```{r}
 elevation <- terra::rast("data/Elevation.tif")
-elevation
-```
-
-Transform fluxnet_ch4_sf to the same CRS as elevation:
-
-```{r}
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = crs(elevation))
-```
-
-Look at the data that is available in elevation:
-
-```{r}
 names(elevation)
 ```
 
-Extract elevation information to fluxnet_ch4_sf:
-
 ```{r}
-fluxnet_ch4_sf$elevation_m <- terra::extract(elevation, fluxnet_ch4_sf)$wc2.1_2.5m_elev
-fluxnet_ch4_sf$elevation_m
+fluxnet_ch4_elevation <- st_transform(fluxnet_ch4_sf, crs = crs(elevation))
+
+elevation_values <- terra::extract(elevation, vect(fluxnet_ch4_elevation)) %>%
+  select(-ID) %>%
+  rename(elevation_m = wc2.1_2.5m_elev)
 ```
 
-# Joining tables
+### Build the static site table
 
-We can combine columns from two (or more) tables together. This can be achieved using the join family of functions in dplyr. There are different types of joins that will result in different outcomes.
+Combine the site metadata and static raster values:
 
-`inner_join()` includes all rows that appear in both the first data frame (x) and the second data frame (y).
+```{r}
+site_static <- fluxnet_ch4_sf %>%
+  st_drop_geometry() %>%
+  bind_cols(soil_values, climate_values, elevation_values)
+```
 
-`left_join()` returns all rows from x based on matching rows on shared columns in y.
-`right_join()` is the companion to `left_join()`, but returns all rows included in y based on matching rows on shared columns in x.
+Keep one row per site:
 
-Import APPEEARS file where I requested MODIS NDVI and EVI data for all FLUXNET sites (data/ENV720-MOD13A3-061-results.csv):
+```{r}
+site_static <- site_static %>%
+  distinct(SITE_ID, .keep_all = TRUE)
+
+find_duplicate_keys(site_static, SITE_ID)
+```
+
+Inspect missing values:
+
+```{r}
+site_static %>%
+  select(SITE_ID, IGBP, country, continent,
+         soil_bulk_density, soil_ph, soil_nitrogen,
+         climate_map, climate_mat, elevation_m) %>%
+  count_missing() %>%
+  head(15)
+```
+
+# Dynamic monthly vegetation predictors
+
+MODIS NDVI and EVI are monthly predictors. Their join key must include both `SITE_ID` and `YearMon`.
 
 ```{r}
 modis_vi <- read.csv("data/ENV720-MOD13A3-061-results.csv")
 names(modis_vi)
 ```
 
-Subset the modis_vi dataset to include only the columns of interest and rename them:
+Prepare the MODIS table:
 
 ```{r}
-fluxnet_ndvi <- modis_vi %>% select("ID",
-                                     "Date",
-                                     "MOD13A3_061__1_km_monthly_EVI", "MOD13A3_061__1_km_monthly_NDVI", "MOD13A3_061__1_km_monthly_VI_Quality") %>%
+fluxnet_vi_monthly <- modis_vi %>%
+  select(ID,
+         Date,
+         MOD13A3_061__1_km_monthly_EVI,
+         MOD13A3_061__1_km_monthly_NDVI,
+         MOD13A3_061__1_km_monthly_VI_Quality) %>%
   rename(SITE_ID = ID,
          EVI = MOD13A3_061__1_km_monthly_EVI,
          NDVI = MOD13A3_061__1_km_monthly_NDVI,
          QAQC = MOD13A3_061__1_km_monthly_VI_Quality) %>%
-  filter(QAQC > 0)
-
-names(fluxnet_ndvi)
+  mutate(date_formatted = as.Date(Date),
+         YearMon = zoo::as.yearmon(date_formatted)) %>%
+  filter(QAQC > 0) %>%
+  distinct(SITE_ID, YearMon, .keep_all = TRUE)
 ```
 
-Make the fluxnet_ch4_sf vector a dataframe:
+Check the keys:
 
 ```{r}
-fluxnet_ch4_df <- as.data.frame(fluxnet_ch4_sf)
+find_duplicate_keys(fluxnet_vi_monthly, SITE_ID, YearMon)
+range(fluxnet_vi_monthly$YearMon)
 ```
 
-Identify the column that you should use to join the datasets fluxnet_ch4_df and fluxnet_ndvi:
+# Monthly flux data
 
-```{r}
-#| output: false
-fluxnet_ch4_df$SITE_ID
-fluxnet_ndvi$SITE_ID
-```
-
-Use left_join because you want to keep all the data from fluxnet_ch4_df and only the sites in fluxnet_ndvi that match the sites in fluxnet_ch4_df:
-
-```{r}
-fluxnet_ch4_final <- fluxnet_ch4_df %>% left_join(fluxnet_ndvi, by = "SITE_ID")
-```
-
-Check to make sure the list of sites matches:
-
-```{r}
-length(unique(fluxnet_ch4_df$SITE_ID))
-length(unique(fluxnet_ch4_final$SITE_ID))
-```
-
-Import the monthly FLUX data:
+Load the monthly flux dataset. This contains the response variable and tower-measured monthly meteorology.
 
 ```{r}
 load("data/FLUXNET_FLUXES.RDATA")
 
-# The saved object is called FLUXNET.flux; alias it to match this course's naming convention
 fluxnet_flux <- FLUXNET.flux
 ```
 
-Look at the flux file "fluxnet_flux":
+Create `SITE_ID` and inspect the time range:
 
 ```{r}
-summary(fluxnet_flux)
+fluxnet_flux <- fluxnet_flux %>%
+  mutate(SITE_ID = SITE)
+
+range(fluxnet_flux$YearMon)
 names(fluxnet_flux)
 ```
 
-```{r}
-#| output: false
-# Make SITE ID:
-fluxnet_flux$SITE_ID <- fluxnet_flux$SITE
-fluxnet_flux$SITE_ID
-
-# This is a good column to join based on:
-fluxnet_flux$YearMon
-```
-
-In your site file, convert the date to Year-Month and use this column to join it with the flux file "fluxnet_flux":
+Check whether `SITE_ID + YearMon` uniquely identifies rows:
 
 ```{r}
-names(fluxnet_ch4_final)
-summary(fluxnet_ch4_final$Date)
+find_duplicate_keys(fluxnet_flux, SITE_ID, YearMon)
 ```
+
+# Join dynamic predictors
+
+Start with the flux data, then join MODIS by `SITE_ID` and `YearMon`.
 
 ```{r}
-#| include: false
-#| output: false
-fluxnet_ch4_final$Date
+before_rows <- nrow(fluxnet_flux)
+
+flux_month_vi <- fluxnet_flux %>%
+  left_join(fluxnet_vi_monthly, by = c("SITE_ID", "YearMon"))
+
+after_rows <- nrow(flux_month_vi)
+
+before_rows
+after_rows
 ```
+
+Check for flux rows that did not receive MODIS data:
 
 ```{r}
-# Format as a Date:
-fluxnet_ch4_final$date_formatted <- fluxnet_ch4_final$Date %>% as.Date(format = "%Y-%m-%d")
-
-# Format as a Yearmon:
-fluxnet_ch4_final$YearMon <- fluxnet_ch4_final$date_formatted %>% zoo::as.yearmon("%m-%Y")
-
-class(fluxnet_ch4_final$YearMon)
+flux_month_vi %>%
+  summarize(missing_ndvi = sum(is.na(NDVI)),
+            missing_evi = sum(is.na(EVI)),
+            total_rows = n())
 ```
 
-Join the two files:
+Use `anti_join()` to inspect unmatched keys:
 
 ```{r}
-fluxes_month <- fluxnet_flux %>% left_join(fluxnet_ch4_final, by = c("YearMon", "SITE_ID"))
+fluxnet_flux %>%
+  anti_join(fluxnet_vi_monthly, by = c("SITE_ID", "YearMon")) %>%
+  count(SITE_ID, sort = TRUE) %>%
+  head()
 ```
 
-Save your file:
+# Join static site predictors to monthly rows
+
+Static site attributes join by `SITE_ID` only. This repeats each site's static values across all months for that site.
+
+```{r}
+site_static_for_join <- site_static %>%
+  select(SITE_ID, SITE_NAME, IGBP, country, continent,
+         LOCATION_LAT, LOCATION_LONG, LOCATION_ELEV,
+         soil_bulk_density, soil_ph, soil_nitrogen,
+         climate_map, climate_tmin, climate_tmax, climate_mat,
+         elevation_m)
+```
+
+Join site attributes to the monthly table:
+
+```{r}
+before_rows <- nrow(flux_month_vi)
+
+flux_model_base <- flux_month_vi %>%
+  left_join(site_static_for_join, by = "SITE_ID")
+
+after_rows <- nrow(flux_model_base)
+
+before_rows
+after_rows
+```
+
+Check which flux rows did not receive site metadata:
+
+```{r}
+flux_model_base %>%
+  filter(is.na(IGBP)) %>%
+  count(SITE_ID, sort = TRUE) %>%
+  head()
+```
+
+# ERA5 monthly reanalysis data
+
+The static climate layer (`GlobalClimate.tif`) gives each site one long-term average. ERA5 gives monthly climate values that can be joined to site-month flux rows.
+
+The download workflow is shown below, but the course data folder already includes processed ERA5 rasters:
+
+-   `data/products/era5_ppt_monthly.tif`
+-   `data/products/era5_tmean_monthly.tif`
+
+### Download ERA5 data
 
 ```{r}
 #| eval: false
-save(fluxes_month, file = "data/products/Monthly_Fluxes.RDATA")
-```
+library(ecmwfr)
 
-# Validating tower measurements with ERA5 reanalysis climate data
-
-The static climate layer you extracted earlier (GlobalClimate.tif) gives each site a single long-term average — useful for describing a site, but not for matching a specific month. `fluxnet_flux` already includes tower-measured monthly precipitation (P_F) and temperature (TA_F), recorded by instruments at each site. Here we'll download ERA5, a global atmospheric reanalysis produced by the European Centre for Medium-Range Weather Forecasts (ECMWF), and compare its monthly values against what the towers actually measured. ERA5 is genuinely global and covers specific months back to 1940, which is why we're using it here instead of the climate normals from earlier workshops — and the same download will double as the input for your spatial projection workshop.
-
-Register your CDS key for this R session, if you haven't already (see the setup instructions at the top of this workshop):
-
-```{r}
-#| eval: false
-wf_set_key(key = "paste-your-personal-access-token-here")
-```
-
-### Download monthly ERA5 data
-
-We need monthly precipitation and temperature for every year covered by `fluxnet_flux`:
-
-```{r}
-range(fluxnet_flux$YearMon)
-```
-
-Build one request per year (global extent, both variables), then submit them together with `wf_request_batch()`, which runs several requests at once instead of waiting for each one in turn:
-
-```{r}
 era5_years <- 2006:2018
 
 era5_requests <- lapply(era5_years, function(yr) {
@@ -405,130 +409,372 @@ era5_requests <- lapply(era5_years, function(yr) {
     target = paste0("era5_", yr, ".nc")
   )
 })
-```
 
-```{r}
-#| eval: false
 era5_dir <- file.path("data", "products", "era5")
 dir.create(era5_dir, showWarnings = FALSE, recursive = TRUE)
 
-wf_request_batch(request_list = era5_requests, workers = 2, retry = 30, user = "ecmwfr", path = era5_dir)
+wf_request_batch(request_list = era5_requests,
+                 workers = 2,
+                 retry = 30,
+                 user = "ecmwfr",
+                 path = era5_dir)
 ```
 
 ::: {.callout-note}
-## This step takes a few minutes
-Each request is processed by ECMWF's queue rather than downloaded instantly — the whole batch (13 years, global, 2 variables) typically finishes in a few minutes, but can take longer if the CDS service is busy. You only need to run it once; the files are saved to `data/products/era5/`. Don't raise `workers` or lower `retry` to try to speed this up — polling too aggressively gets your requests throttled by CDS ("check your retry rate") rather than completed faster.
+## Why we use the processed rasters below
+ERA5 downloads depend on an external account, API key, and queue. For this workshop, we use processed rasters that have already been downloaded and converted to the right units so the data integration workflow is reproducible in class.
 :::
 
-Each year downloads as a zip containing one NetCDF file per variable. Unzip them into per-year folders so files with the same name across years don't collide:
+### Extract ERA5 values to tower sites
+
+Read the processed monthly ERA5 rasters:
 
 ```{r}
-era5_dir <- file.path("data", "products", "era5")
-era5_zips <- list.files(era5_dir, pattern = "[.]zip$", full.names = TRUE)
+era5_ppt_monthly <- rast("data/products/era5_ppt_monthly.tif")
+era5_tmean_monthly <- rast("data/products/era5_tmean_monthly.tif")
 
-for (z in era5_zips) {
-  unzip(z, exdir = tools::file_path_sans_ext(z))
-}
+nlyr(era5_ppt_monthly)
+nlyr(era5_tmean_monthly)
 ```
 
-Read each variable's files across all years into one SpatRaster stack, in chronological order:
+Name each layer by `YearMon`:
 
 ```{r}
-era5_ppt_files <- list.files(era5_dir, pattern = "avgad[.]nc$", recursive = TRUE, full.names = TRUE) %>% sort()
-era5_tmean_files <- list.files(era5_dir, pattern = "avgua[.]nc$", recursive = TRUE, full.names = TRUE) %>% sort()
-
-era5_ppt_raw <- rast(era5_ppt_files)
-era5_tmean_raw <- rast(era5_tmean_files)
-
-nlyr(era5_ppt_raw)
+names(era5_ppt_monthly) <- as.character(zoo::as.yearmon(names(era5_ppt_monthly)))
+names(era5_tmean_monthly) <- as.character(zoo::as.yearmon(names(era5_tmean_monthly)))
 ```
 
-ERA5's global grid runs longitude 0-360 degrees, but our site coordinates use the standard -180 to 180 degree convention. `terra::rotate()` converts it so the two line up:
+Transform tower points and extract monthly values:
 
 ```{r}
-era5_ppt_raw <- terra::rotate(era5_ppt_raw)
-era5_tmean_raw <- terra::rotate(era5_tmean_raw)
-```
+fluxnet_ch4_era5 <- st_transform(fluxnet_ch4_sf, crs = crs(era5_ppt_monthly))
 
-### Convert units to match P_F and TA_F
-
-`total_precipitation` in this product is a mean *daily* rate in meters, not a monthly total, so we multiply by 1000 (meters to mm) and by the number of days in that layer's month:
-
-```{r}
-era5_ppt_mm <- era5_ppt_raw * 1000
-era5_ppt_monthly <- era5_ppt_mm * lubridate::days_in_month(terra::time(era5_ppt_raw))
-```
-
-`2m_temperature` is already a monthly mean, in Kelvin — just convert to Celsius:
-
-```{r}
-era5_tmean_c <- era5_tmean_raw - 273.15
-```
-
-### Extract monthly values at each tower site
-
-Name each layer with its year-month so we can pivot the extracted values into a long, joinable format:
-
-```{r}
-names(era5_ppt_monthly) <- as.character(zoo::as.yearmon(terra::time(era5_ppt_raw)))
-names(era5_tmean_c) <- as.character(zoo::as.yearmon(terra::time(era5_tmean_raw)))
-
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = crs(era5_ppt_monthly))
-
-era5_ppt_long <- terra::extract(era5_ppt_monthly, fluxnet_ch4_sf, ID = FALSE) %>%
-  mutate(SITE_ID = fluxnet_ch4_sf$SITE_ID) %>%
+era5_ppt_long <- terra::extract(era5_ppt_monthly, vect(fluxnet_ch4_era5), ID = FALSE) %>%
+  mutate(SITE_ID = fluxnet_ch4_era5$SITE_ID) %>%
   pivot_longer(-SITE_ID, names_to = "YearMon", values_to = "era5_p_f") %>%
   mutate(YearMon = zoo::as.yearmon(YearMon))
 
-era5_tmean_long <- terra::extract(era5_tmean_c, fluxnet_ch4_sf, ID = FALSE) %>%
-  mutate(SITE_ID = fluxnet_ch4_sf$SITE_ID) %>%
+era5_tmean_long <- terra::extract(era5_tmean_monthly, vect(fluxnet_ch4_era5), ID = FALSE) %>%
+  mutate(SITE_ID = fluxnet_ch4_era5$SITE_ID) %>%
   pivot_longer(-SITE_ID, names_to = "YearMon", values_to = "era5_ta_f") %>%
   mutate(YearMon = zoo::as.yearmon(YearMon))
 
-era5_monthly <- era5_ppt_long %>% left_join(era5_tmean_long, by = c("SITE_ID", "YearMon"))
+era5_monthly <- era5_ppt_long %>%
+  left_join(era5_tmean_long, by = c("SITE_ID", "YearMon"))
 ```
 
-Join ERA5 onto the flux data, the same way you joined NDVI/EVI earlier:
+Check the ERA5 key:
 
 ```{r}
-fluxes_month_era5 <- fluxes_month %>% left_join(era5_monthly, by = c("SITE_ID", "YearMon"))
+find_duplicate_keys(era5_monthly, SITE_ID, YearMon)
+range(era5_monthly$YearMon)
 ```
 
-### How well does ERA5 match the tower measurements?
+Join ERA5 onto the modeling table:
 
 ```{r}
-ggplot(fluxes_month_era5, aes(x = P_F, y = era5_p_f)) +
-  geom_point() +
+before_rows <- nrow(flux_model_base)
+
+flux_model_era5 <- flux_model_base %>%
+  left_join(era5_monthly, by = c("SITE_ID", "YearMon"))
+
+after_rows <- nrow(flux_model_era5)
+
+before_rows
+after_rows
+```
+
+# Validate ERA5 against tower measurements
+
+Compare tower-measured precipitation (`P_F`) with ERA5 precipitation:
+
+```{r}
+ggplot(flux_model_era5, aes(x = P_F, y = era5_p_f)) +
+  geom_point(alpha = 0.45) +
   geom_abline(slope = 1, intercept = 0, col = "red") +
   labs(title = "Tower vs. ERA5 monthly precipitation",
        x = "Tower-measured P_F (mm)",
        y = "ERA5 precipitation (mm)")
 
-cor(fluxes_month_era5$P_F, fluxes_month_era5$era5_p_f, use = "complete.obs")
+cor(flux_model_era5$P_F, flux_model_era5$era5_p_f, use = "complete.obs")
 ```
 
+Compare tower-measured air temperature (`TA_F`) with ERA5 temperature:
+
 ```{r}
-ggplot(fluxes_month_era5, aes(x = TA_F, y = era5_ta_f)) +
-  geom_point() +
+ggplot(flux_model_era5, aes(x = TA_F, y = era5_ta_f)) +
+  geom_point(alpha = 0.45) +
   geom_abline(slope = 1, intercept = 0, col = "red") +
   labs(title = "Tower vs. ERA5 monthly mean temperature",
        x = "Tower-measured TA_F (degrees C)",
        y = "ERA5 temperature (degrees C)")
 
-cor(fluxes_month_era5$TA_F, fluxes_month_era5$era5_ta_f, use = "complete.obs")
+cor(flux_model_era5$TA_F, flux_model_era5$era5_ta_f, use = "complete.obs")
 ```
 
-A tower sits at one exact point and measures its immediate surroundings; ERA5 is a reanalysis model output at ~0.25 degree (~28 km) resolution, so each value represents the average condition across a fairly large grid cell. Expect closer agreement for temperature (which varies smoothly over that distance) than for precipitation (which is often much more localized) — this is exactly the kind of gap to check for before trusting a reanalysis product as a stand-in for missing tower data.
+A tower measures its immediate surroundings. ERA5 represents average conditions across a much larger grid cell. Expect closer agreement for temperature than precipitation. This is the kind of check you should do before trusting a reanalysis product as a predictor or substitute for missing observations.
 
-### Save your work
+# Build the model-ready table
 
-Save the ERA5-enriched dataset, and the two raster stacks so you don't need to re-download them for the spatial projection workshop:
+Now select the response variable, candidate predictors, and useful identifiers. This creates a table that is ready for exploratory modeling.
+
+```{r}
+methane_model_data <- flux_model_era5 %>%
+  select(SITE_ID, SITE_NAME, YearMon,
+         FCH4_F_gC,
+         P_F, TA_F, VPD_F,
+         NDVI, EVI,
+         IGBP, country, continent,
+         soil_ph, soil_nitrogen, soil_bulk_density,
+         climate_map, climate_tmin, climate_tmax, climate_mat,
+         elevation_m,
+         era5_p_f, era5_ta_f) %>%
+  filter(!is.na(FCH4_F_gC))
+```
+
+Inspect the table:
+
+```{r}
+glimpse(methane_model_data)
+nrow(methane_model_data)
+n_distinct(methane_model_data$SITE_ID)
+range(methane_model_data$YearMon)
+```
+
+# Data quality dashboard
+
+Check missingness:
+
+```{r}
+methane_model_data %>%
+  count_missing() %>%
+  head(25)
+```
+
+Check duplicate site-month rows:
+
+```{r}
+find_duplicate_keys(methane_model_data, SITE_ID, YearMon)
+```
+
+Check which sites have the most complete model records:
+
+```{r}
+methane_model_data %>%
+  mutate(complete_predictors = complete.cases(P_F, TA_F, VPD_F,
+                                              NDVI, EVI,
+                                              soil_ph, soil_nitrogen,
+                                              climate_map, climate_mat,
+                                              elevation_m,
+                                              era5_p_f, era5_ta_f)) %>%
+  ungroup() %>%
+  reframe(.by = SITE_ID,
+          total_rows = n(),
+          complete_rows = sum(complete_predictors),
+          complete_fraction = complete_rows / total_rows) %>%
+  arrange(desc(complete_fraction), desc(complete_rows)) %>%
+  head(15)
+```
+
+Visualize the response variable:
+
+```{r}
+ggplot(methane_model_data, aes(x = FCH4_F_gC)) +
+  geom_histogram(color = "black", fill = "white") +
+  labs(title = "Distribution of monthly methane flux observations",
+       x = "FCH4_F_gC",
+       y = "Count")
+```
+
+# Flux summaries and tower dissimilarity
+
+A useful modeling dataset should help us ask whether towers that are environmentally similar also behave similarly. Here, we summarize methane fluxes by tower and compare those summaries to tower dissimilarity based on integrated predictor data.
+
+First, compute the mean and variability of methane flux for each tower:
+
+```{r}
+tower_flux_summary <- methane_model_data %>%
+  ungroup() %>%
+  reframe(.by = c(SITE_ID, SITE_NAME, IGBP, country, continent),
+          n_months = sum(!is.na(FCH4_F_gC)),
+          mean_flux = mean(FCH4_F_gC, na.rm = TRUE),
+          sd_flux = sd(FCH4_F_gC, na.rm = TRUE),
+          flux_cv = sd_flux / abs(mean_flux))
+```
+
+Look at the sites with the highest mean methane flux:
+
+```{r}
+tower_flux_summary %>%
+  arrange(desc(mean_flux)) %>%
+  head(10)
+```
+
+Look at the sites with the most variable methane flux:
+
+```{r}
+tower_flux_summary %>%
+  arrange(desc(sd_flux)) %>%
+  head(10)
+```
+
+Create one predictor summary per tower. Static variables such as soil and elevation are repeated across months, while dynamic variables such as NDVI, precipitation, and temperature are summarized across the available monthly record:
+
+```{r}
+tower_predictor_summary <- methane_model_data %>%
+  ungroup() %>%
+  reframe(.by = SITE_ID,
+          mean_p_f = mean(P_F, na.rm = TRUE),
+          mean_ta_f = mean(TA_F, na.rm = TRUE),
+          mean_vpd_f = mean(VPD_F, na.rm = TRUE),
+          mean_ndvi = mean(NDVI, na.rm = TRUE),
+          mean_evi = mean(EVI, na.rm = TRUE),
+          mean_era5_p_f = mean(era5_p_f, na.rm = TRUE),
+          mean_era5_ta_f = mean(era5_ta_f, na.rm = TRUE),
+          soil_ph = first(soil_ph),
+          soil_nitrogen = first(soil_nitrogen),
+          soil_bulk_density = first(soil_bulk_density),
+          climate_map = first(climate_map),
+          climate_mat = first(climate_mat),
+          elevation_m = first(elevation_m))
+```
+
+Join flux summaries and predictor summaries:
+
+```{r}
+tower_summary <- tower_flux_summary %>%
+  left_join(tower_predictor_summary, by = "SITE_ID")
+```
+
+Calculate environmental dissimilarity among towers using standardized predictors. Standardizing puts all variables on comparable scales before calculating distance:
+
+```{r}
+dissimilarity_vars <- c("mean_p_f", "mean_ta_f", "mean_vpd_f",
+                        "mean_ndvi", "mean_evi",
+                        "mean_era5_p_f", "mean_era5_ta_f",
+                        "soil_ph", "soil_nitrogen", "soil_bulk_density",
+                        "climate_map", "climate_mat", "elevation_m")
+
+tower_dissimilarity_input <- tower_summary %>%
+  select(SITE_ID, SITE_NAME, IGBP, mean_flux, sd_flux, all_of(dissimilarity_vars)) %>%
+  drop_na()
+
+scaled_predictors <- tower_dissimilarity_input %>%
+  select(all_of(dissimilarity_vars)) %>%
+  scale()
+
+tower_dissimilarity <- dist(scaled_predictors)
+```
+
+Find each tower's nearest environmental neighbor:
+
+```{r}
+dissimilarity_matrix <- as.matrix(tower_dissimilarity)
+diag(dissimilarity_matrix) <- NA
+
+nearest_neighbor_index <- apply(dissimilarity_matrix, 1, which.min)
+
+nearest_tower_summary <- tower_dissimilarity_input %>%
+  mutate(nearest_SITE_ID = tower_dissimilarity_input$SITE_ID[nearest_neighbor_index],
+         nearest_SITE_NAME = tower_dissimilarity_input$SITE_NAME[nearest_neighbor_index],
+         nearest_dissimilarity = dissimilarity_matrix[cbind(seq_len(nrow(dissimilarity_matrix)),
+                                                            nearest_neighbor_index)])
+
+nearest_tower_summary %>%
+  select(SITE_ID, SITE_NAME, IGBP,
+         nearest_SITE_ID, nearest_SITE_NAME, nearest_dissimilarity,
+         mean_flux, sd_flux) %>%
+  arrange(nearest_dissimilarity) %>%
+  head(10)
+```
+
+Create a pairwise comparison table. Each row compares two towers:
+
+```{r}
+tower_pairs <- as.data.frame(as.table(dissimilarity_matrix)) %>%
+  rename(site_1_index = Var1,
+         site_2_index = Var2,
+         environmental_dissimilarity = Freq) %>%
+  mutate(site_1_index = as.integer(site_1_index),
+         site_2_index = as.integer(site_2_index)) %>%
+  filter(site_1_index < site_2_index) %>%
+  mutate(SITE_ID_1 = tower_dissimilarity_input$SITE_ID[site_1_index],
+         SITE_ID_2 = tower_dissimilarity_input$SITE_ID[site_2_index],
+         mean_flux_difference = abs(tower_dissimilarity_input$mean_flux[site_1_index] -
+                                      tower_dissimilarity_input$mean_flux[site_2_index]),
+         sd_flux_difference = abs(tower_dissimilarity_input$sd_flux[site_1_index] -
+                                    tower_dissimilarity_input$sd_flux[site_2_index]))
+```
+
+Do environmentally similar towers have more similar mean methane flux?
+
+```{r}
+ggplot(tower_pairs,
+       aes(x = environmental_dissimilarity, y = mean_flux_difference)) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "lm") +
+  labs(title = "Tower dissimilarity vs. difference in mean methane flux",
+       x = "Environmental dissimilarity between towers",
+       y = "Absolute difference in mean FCH4_F_gC")
+
+cor(tower_pairs$environmental_dissimilarity,
+    tower_pairs$mean_flux_difference,
+    use = "complete.obs")
+```
+
+Do environmentally similar towers have more similar flux variability?
+
+```{r}
+ggplot(tower_pairs,
+       aes(x = environmental_dissimilarity, y = sd_flux_difference)) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "lm") +
+  labs(title = "Tower dissimilarity vs. difference in methane flux variability",
+       x = "Environmental dissimilarity between towers",
+       y = "Absolute difference in SD of FCH4_F_gC")
+
+cor(tower_pairs$environmental_dissimilarity,
+    tower_pairs$sd_flux_difference,
+    use = "complete.obs")
+```
+
+::: {.callout-note}
+## Interpreting dissimilarity
+This is a screening analysis. If environmentally similar towers have similar methane flux means or variability, that supports using these predictors in a model. If they do not, it suggests important drivers may still be missing, such as water table depth, wetland type, soil carbon, disturbance history, or measurement design.
+:::
+
+# Save your work
+
+Save the model-ready table and the ERA5 rasters needed for the spatial projection workshop:
 
 ```{r}
 #| eval: false
-save(fluxes_month_era5, file = "data/products/fluxes_month_era5.RDATA")
+save(methane_model_data, file = "data/products/methane_model_data.RDATA")
 writeRaster(era5_ppt_monthly, "data/products/era5_ppt_monthly.tif", overwrite = TRUE)
-writeRaster(era5_tmean_c, "data/products/era5_tmean_monthly.tif", overwrite = TRUE)
+writeRaster(era5_tmean_monthly, "data/products/era5_tmean_monthly.tif", overwrite = TRUE)
 ```
 
-You are now prepared to take data from different sources to build a file to explore patterns in methane infrastructure. Take note of the difference between joining site based static data versus site based data that changes over time. In your next in class assessment, you will build a file with all of the data you want to use to develop your methane model. To prepare for this, find and obtain your data sources.
+# Final project data integration plan
+
+For your final methane model, identify:
+
+1.  Your response variable.
+2.  Your spatial extent.
+3.  Your temporal resolution.
+4.  At least five candidate predictors.
+5.  The data source for each predictor.
+6.  Whether each predictor is static or dynamic.
+7.  The expected units.
+8.  The join key or extraction method.
+9.  A validation check for each predictor.
+
+## Assignment
+
+Submit a 1-2 page **Final Project Data Integration Plan**. Include:
+
+1.  A short description of the methane flux question you want to answer.
+2.  A table of at least five candidate predictors with source, units, spatial resolution, temporal resolution, static/dynamic status, and join key.
+3.  One paragraph describing likely missingness, scale mismatch, or join problems.
+4.  A short workflow diagram or pseudocode showing how you will compile your modeling table.
+5.  One validation check you will use before modeling.
+6.  A brief plan for comparing flux mean and variability across sites, including which predictors you would use to calculate tower dissimilarity.

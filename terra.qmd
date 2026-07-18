@@ -1,212 +1,528 @@
 ---
-title: "Introduction to rasters with the terra package"
+title: "Raster Data: Climate Exposure and Tower Similarity"
 editor:
   mode: source
 ---
 
-### Install libraries for this workshop:
+## Mapping climate surfaces
+
+Vector data told us where FLUXNET CH4 towers are located. Raster data lets us ask what environmental conditions surround those towers. In this workshop, we will use gridded climate layers to evaluate the climate exposure represented by methane tower sites and to identify towers that may be useful analogs for thinking about methane fluxes in Yale-Myers Forest wetlands.
+
+We will ask:
+
+> What climate conditions do FLUXNET CH4 towers represent, and which towers are most similar to Yale-Myers Forest?
+
+By the end of this workshop, you will be able to:
+
+1.  Read and inspect raster data with `terra`.
+2.  Understand `SpatRaster` and `SpatVector` objects.
+3.  Crop and mask rasters to an area of interest.
+4.  Use raster algebra to create new climate layers.
+5.  Summarize raster values globally and by polygon zones.
+6.  Extract raster values to point locations.
+7.  Compare tower-site climate exposure to gridded climate space.
+8.  Calculate environmental dissimilarity among tower sites.
+9.  Use multidimensional scaling (MDS) to visualize which towers are more or less similar.
+
+### Install libraries for this workshop
 
 ```{r}
 #| eval: false
 install.packages("sf")
 install.packages("terra")
 install.packages("tidyverse")
-install.packages("tidyterra")
 install.packages("rnaturalearth")
-install.packages("geodata")
 ```
 
-### Load libraries:
+### Load libraries
 
 ```{r}
 #| output: false
 library(terra)
 library(tidyverse)
 library(rnaturalearth)
-library(geodata)
 library(sf)
-library(tidyterra)
 ```
 
-## Rasters
+# What is a raster?
 
-A raster is a spatial data structure that subdivides an extent into rectangles known as "cells" (or "pixels"). Each cell has the capacity to store one or more values. This type of data structure is commonly referred to as a "grid" and is frequently juxtaposed with simple features.
+A raster is a spatial data structure that subdivides an area into cells, often called pixels. Each cell stores one or more values. Climate rasters are useful because they let us describe environmental gradients everywhere, not only at point locations.
 
-The terra package offers functions designed for the creation, reading, manipulation, and writing of raster data. The terra package is built around a number of "classes" of which the SpatRaster and SpatVector are the most important.
+The `terra` package is built around two important classes:
 
-#### SpatRaster
+-   `SpatRaster`: gridded raster data.
+-   `SpatVector`: vector data such as points, lines, or polygons.
 
-A SpatRaster object stores a number of fundamental parameters that describe it. These include the number of columns and rows, the coordinates of its spatial extent, and the coordinate reference system. In addition, a SpatRaster can store information about the file(s) in which the raster cell values are stored.
+# Read climate rasters
 
-#### SpatVector
+This course includes a global climate raster with four layers:
 
-A SpatVector represents "vector" data, that is, points, lines or polygon geometries and their tabular attributes.
-
-#### Working with climate data:
-
-To become familiar with working with rasters, we will download climate data for an area of interest (AOI).
+-   `MAP`: mean annual precipitation in mm.
+-   `TMIN`: mean minimum temperature in degrees C.
+-   `TMAX`: mean maximum temperature in degrees C.
+-   `MAT`: mean annual temperature in degrees C.
 
 ```{r}
-# First create an AOI
-world <- ne_countries(scale = "medium", returnclass = "sf")
-aoi_global <- world %>% filter(continent %in% c("Europe", "Asia", "North America", "South America", "Africa", "Oceania"))
+global_climate <- rast("data/GlobalClimate.tif")
+global_climate
 ```
 
-Visualize your AOI:
+Look at the layer names:
 
 ```{r}
-# Visualize it here
-# ...
+names(global_climate)
 ```
 
-We will use WorldClim, a set of global climate layers at spatial resolutions from 30 arc-seconds (~1 km) down to 10 arc-minutes. Its values represent average monthly climate normals for 1970-2000 (Fick & Hijmans, 2017).
-
-Download climate data using the geodata package. For this exercise we will use climate normals, multi-decadal averages for climate variables like temperature and precipitation. They provide a baseline that allows us to understand the location's average condition. geodata always downloads the full global raster, so we crop and mask it down to our AOI afterward.
-
-You can access monthly precipitation ("prec"), monthly minimum temperature ("tmin"), monthly maximum temperature ("tmax") climate normals and more.
-
-Download monthly precipitation (prec), then crop and mask it to the AOI:
+Plot mean annual precipitation:
 
 ```{r}
-normals_ppt <- worldclim_global(var = "prec", res = 10, path = tempdir()) %>%
-  crop(aoi_global) %>%
-  mask(aoi_global)
+plot(global_climate$MAP,
+     main = "Mean annual precipitation")
 ```
 
-What is this object:
+Plot mean annual temperature:
 
 ```{r}
-class(normals_ppt)
+plot(global_climate$MAT,
+     main = "Mean annual temperature")
 ```
 
-A SpatRaster with multiple layers holds one raster per time step (here, one per calendar month) that all share the same spatial extent and resolution.
+# Raster algebra
 
-To access the raster stack:
+Raster algebra lets us create new layers from existing layers. Temperature range is a simple measure of climate exposure:
 
 ```{r}
-normals_ppt
-normals_ppt %>% names()
-
-ggplot() + geom_spatraster(data = normals_ppt[[1]]) + scale_fill_gradient(na.value = "transparent")
+temp_range <- global_climate$TMAX - global_climate$TMIN
+names(temp_range) <- "temp_range"
 ```
 
-What is the `+ scale_fill_gradient(na.value = "transparent")` doing?
-
-#### Raster algebra
-
-Many generic functions that allow for simple and elegant raster algebra have been implemented for SpatRaster objects, including the normal algebraic operators such as +, -, *, /, logical operators such as >, >=, <, ==, ! and functions such as abs, round, ceiling, floor, trunc, sqrt, log, log10, exp, cos, sin, max, min, range, prod, sum, any, all. In these functions you can mix terra objects with numbers, as long as the first argument is a terra object. If you use multiple SpatRaster objects, all objects must have the same resolution and origin.
-
-Let's summarize monthly data to annual normals:
+Combine the original climate layers with the new temperature range layer:
 
 ```{r}
-normals_ppt_annual <- normals_ppt %>% sum(na.rm = TRUE)
-
-# look at the object
-normals_ppt_annual %>% plot()
-
-# Check the name of the layers:
-names(normals_ppt_annual)
-
-# re-name the layers:
-names(normals_ppt_annual) <- "ppt"
+climate_stack <- c(global_climate, temp_range)
+names(climate_stack)
 ```
 
-Summary functions (`min()`, `max()`, `mean()`, `prod()`, `sum()`, `median()`, `cv()`, `range()`, `any()`, `all()`) always return a SpatRaster object.
-
-Use global if instead of a SpatRaster you want a single number summarizing the cell values of each layer.
+Plot the new raster:
 
 ```{r}
-normals_ppt_annual %>% global(na.rm = TRUE, mean)
+plot(climate_stack$temp_range,
+     main = "Temperature range")
 ```
 
-#### Spatial Summaries
-
-You might also find it useful to create zonal summaries for each polygon within the simple feature. To do this we can use the function zonal, which takes a SpatRast and a SpatVect. Since aoi_global has one feature per country, this gives us a country-level summary:
+Use `global()` when you want one summary value for an entire raster layer:
 
 ```{r}
-normals_ppt_annual_country <- zonal(x = normals_ppt_annual,
-                                     z = vect(aoi_global), fun = "mean", as.polygons = TRUE, na.rm = TRUE)
+global(climate_stack, fun = "mean", na.rm = TRUE)
 ```
 
-What did the function return?
+# Crop and mask to an area of interest
+
+Cropping trims a raster to a rectangular extent. Masking removes cells outside an area of interest. Here we use countries from `rnaturalearth` to create a South America polygon and summarize climate over that region.
 
 ```{r}
-class(normals_ppt_annual_country)
+world <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  filter(continent %in% c("Europe", "Asia", "North America",
+                          "South America", "Africa", "Oceania")) %>%
+  st_make_valid()
+
+south_america <- world %>%
+  filter(continent == "South America") %>%
+  st_union() %>%
+  st_as_sf()
 ```
 
-Convert the SpatVect back to a simple feature and plot it.
+Crop and mask mean annual precipitation to South America:
 
 ```{r}
-normals_ppt_annual_country_sf <- st_as_sf(normals_ppt_annual_country)
+south_america_ppt <- climate_stack$MAP %>%
+  crop(south_america) %>%
+  mask(south_america)
 
-ggplot(data = normals_ppt_annual_country_sf) + geom_sf(aes(fill = ppt))
+plot(south_america_ppt,
+     main = "Mean annual precipitation in South America")
 ```
 
-#### Extracting information to a point file:
-
-For this exercise you will use your fluxnet_ch4_sf vector file you saved last week and the monthly precipitation data downloaded (normals_ppt).
-
-Import your point file fluxnet_ch4_sf:
+What did the crop and mask operations return?
 
 ```{r}
-fluxnet_ch4_sf <- st_read(dsn = "data/products", layer = "fluxnet_ch4")
+class(south_america_ppt)
+south_america_ppt
 ```
 
-Ensure both files have the same coordinate reference system (CRS):
+# Zonal summaries
+
+Zonal summaries calculate raster statistics inside polygon zones. Here we calculate mean annual precipitation for each country in South America. Keeping the example regional makes the computation faster while preserving the same workflow.
 
 ```{r}
-fluxnet_ch4_sf
-normals_ppt
+south_america_countries <- world %>%
+  filter(continent == "South America")
+
+country_ppt <- zonal(x = south_america_ppt,
+                     z = vect(south_america_countries),
+                     fun = "mean",
+                     as.polygons = TRUE,
+                     na.rm = TRUE)
 ```
 
-You can transform one of the files if they don't match. Here I transform the vector:
+What did `zonal()` return?
 
 ```{r}
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = crs(normals_ppt))
+class(country_ppt)
 ```
 
-To check to see if everything lines up, I plot the files together:
+Convert the result back to an `sf` object and map it:
 
 ```{r}
-ggplot() + geom_spatraster(data = normals_ppt[[1]]) + geom_sf(data = fluxnet_ch4_sf) + scale_fill_gradient(na.value = "transparent")
+country_ppt_sf <- st_as_sf(country_ppt)
+
+ggplot(data = country_ppt_sf) +
+  geom_sf(aes(fill = MAP), color = NA) +
+  scale_fill_viridis_c(na.value = "transparent") +
+  labs(title = "Country-level mean annual precipitation in South America",
+       fill = "MAP (mm)")
 ```
 
-Extract information from your raster stack using `terra::extract()`
+Which South American countries have the highest mean annual precipitation in this dataset?
 
 ```{r}
-fluxnet_ch4_ppt <- terra::extract(normals_ppt, fluxnet_ch4_sf)
-head(fluxnet_ch4_ppt)
+country_ppt_sf %>%
+  st_drop_geometry() %>%
+  select(name, continent, MAP) %>%
+  arrange(desc(MAP)) %>%
+  head()
 ```
 
-What did the extract function return?
+# Connecticut and Yale-Myers Forest
+
+This course also includes Connecticut climate rasters for 2021. We can use them to practice with multi-layer rasters and to extract climate information for Yale-Myers Forest.
 
 ```{r}
-class(fluxnet_ch4_ppt)
+ct_ppt_2021 <- rast("data/TERRA_PPT_2021_CT.tif")
+ct_tmean_2021 <- rast("data/TERRA_TMEAN_2021_CT.tif")
 ```
 
-Combine extracted information to the simple feature:
+Each raster has one layer per month. Keep the 2021 months:
 
 ```{r}
-fluxnet_ch4_ppt_sf <- fluxnet_ch4_sf %>% cbind(fluxnet_ch4_ppt)
+ct_ppt_2021 <- ct_ppt_2021[[1:12]]
+ct_tmean_2021 <- ct_tmean_2021[[1:12]]
+
+names(ct_ppt_2021)
+names(ct_tmean_2021)
 ```
 
-Visualize your work. Each extracted column is named after its WorldClim layer (e.g. `wc2.1_10m_prec_01`), so look it up with `names()` instead of typing it in by hand:
+Summarize monthly Connecticut layers to annual precipitation and mean temperature:
 
 ```{r}
-names(fluxnet_ch4_ppt_sf)
+ct_annual_ppt_2021 <- sum(ct_ppt_2021, na.rm = TRUE)
+names(ct_annual_ppt_2021) <- "ppt_2021"
 
-ppt_col <- names(fluxnet_ch4_ppt_sf)[grepl("prec", names(fluxnet_ch4_ppt_sf))][1]
-
-ggplot() + geom_sf(data = aoi_global) + geom_sf(data = fluxnet_ch4_ppt_sf, aes(col = .data[[ppt_col]]))
+ct_mean_tmean_2021 <- mean(ct_tmean_2021, na.rm = TRUE)
+names(ct_mean_tmean_2021) <- "tmean_2021"
 ```
 
-FLUXNET data can be used to understand patterns in natural methane fluxes. Evaluating the conditions where measurements are taken is essential to designing a useful model.
+Plot the Connecticut rasters:
 
-## Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.
+```{r}
+plot(ct_annual_ppt_2021,
+     main = "Connecticut 2021 annual precipitation")
 
-## Assignment
+plot(ct_mean_tmean_2021,
+     main = "Connecticut 2021 mean temperature")
+```
 
-We will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.
+Create a Yale-Myers Forest point. These are the same coordinates used in the Data Basics workshop:
+
+```{r}
+yale_myers_sf <- tibble(
+  SITE_ID = "Yale-Myers",
+  SITE_NAME = "Yale-Myers Forest wetlands",
+  IGBP = "WET",
+  LOCATION_LAT = 41.952909,
+  LOCATION_LONG = -72.123859
+) %>%
+  st_as_sf(coords = c("LOCATION_LONG", "LOCATION_LAT"),
+           crs = 4326,
+           remove = FALSE)
+```
+
+Extract 2021 Connecticut climate values for Yale-Myers:
+
+```{r}
+yale_myers_ct_climate <- terra::extract(c(ct_annual_ppt_2021, ct_mean_tmean_2021),
+                                        vect(yale_myers_sf))
+
+yale_myers_ct_climate
+```
+
+Map Yale-Myers on the Connecticut precipitation raster:
+
+```{r}
+ct_annual_ppt_df <- as.data.frame(ct_annual_ppt_2021,
+                                  xy = TRUE,
+                                  na.rm = TRUE)
+
+ggplot(data = ct_annual_ppt_df) +
+  geom_raster(aes(x = x, y = y, fill = ppt_2021)) +
+  geom_sf(data = yale_myers_sf,
+          color = "red",
+          size = 3,
+          inherit.aes = FALSE) +
+  scale_fill_viridis_c(na.value = "transparent") +
+  labs(title = "Yale-Myers Forest on Connecticut 2021 precipitation",
+       fill = "Precipitation (mm)")
+```
+
+# Extract raster climate to tower sites
+
+Read the FLUXNET site table and create point locations for all sites with coordinates:
+
+```{r}
+fluxnet_sites <- read.csv("data/FluxNet_Sites_2024.csv")
+
+fluxnet_sites_located <- fluxnet_sites %>%
+  filter(!is.na(LOCATION_LONG), !is.na(LOCATION_LAT)) %>%
+  mutate(site_group = if_else(FLUXNET.CH4 != "",
+                              "CH4 site",
+                              "Other FLUXNET site"))
+
+fluxnet_sites_sf <- st_as_sf(fluxnet_sites_located,
+                              coords = c("LOCATION_LONG", "LOCATION_LAT"),
+                              crs = 4326,
+                              remove = FALSE)
+```
+
+Extract the global climate layers to each tower point:
+
+```{r}
+tower_climate_values <- terra::extract(climate_stack,
+                                       vect(fluxnet_sites_sf)) %>%
+  select(-ID) %>%
+  rename_with(~ paste0("raster_", .x))
+
+tower_climate <- fluxnet_sites_sf %>%
+  st_drop_geometry() %>%
+  bind_cols(tower_climate_values)
+```
+
+Look at the extracted values:
+
+```{r}
+tower_climate %>%
+  select(SITE_ID, SITE_NAME, site_group, IGBP,
+         raster_MAP, raster_MAT, raster_TMIN, raster_TMAX, raster_temp_range) %>%
+  head()
+```
+
+Add Yale-Myers Forest to the extracted climate table:
+
+```{r}
+yale_myers_global_values <- terra::extract(climate_stack,
+                                           vect(yale_myers_sf)) %>%
+  select(-ID) %>%
+  rename_with(~ paste0("raster_", .x))
+
+yale_myers_climate <- yale_myers_sf %>%
+  st_drop_geometry() %>%
+  mutate(site_group = "Yale-Myers reference",
+         FLUXNET.CH4 = "Yale-Myers reference") %>%
+  bind_cols(yale_myers_global_values)
+
+climate_context <- bind_rows(
+  tower_climate,
+  yale_myers_climate
+)
+```
+
+# Raster-based representativeness
+
+Compare CH4 tower climate conditions with all FLUXNET tower locations:
+
+```{r}
+ggplot(data = tower_climate,
+       aes(x = raster_MAT, y = raster_MAP, color = site_group)) +
+  geom_point(alpha = 0.75) +
+  labs(title = "Climate space represented by FLUXNET tower sites",
+       x = "Mean annual temperature (degrees C)",
+       y = "Mean annual precipitation (mm)",
+       color = "Site group")
+```
+
+Add Yale-Myers Forest:
+
+```{r}
+ggplot(data = climate_context,
+       aes(x = raster_MAT, y = raster_MAP, color = site_group)) +
+  geom_point(alpha = 0.75) +
+  geom_point(data = yale_myers_climate,
+             color = "red",
+             size = 4) +
+  labs(title = "Yale-Myers Forest in raster-derived climate space",
+       x = "Mean annual temperature (degrees C)",
+       y = "Mean annual precipitation (mm)",
+       color = "Site group")
+```
+
+Compare tower locations with a sample of global raster cells:
+
+```{r}
+set.seed(730)
+
+global_climate_sample <- spatSample(climate_stack[[c("MAT", "MAP")]],
+                                    size = 1000,
+                                    method = "regular",
+                                    na.rm = TRUE,
+                                    as.df = TRUE) %>%
+  select(MAT, MAP)
+
+ggplot() +
+  geom_point(data = global_climate_sample,
+             aes(x = MAT, y = MAP),
+             color = "gray85",
+             alpha = 0.3) +
+  geom_point(data = tower_climate %>% filter(site_group == "CH4 site"),
+             aes(x = raster_MAT, y = raster_MAP, color = IGBP),
+             alpha = 0.85) +
+  geom_point(data = yale_myers_climate,
+             aes(x = raster_MAT, y = raster_MAP),
+             color = "red",
+             size = 4) +
+  labs(title = "CH4 towers and Yale-Myers relative to sampled global climate space",
+       subtitle = "Gray points are sampled raster cells",
+       x = "Mean annual temperature (degrees C)",
+       y = "Mean annual precipitation (mm)",
+       color = "IGBP")
+```
+
+# Environmental dissimilarity among CH4 towers
+
+To identify which towers are more or less similar to Yale-Myers Forest, we can compare sites using their raster-derived climate variables. We will use standardized Euclidean distance so variables with large units, such as precipitation, do not dominate the comparison only because of scale.
+
+For this first-pass analysis, we will compare sites using:
+
+-   `raster_MAP`;
+-   `raster_MAT`;
+-   `raster_TMIN`;
+-   `raster_TMAX`;
+-   `raster_temp_range`.
+
+```{r}
+climate_vars <- c("raster_MAP", "raster_MAT", "raster_TMIN",
+                  "raster_TMAX", "raster_temp_range")
+
+analog_candidates <- climate_context %>%
+  filter(site_group %in% c("CH4 site", "Yale-Myers reference")) %>%
+  select(SITE_ID, SITE_NAME, IGBP, site_group, all_of(climate_vars)) %>%
+  drop_na()
+```
+
+Scale the variables and calculate distances:
+
+```{r}
+scaled_climate <- analog_candidates %>%
+  select(all_of(climate_vars)) %>%
+  scale()
+
+climate_distance <- dist(scaled_climate)
+```
+
+Calculate each CH4 tower's distance from Yale-Myers Forest:
+
+```{r}
+yale_index <- which(analog_candidates$SITE_ID == "Yale-Myers")
+
+distance_to_yale <- as.matrix(climate_distance)[yale_index, ]
+
+yale_myers_analogs <- analog_candidates %>%
+  mutate(distance_to_yale = as.numeric(distance_to_yale)) %>%
+  filter(SITE_ID != "Yale-Myers") %>%
+  arrange(distance_to_yale)
+```
+
+Which CH4 towers are most similar to Yale-Myers based on these raster climate variables?
+
+```{r}
+yale_myers_analogs %>%
+  select(SITE_ID, SITE_NAME, IGBP,
+         raster_MAP, raster_MAT, raster_temp_range, distance_to_yale) %>%
+  head(10)
+```
+
+Because Yale-Myers wetlands are wetlands, it may be useful to separately inspect wetland towers:
+
+```{r}
+yale_myers_analogs %>%
+  filter(IGBP == "WET") %>%
+  select(SITE_ID, SITE_NAME, IGBP,
+         raster_MAP, raster_MAT, raster_temp_range, distance_to_yale) %>%
+  head(10)
+```
+
+::: {.callout-note}
+## Interpret analogs carefully
+This is a climate-similarity analysis, not proof that a tower is a perfect analog for Yale-Myers wetlands. Methane fluxes also depend on water table depth, wetland type, soils, vegetation, disturbance history, and measurement design. The goal is to identify towers that may be useful starting points for comparison.
+:::
+
+# MDS visualization
+
+Multidimensional scaling (MDS) takes a distance matrix and places sites into a low-dimensional space. Sites that plot closer together are more similar based on the variables used to calculate the distance.
+
+```{r}
+mds <- cmdscale(climate_distance, k = 2)
+
+mds_scores <- analog_candidates %>%
+  bind_cols(as.data.frame(mds) %>%
+              rename(MDS1 = V1, MDS2 = V2))
+```
+
+Label Yale-Myers and the five most similar CH4 towers:
+
+```{r}
+label_sites <- mds_scores %>%
+  filter(SITE_ID == "Yale-Myers" |
+           SITE_ID %in% yale_myers_analogs$SITE_ID[1:5])
+```
+
+Plot the MDS:
+
+```{r}
+ggplot(data = mds_scores,
+       aes(x = MDS1, y = MDS2)) +
+  geom_point(aes(color = site_group, shape = IGBP == "WET"),
+             alpha = 0.75,
+             size = 2.5) +
+  geom_text(data = label_sites,
+            aes(label = SITE_ID),
+            nudge_y = 0.12,
+            size = 3) +
+  labs(title = "MDS of CH4 tower climate similarity",
+       subtitle = "Distance calculated from raster-derived climate variables",
+       x = "MDS axis 1",
+       y = "MDS axis 2",
+       color = "Site group",
+       shape = "Wetland tower")
+```
+
+# Assignment
+
+Create a short raster evidence brief that evaluates climate exposure and tower similarity for Yale-Myers Forest wetlands.
+
+Your report should answer:
+
+1.  What precipitation and temperature conditions are represented by FLUXNET CH4 tower sites?
+2.  Where does Yale-Myers Forest fall in raster-derived climate space?
+3.  Which CH4 towers are most climatically similar to Yale-Myers Forest?
+4.  Which wetland CH4 towers are most similar to Yale-Myers Forest?
+5.  Based on the MDS plot and distance table, which towers would you prioritize as analogs for estimating or contextualizing methane fluxes from Yale-Myers wetlands?
+6.  What important wetland controls are missing from this raster-only similarity analysis?
+
+Include at least:
+
+-   one raster map;
+-   one climate-space plot;
+-   one distance or MDS figure;
+-   one table of candidate analog towers.
 
 #### References
 

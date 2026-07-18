@@ -2,16 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Spatial Projections of a randomForest model</title>
+<title>Spatial Model Visualization: Scaling Methane Flux in Space</title>
 <style>
-/* Default styles provided by pandoc.
-** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -24,9 +21,8 @@ ul.task-list li input[type="checkbox"] {
   vertical-align: middle;
 }
 /* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -37,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -69,16 +65,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./images/favicon.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c27a0819adbec56e9d03f3e11156bb0e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -110,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="nav-sidebar docked quarto-light">
+<body class="nav-sidebar docked">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -134,8 +129,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
       <a href="./index.html" class="sidebar-logo-link">
-      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo light-content py-0 d-lg-inline d-none">
-      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo dark-content py-0 d-lg-inline d-none">
+      <img src="./images/YSEwordmark2L_RGB-KO.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">ENV 730</a> 
@@ -288,18 +282,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#in-this-workshop-we-will" id="toc-in-this-workshop-we-will" class="nav-link active" data-scroll-target="#in-this-workshop-we-will">In this workshop, we will:</a></li>
-  <li><a href="#make-a-list-of-the-variables-their-units-the-exact-name-and-class-of-each-variable-in-your-model." id="toc-make-a-list-of-the-variables-their-units-the-exact-name-and-class-of-each-variable-in-your-model." class="nav-link" data-scroll-target="#make-a-list-of-the-variables-their-units-the-exact-name-and-class-of-each-variable-in-your-model.">(1) Make a list of the variables, their units, the exact name and class of each variable in your model.</a>
+  <li><a href="#from-flux-density-to-emissions" id="toc-from-flux-density-to-emissions" class="nav-link active" data-scroll-target="#from-flux-density-to-emissions">From flux density to emissions</a>
   <ul class="collapse">
-  <li><a href="#look-at-the-model-to-determine-which-variables-are-in-it" id="toc-look-at-the-model-to-determine-which-variables-are-in-it" class="nav-link" data-scroll-target="#look-at-the-model-to-determine-which-variables-are-in-it">Look at the model to determine which variables are in it:</a></li>
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries">Load libraries</a></li>
   </ul></li>
-  <li><a href="#determine-where-you-can-get-a-spatial-version-of-each-variable-in-your-model." id="toc-determine-where-you-can-get-a-spatial-version-of-each-variable-in-your-model." class="nav-link" data-scroll-target="#determine-where-you-can-get-a-spatial-version-of-each-variable-in-your-model.">(2) Determine where you can get a spatial version of each variable in your model.</a>
+  <li><a href="#list-model-variables-and-units" id="toc-list-model-variables-and-units" class="nav-link" data-scroll-target="#list-model-variables-and-units">1. List model variables and units</a></li>
+  <li><a href="#build-the-connecticut-prediction-grid" id="toc-build-the-connecticut-prediction-grid" class="nav-link" data-scroll-target="#build-the-connecticut-prediction-grid">2. Build the Connecticut prediction grid</a></li>
+  <li><a href="#build-the-land-cover-predictor" id="toc-build-the-land-cover-predictor" class="nav-link" data-scroll-target="#build-the-land-cover-predictor">3. Build the land-cover predictor</a></li>
+  <li><a href="#introduce-wad2m-inundation-fraction" id="toc-introduce-wad2m-inundation-fraction" class="nav-link" data-scroll-target="#introduce-wad2m-inundation-fraction">4. Introduce WAD2M inundation fraction</a>
   <ul class="collapse">
-  <li><a href="#to-use-raster-layers-with-the-predict-function-they-must-have-the-same-crs-resolution-and-extent" id="toc-to-use-raster-layers-with-the-predict-function-they-must-have-the-same-crs-resolution-and-extent" class="nav-link" data-scroll-target="#to-use-raster-layers-with-the-predict-function-they-must-have-the-same-crs-resolution-and-extent">To use raster layers with the predict function, they must have the same CRS, resolution, and extent!</a></li>
+  <li><a href="#prepare-wad2m-for-connecticut" id="toc-prepare-wad2m-for-connecticut" class="nav-link" data-scroll-target="#prepare-wad2m-for-connecticut">Prepare WAD2M for Connecticut</a></li>
+  <li><a href="#if-your-target-year-is-not-available" id="toc-if-your-target-year-is-not-available" class="nav-link" data-scroll-target="#if-your-target-year-is-not-available">If your target year is not available</a></li>
   </ul></li>
-  <li><a href="#format-each-spatial-layer." id="toc-format-each-spatial-layer." class="nav-link" data-scroll-target="#format-each-spatial-layer.">(3) Format each spatial layer.</a></li>
-  <li><a href="#make-predictions" id="toc-make-predictions" class="nav-link" data-scroll-target="#make-predictions">(4) Make predictions</a></li>
-  <li><a href="#use-predictions" id="toc-use-predictions" class="nav-link" data-scroll-target="#use-predictions">(5) Use predictions</a></li>
+  <li><a href="#make-monthly-flux-predictions" id="toc-make-monthly-flux-predictions" class="nav-link" data-scroll-target="#make-monthly-flux-predictions">5. Make monthly flux predictions</a></li>
+  <li><a href="#convert-flux-density-to-emissions" id="toc-convert-flux-density-to-emissions" class="nav-link" data-scroll-target="#convert-flux-density-to-emissions">6. Convert flux density to emissions</a></li>
+  <li><a href="#build-the-connecticut-methane-budget" id="toc-build-the-connecticut-methane-budget" class="nav-link" data-scroll-target="#build-the-connecticut-methane-budget">7. Build the Connecticut methane budget</a></li>
+  <li><a href="#extract-yale-myers-forest" id="toc-extract-yale-myers-forest" class="nav-link" data-scroll-target="#extract-yale-myers-forest">8. Extract Yale-Myers Forest</a></li>
+  <li><a href="#why-wad2m-scaling-matters" id="toc-why-wad2m-scaling-matters" class="nav-link" data-scroll-target="#why-wad2m-scaling-matters">9. Why WAD2M scaling matters</a></li>
+  <li><a href="#inundation-area-uncertainty" id="toc-inundation-area-uncertainty" class="nav-link" data-scroll-target="#inundation-area-uncertainty">10. Inundation-area uncertainty</a></li>
+  <li><a href="#save-products" id="toc-save-products" class="nav-link" data-scroll-target="#save-products">11. Save products</a></li>
+  <li><a href="#assignment" id="toc-assignment" class="nav-link" data-scroll-target="#assignment">Assignment</a></li>
   </ul>
 </nav>
     </div>
@@ -308,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./spatial_projections.html">Dynamic Models in R</a></li><li class="breadcrumb-item"><a href="./spatial_projections.html">Spatial Model Visualization</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Spatial Projections of a randomForest model</h1>
+<h1 class="title">Spatial Model Visualization: Scaling Methane Flux in Space</h1>
 </div>
 
 
@@ -325,51 +327,93 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>In this workshop, we will create a spatial projection of our random forest model for monthly methane exchange from natural ecosystems.</p>
-<p>To date, we have completed model calibration, validation, and sensitivity analysis. Next, we can apply the model to a landscape to estimate natural methane emissions. For this workshop, we will calculate Connecticut’s natural methane emissions in 2018.</p>
+<section id="from-flux-density-to-emissions" class="level2">
+<h2 class="anchored" data-anchor-id="from-flux-density-to-emissions">From flux density to emissions</h2>
+<p>In the Random Forest and Sensitivity Analysis workshops, we built and stress-tested a methane flux model. In this final workshop, we will project a model across Connecticut and turn gridded flux predictions into a methane emissions budget.</p>
+<p>The key idea is a unit conversion:</p>
+<blockquote class="blockquote">
+<p>methane flux density x inundated area = methane emissions</p>
+</blockquote>
+<p>Our random forest predicts methane flux as <code>g C m-2 month-1</code>. That is a rate per square meter. A map of predicted flux is not yet an emissions budget. To estimate emissions, we need to multiply by the area where methane-producing wetlands are present.</p>
+<p>That is where the <strong>Wetland Area and Dynamics for Methane Modeling (WAD2M)</strong> product enters. WAD2M provides monthly wetland/inundation fractions on a global 0.25 degree grid. Zhang et al.&nbsp;(2021) describe WAD2M version 1.0 as a monthly product for 2000-2018 built for large-scale methane modeling. The NASA UpCH4 methane emissions product uses WAD2M to weight gridded methane flux predictions by fractional wetland extent before converting them to by-grid-cell emissions.</p>
+<p>Useful references:</p>
+<ul>
+<li>WAD2M paper: <a href="https://doi.org/10.5194/essd-13-2001-2021">Zhang et al.&nbsp;2021, Earth System Science Data</a></li>
+<li>WAD2M metadata summary: <a href="https://hero.epa.gov/reference/8047289/">EPA HERO record</a></li>
+<li>Example methane upscaling product using WAD2M: <a href="https://data.nasa.gov/dataset/global-wetland-methane-emissions-derived-from-fluxnet-and-the-upch4-model-2001-2018-c7437">NASA Open Data Portal, UpCH4</a></li>
+</ul>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>This workshop depends on Data Integration in R
+Data dependency
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This workshop reuses the ERA5 climate rasters downloaded and saved in <code>data_integration.qmd</code> (<code>data/products/era5_ppt_monthly.tif</code> and <code>data/products/era5_tmean_monthly.tif</code>), instead of downloading climate data again. If you haven’t completed that workshop’s ERA5 download section yet, go do that first.</p>
+<p>This workshop reuses the ERA5 climate rasters saved in <code>data_integration.qmd</code>: <code>data/products/era5_ppt_monthly.tif</code> and <code>data/products/era5_tmean_monthly.tif</code>.</p>
+<p>For WAD2M, this workshop expects a Connecticut-ready 2018 monthly inundation fraction raster at <code>data/products/wad2m_inundation_fraction_ct_2018.tif</code>. If that file is not present, the code creates a clearly labeled seasonal classroom proxy from the provided MODIS land-cover raster so the unit-conversion workflow still runs.</p>
 </div>
 </div>
-<section id="in-this-workshop-we-will" class="level3">
-<h3 class="anchored" data-anchor-id="in-this-workshop-we-will">In this workshop, we will:</h3>
+<p>By the end of this workshop, you will be able to:</p>
 <ol type="1">
-<li><p>Make a list of the variables, their units, and the exact name and class of each variable in your model.</p></li>
-<li><p>Determine where you can get a spatial version of each variable in your model.</p></li>
-<li><p>Format each spatial layer to match the exact conditions of the data used to fit the model.</p></li>
-<li><p>Make spatial predictions.</p></li>
-<li><p>Use predictions to calculate an annual budget.</p></li>
+<li>Identify the variables, units, names, and classes needed for spatial prediction.</li>
+<li>Align predictor rasters so they have the same CRS, resolution, extent, and layer names.</li>
+<li>Predict monthly methane flux density in space.</li>
+<li>Explain what WAD2M inundation fraction represents.</li>
+<li>Convert flux density to cell-level monthly and annual emissions.</li>
+<li>Compare budgets with and without inundation-fraction scaling.</li>
+<li>Extract predictions and emissions for the Yale-Myers Forest grid cell.</li>
+<li>Test how sensitive the budget is to inundation-area uncertainty.</li>
+<li>Report methane emissions in <code>g C</code>, <code>Tg C</code>, and <code>Tg CH4</code>.</li>
 </ol>
-<p>Load libraries:</p>
+<section id="load-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="load-libraries">Load libraries</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyterra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="make-a-list-of-the-variables-their-units-the-exact-name-and-class-of-each-variable-in-your-model." class="level1">
-<h1>(1) Make a list of the variables, their units, the exact name and class of each variable in your model.</h1>
-<p>Load the datasets and the model.</p>
+</section>
+<section id="list-model-variables-and-units" class="level1">
+<h1>1. List model variables and units</h1>
+<p>Load the model. This workshop uses the original spatial-projection model because it has three predictors that are available as rasters for Connecticut: precipitation, temperature, and an upland/inundated land-cover indicator.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"data/final_model.RDATA"</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"data/final_model.RDATA"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The saved model object is called FCH4_F_gC.rf; alias it to match this course's naming convention</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>fch4_rf <span class="ot">&lt;-</span> FCH4_F_gC.rf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># The saved model object is called FCH4_F_gC.rf; alias it to match this course's naming convention.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>fch4_rf <span class="ot">&lt;-</span> FCH4_F_gC.rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>There are four items in this .RDATA file. (1) the randomForest model, (2) the flux net dataset, (3) the training data, and (4) the testing data.</p>
-<section id="look-at-the-model-to-determine-which-variables-are-in-it" class="level3">
-<h3 class="anchored" data-anchor-id="look-at-the-model-to-determine-which-variables-are-in-it">Look at the model to determine which variables are in it:</h3>
+<p>Inspect the model formula and variable classes:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fch4_rf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">formula</span>(fch4_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>FCH4_F_gC ~ P_F + TA_F + Upland
+attr(,"variables")
+list(FCH4_F_gC, P_F, TA_F, Upland)
+attr(,"factors")
+          P_F TA_F Upland
+FCH4_F_gC   0    0      0
+P_F         1    0      0
+TA_F        0    1      0
+Upland      0    0      1
+attr(,"term.labels")
+[1] "P_F"    "TA_F"   "Upland"
+attr(,"order")
+[1] 1 1 1
+attr(,"intercept")
+[1] 0
+attr(,"response")
+[1] 1
+attr(,"predvars")
+list(FCH4_F_gC, P_F, TA_F, Upland)
+attr(,"dataClasses")
+FCH4_F_gC       P_F      TA_F    Upland 
+"numeric" "numeric" "numeric"  "factor" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fch4_rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -381,57 +425,100 @@ No. of variables tried at each split: 1
           Mean of squared residuals: 4.40718
                     % Var explained: 32.54</code></pre>
 </div>
-</div>
-<p>The model includes precipitation in mm (P_F), mean air temperature in degrees Celsius (TA_F), and an indicator for upland ecosystems (Upland).</p>
-<p>Check the class of each variable.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>P_F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>P_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "numeric"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>TA_F)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>TA_F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "numeric"</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>Upland)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>Upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "factor"</code></pre>
 </div>
 </div>
-<p>To project this model in space, we need the following variables:</p>
-<ol type="1">
-<li>Monthly total precipitation in mm and the name of the layer needs to be “P_F”</li>
-<li>Monthly mean air temperature in degrees Celsius and the layer name needs to be “TA_F”</li>
-<li>We need an indicator for upland ecosystems called Upland. All inundated ecosystems (+ snow) are given the value “0” and non-inundated ecosystems are given the value “1”. Croplands and urban areas should be filtered out of this layer.</li>
-</ol>
-</section>
-</section>
-<section id="determine-where-you-can-get-a-spatial-version-of-each-variable-in-your-model." class="level1">
-<h1>(2) Determine where you can get a spatial version of each variable in your model.</h1>
-<p>We will spatialize the model for Connecticut in 2018 — the most recent year covered by both the tower flux data and the ERA5 download from <code>data_integration.qmd</code>.</p>
-<ol type="1">
-<li>Monthly total precipitation (mm): ERA5 reanalysis (already downloaded in <code>data_integration.qmd</code>).</li>
-<li>Monthly mean air temperature in degrees Celsius: ERA5 reanalysis (already downloaded in <code>data_integration.qmd</code>).</li>
-<li>Indicator for Upland ecosystems (Upland): MODIS Land Cover Data (Majority_Land_Cover_Type_1). downloaded from: (2001 - 2022) <a href="https://lpdaac.usgs.gov/products/mcd12c1v061/" class="uri">https://lpdaac.usgs.gov/products/mcd12c1v061/</a> the user guide is available here: <a href="https://lpdaac.usgs.gov/documents/101/MCD12_User_Guide_V6.pdf" class="uri">https://lpdaac.usgs.gov/documents/101/MCD12_User_Guide_V6.pdf</a>.</li>
-</ol>
-<section id="to-use-raster-layers-with-the-predict-function-they-must-have-the-same-crs-resolution-and-extent" class="level3">
-<h3 class="anchored" data-anchor-id="to-use-raster-layers-with-the-predict-function-they-must-have-the-same-crs-resolution-and-extent">To use raster layers with the predict function, they must have the same CRS, resolution, and extent!</h3>
-</section>
-</section>
-<section id="format-each-spatial-layer." class="level1">
-<h1>(3) Format each spatial layer.</h1>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearthhires)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To project this model in space, the raster stack must contain:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Model variable</th>
+<th>Meaning</th>
+<th>Unit or class</th>
+<th>Spatial source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>P_F</code></td>
+<td>Monthly total precipitation</td>
+<td>mm month-1</td>
+<td>ERA5</td>
+</tr>
+<tr class="even">
+<td><code>TA_F</code></td>
+<td>Monthly mean air temperature</td>
+<td>degrees C</td>
+<td>ERA5</td>
+</tr>
+<tr class="odd">
+<td><code>Upland</code></td>
+<td>Ecosystem indicator</td>
+<td>factor with levels <code>inundated</code>, <code>upland</code></td>
+<td>MODIS land cover</td>
+</tr>
+</tbody>
+</table>
+<p>The model prediction has units of <code>g C m-2 month-1</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<p>Create an AOI for Connecticut.</p>
+<div class="callout-title-container flex-fill">
+Which random forest should you project?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This workshop uses the simple spatial model because its predictors are easy to map for every grid cell in Connecticut. The updated Random Forest workshop may save a stronger model at <code>data/products/random_forest_model.RDATA</code>, but that model can only be projected if every selected predictor has a spatial raster with the same name and class expected by the model.</p>
+<p>For example, a model using <code>NDVI</code>, <code>EVI</code>, <code>VPD_F</code>, or <code>IGBP_model</code> requires matching spatial layers for those variables. A good final project model is not only the model with the best test metrics; it is also a model whose predictors can be mapped honestly.</p>
+</div>
+</div>
+<p>Check whether the updated random forest exists and inspect its predictors:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>us_states <span class="ot">&lt;-</span> <span class="fu">ne_states</span>(<span class="at">country =</span> <span class="st">"United States of America"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ct <span class="ot">&lt;-</span> us_states <span class="sc">%&gt;%</span> <span class="fu">filter</span>(postal <span class="sc">==</span> <span class="st">"CT"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ct<span class="sc">$</span>geometry)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="st">"data/products/random_forest_model.RDATA"</span>)) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">load</span>(<span class="st">"data/products/random_forest_model.RDATA"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  updated_model_predictors <span class="ot">&lt;-</span> final_predictors</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  updated_model_predictors <span class="ot">&lt;-</span> <span class="cn">NA_character_</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>updated_model_predictors</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] NA</code></pre>
+</div>
+</div>
+<p>Reload the simple spatial model for the rest of this workshop:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="at">file =</span> <span class="st">"data/final_model.RDATA"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>fch4_rf <span class="ot">&lt;-</span> FCH4_F_gC.rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="build-the-connecticut-prediction-grid" class="level1">
+<h1>2. Build the Connecticut prediction grid</h1>
+<p>Use the provided Connecticut MODIS raster as the Connecticut template. This gives us an area of interest and a target grid without requiring students to download a state boundary file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>igbp_ct <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/MODIS_IGBP_2001-2022_CT.tif"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ct_template <span class="ot">&lt;-</span> igbp_ct[[<span class="dv">2018</span> <span class="sc">-</span> <span class="dv">2001</span> <span class="sc">+</span> <span class="dv">1</span>]]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ct_extent <span class="ot">&lt;-</span> <span class="fu">ext</span>(ct_template)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(ct_template, <span class="at">main =</span> <span class="st">"Connecticut MODIS land-cover template"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -440,57 +527,56 @@ No. of variables tried at each split: 1
 </div>
 </div>
 </div>
-<p>Load the ERA5 rasters saved in <code>data_integration.qmd</code>, keep only the 2018 layers, then crop and mask them down to Connecticut:</p>
+<p>Load the ERA5 rasters saved in Data Integration, keep only the 2018 layers, then crop and mask them to Connecticut:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>era5_ppt_all <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/products/era5_ppt_monthly.tif"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>era5_tmean_all <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/products/era5_tmean_monthly.tif"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>ct_era5_ppt <span class="ot">&lt;-</span> era5_ppt_all[[<span class="fu">grepl</span>(<span class="st">"2018"</span>, <span class="fu">names</span>(era5_ppt_all))]] <span class="sc">%&gt;%</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(ct) <span class="sc">%&gt;%</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(ct)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>ct_era5_tmean <span class="ot">&lt;-</span> era5_tmean_all[[<span class="fu">grepl</span>(<span class="st">"2018"</span>, <span class="fu">names</span>(era5_tmean_all))]] <span class="sc">%&gt;%</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(ct) <span class="sc">%&gt;%</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mask</span>(ct)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>ct_era5_tmean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>era5_ppt_all <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/products/era5_ppt_monthly.tif"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>era5_tmean_all <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/products/era5_tmean_monthly.tif"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>ct_era5_ppt <span class="ot">&lt;-</span> era5_ppt_all[[<span class="fu">grepl</span>(<span class="st">"2018"</span>, <span class="fu">names</span>(era5_ppt_all))]] <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(ct_extent)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>ct_era5_tmean <span class="ot">&lt;-</span> era5_tmean_all[[<span class="fu">grepl</span>(<span class="st">"2018"</span>, <span class="fu">names</span>(era5_tmean_all))]] <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(ct_extent)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>ct_era5_tmean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster
-size        : 4, 7, 12  (nrow, ncol, nlyr)
+<pre><code>class       : SpatRaster 
+size        : 5, 8, 12  (nrow, ncol, nlyr)
 resolution  : 0.25, 0.25  (x, y)
-extent      : -73.625, -71.875, 41.125, 42.125  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326)
+extent      : -73.875, -71.875, 40.875, 42.125  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 (EPSG:4326) 
 source(s)   : memory
-varname     : era5_tmean_monthly
-names       :  Jan 2018, Feb 2018, Mar 2018, Apr 2018,  May 2018,  Jun 2018, ...
-min values  : -4.404791, 0.618127, 0.727747, 5.277246, 13.269861, 17.386683, ...
-max values  : -0.342291, 3.518518, 3.577356, 7.413965, 17.678064, 20.730433, ...
-time        : 2018-01-01 00:00:00 to 2018-12-01 00:00:00 (12 steps)</code></pre>
+varname     : era5_tmean_monthly 
+names       :   Jan 2018,  Feb 2018,  Mar 2018, Apr 2018, May 2018, Jun 2018, ... 
+min values  : -4.4047914, 0.6181275, 0.7277466, 5.277246, 12.04525, 16.57418, ... 
+max values  :  0.8588806, 4.0556273, 3.8839965, 8.054590, 17.87338, 21.26168, ... 
+time        : 2018-01-01 to 2018-12-01 UTC (12 steps) </code></pre>
 </div>
 </div>
-<p>Save the layers.</p>
+<p>Save the cropped climate layers if you want to reuse them:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ct_era5_tmean, <span class="st">"data/products/era5_tmean_ct_2018.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ct_era5_ppt, <span class="st">"data/products/era5_ppt_ct_2018.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ct_era5_tmean, <span class="st">"data/products/era5_tmean_ct_2018.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ct_era5_ppt, <span class="st">"data/products/era5_ppt_ct_2018.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now, we need to get the MODIS IGBP layers. The dataset provided was developed from MODIS Land Cover Data (Majority_Land_Cover_Type_1) downloaded from: (2001 - 2022) <a href="https://lpdaac.usgs.gov/products/mcd12c1v061/" class="uri">https://lpdaac.usgs.gov/products/mcd12c1v061/</a>. This dataset was downloaded for the entire globe and cropped to include only Connecticut.</p>
-<p>Load the data.</p>
+</section>
+<section id="build-the-land-cover-predictor" class="level1">
+<h1>3. Build the land-cover predictor</h1>
+<p>Inspect the MODIS IGBP layer for Connecticut:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>igbp_ct <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="st">"data/MODIS_IGBP_2001-2022_CT.tif"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>igbp_ct</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>igbp_ct</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster
+<pre><code>class       : SpatRaster 
 size        : 22, 39, 22  (nrow, ncol, nlyr)
 resolution  : 0.05, 0.05  (x, y)
 extent      : -73.75, -71.8, 40.95, 42.05  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat Unknown datum based upon the Clarke 1866 ellipsoid
-source      : MODIS_IGBP_2001-2022_CT.tif
-names       : Major~ype_1, Major~ype_1, Major~ype_1, Major~ype_1, Major~ype_1, Major~ype_1, ...
-min values  :           0,           0,           0,           0,           0,           0, ...
-max values  :          14,          13,          14,          14,          14,          13, ...
-time (raw)  : 992563200 to 1655251200 (22 steps)</code></pre>
+coord. ref. : lon/lat Unknown datum based upon the Clarke 1866 ellipsoid 
+source      : MODIS_IGBP_2001-2022_CT.tif 
+names       : Major~ype_1, Major~ype_1, Major~ype_1, Major~ype_1, Major~ype_1, Major~ype_1, ... 
+min values  :           0,           0,           0,           0,           0,           0, ... 
+max values  :          14,          13,          14,          14,          14,          13, ... 
+time (raw)  : 992563200 to 1655251200 (22 steps) </code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>igbp_ct[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(igbp_ct[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -499,28 +585,43 @@ time (raw)  : 992563200 to 1655251200 (22 steps)</code></pre>
 </div>
 </div>
 </div>
-<p>This layer needs to be reformatted. Using the User Guide we can determine what each numerical value represents: <a href="https://lpdaac.usgs.gov/documents/1409/MCD12_User_Guide_V61.pdf" class="uri">https://lpdaac.usgs.gov/documents/1409/MCD12_User_Guide_V61.pdf</a></p>
-<p>1: ENF. 2: EBF. 3: DNF. 4: DBF. 5: MF. 6: CS. 7: OS. 8: WS. 9 : SAV. 10 : GRA. 11: WET. 12 : CRO. 13 : URB. 14 : CRO. 15 : SNO. 16: Barren. 17 : WAT. 0: Unclassified.</p>
-<p>Look at the layer. Here I use “[[1]]” to see only the first layer, which is for the year 2001.</p>
+<p>The MODIS IGBP classes include forest, shrubland, savanna, grassland, wetlands, cropland, urban land, snow/ice, barren land, and water. For this model, we simplify those classes into <code>Upland</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(igbp_ct[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="spatial_projections_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_r <span class="ot">&lt;-</span> igbp_ct</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">7</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">8</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">9</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">11</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">12</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">13</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">14</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">15</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">16</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">17</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-<p>Reclassify each value, one at a time, and think about how you should reclassify each. We want to give all uplands the value “1” and all inundated systems the value “0”.</p>
-<p>First, make a copy of the raster (igbp_ct) and call it igbp_ct_r:</p>
+<p>Format the <code>Upland</code> raster as a factor:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_r <span class="ot">&lt;-</span> igbp_ct</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>factors_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">cover =</span> <span class="fu">c</span>(<span class="st">"inundated"</span>, <span class="st">"upland"</span>))</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nlyr</span>(igbp_ct_r))) {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">levels</span>(igbp_ct_r[[i]]) <span class="ot">&lt;-</span> factors_df</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Reclassify 0 value to NA.</p>
+<p>Subset the 2018 layer:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(igbp_ct_r[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_upland <span class="ot">&lt;-</span> igbp_ct_r[[<span class="dv">2018</span> <span class="sc">-</span> <span class="dv">2001</span> <span class="sc">+</span> <span class="dv">1</span>]]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(igbp_ct_upland) <span class="ot">&lt;-</span> <span class="st">"Upland"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(igbp_ct_upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -529,485 +630,1011 @@ time (raw)  : 992563200 to 1655251200 (22 steps)</code></pre>
 </div>
 </div>
 </div>
-<p>Reclassify the other values:</p>
+<p>Use the land-cover grid as the target grid, then resample the climate layers to match it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">5</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">6</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">7</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">8</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">9</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">11</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">12</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">13</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">14</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">15</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">16</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>igbp_ct_r[igbp_ct_r <span class="sc">==</span> <span class="dv">17</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_upland <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(igbp_ct_upland, ct_era5_ppt)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>ct_era5_tmean_resample <span class="ot">&lt;-</span> <span class="fu">resample</span>(ct_era5_tmean, igbp_ct_upland)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>ct_era5_ppt_resample <span class="ot">&lt;-</span> <span class="fu">resample</span>(ct_era5_ppt, igbp_ct_upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Look at the final raster to ensure everything is reclassified to upland since Connecticut doesn’t have anything else at the resolution of MODIS.</p>
+<p>Check that the layers now align:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(igbp_ct_r[[<span class="dv">1</span>]], <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="spatial_projections_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Format the upland layer as a factor by first making a data frame that has the raster values 0 and 1 and the corresponding factor level.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>factors_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">id =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>), <span class="at">cover =</span> <span class="fu">c</span>(<span class="st">"upland"</span>, <span class="st">"inundated"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Create a for loop to assign the factor levels to each raster layer one at a time:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nlyr</span>(igbp_ct_r))) {</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(i)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">levels</span>(igbp_ct_r[[i]]) <span class="ot">&lt;-</span> factors_df</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">is.factor</span>(igbp_ct_r)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">compareGeom</span>(igbp_ct_upland, ct_era5_tmean_resample, ct_era5_ppt_resample)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1
-[1] 2
-[1] 3
-[1] 4
-[1] 5
-[1] 6
-[1] 7
-[1] 8
-[1] 9
-[1] 10
-[1] 11
-[1] 12
-[1] 13
-[1] 14
-[1] 15
-[1] 16
-[1] 17
-[1] 18
-[1] 19
-[1] 20
-[1] 21
-[1] 22</code></pre>
+<pre><code>[1] TRUE</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(igbp_ct_r[[<span class="dv">1</span>]], <span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="spatial_projections_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We only need the layer for 2018. The layers run from 2001 to 2022, so 2018 is the 18th layer. Subset it.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_upland <span class="ot">&lt;-</span> igbp_ct_r[[<span class="dv">2018</span> <span class="sc">-</span> <span class="dv">2001</span> <span class="sc">+</span> <span class="dv">1</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>We will use the CRS of the climate layers and make everything match this.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>igbp_ct_upland <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(igbp_ct_upland, ct_era5_ppt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>All the resolutions must be the same to combine the rasters into one item. We will set the climate layers to match the igbp_ct_upland layer:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>ct_era5_tmean_resample <span class="ot">&lt;-</span> <span class="fu">resample</span>(ct_era5_tmean, igbp_ct_upland)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>ct_era5_ppt_resample <span class="ot">&lt;-</span> <span class="fu">resample</span>(ct_era5_ppt, igbp_ct_upland)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Now, export the files to save a version processed as needed.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ct_era5_tmean_resample, <span class="st">"data/products/era5_tmean_ct_2018_resampled.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(ct_era5_ppt_resample, <span class="st">"data/products/era5_ppt_ct_2018_resampled.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(igbp_ct_upland, <span class="st">"data/products/modis_upland_ct_2018.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="make-predictions" class="level1">
-<h1>(4) Make predictions</h1>
-<p>Combine all the variables into a raster stack, only including one month since igbp_ct_upland has one layer and the climate has 12, one for each month.</p>
+<section id="introduce-wad2m-inundation-fraction" class="level1">
+<h1>4. Introduce WAD2M inundation fraction</h1>
+<p>WAD2M is not a model predictor in this simple random forest. It is used after prediction to scale fluxes by wetland or inundated area.</p>
+<p>The values should be fractions between 0 and 1:</p>
+<ul>
+<li><code>0</code> means no WAD2M wetland/inundated area in the grid cell.</li>
+<li><code>0.25</code> means 25% of the grid cell is wetland/inundated area.</li>
+<li><code>1</code> means the whole grid cell is wetland/inundated area.</li>
+</ul>
+<section id="prepare-wad2m-for-connecticut" class="level2">
+<h2 class="anchored" data-anchor-id="prepare-wad2m-for-connecticut">Prepare WAD2M for Connecticut</h2>
+<p>The exact WAD2M download workflow depends on the format you obtain from the data portal. The key preparation steps are always the same:</p>
+<ol type="1">
+<li>Load the global WAD2M inundation-fraction product.</li>
+<li>Select the 12 monthly layers for 2018.</li>
+<li>Crop the product to Connecticut.</li>
+<li>Project and resample it to the same grid as the model predictions.</li>
+<li>Save the prepared raster as <code>data/products/wad2m_inundation_fraction_ct_2018.tif</code>.</li>
+</ol>
+<p>The following code is a template for preparing a local WAD2M NetCDF or GeoTIFF file after download:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>model_rasters_m1 <span class="ot">&lt;-</span> <span class="fu">c</span>(igbp_ct_upland, ct_era5_tmean_resample[[<span class="dv">1</span>]], ct_era5_ppt_resample[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>If you have any issues combining the raster layers into one object, you may not have made everything the same resolution or extent.</p>
-<p>Make the names of the raster layers match the dataframe.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(model_rasters_m1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Upland"</span>, <span class="st">"TA_F"</span>, <span class="st">"P_F"</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>model_rasters_m1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster
-size        : 4, 7, 3  (nrow, ncol, nlyr)
-resolution  : 0.25, 0.25  (x, y)
-extent      : -73.625, -71.875, 41.125, 42.125  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326)
-source(s)   : memory
-names       : Upland,      TA_F,        P_F
-min values  : upland, -4.404791,  83.133698
-max values  : upland, -0.342291, 133.924484</code></pre>
-</div>
-</div>
-<p>Check the dataframe again to ensure you don’t need to make additional changes to the raster.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>Upland)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "factor"</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train<span class="sc">$</span>Upland)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>inundated    upland 
-      974       697 </code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(train<span class="sc">$</span>Upland)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "inundated" "upland"   </code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>model_rasters_m1<span class="sc">$</span>Upland</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>class       : SpatRaster
-size        : 4, 7, 1  (nrow, ncol, nlyr)
-resolution  : 0.25, 0.25  (x, y)
-extent      : -73.625, -71.875, 41.125, 42.125  (xmin, xmax, ymin, ymax)
-coord. ref. : lon/lat WGS 84 (EPSG:4326)
-source(s)   : memory
-categories  : cover
-name        : Upland
-min value   : upland
-max value   : upland</code></pre>
-</div>
-</div>
-<p>You are ready to use the predict function to predict you model in space.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>model_rasters_m1_pred <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">predict</span>(<span class="at">object =</span> model_rasters_m1, <span class="at">model =</span> fch4_rf)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_rasters_m1_pred)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="spatial_projections_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We can do this in a for loop to get all 12 months.</p>
-<p>First, determine where you want to export the files to, and make a new folder there called predictions.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>predictions_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"products"</span>, <span class="st">"predictions"</span>) <span class="co"># the folder that will hold each month's prediction</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(predictions_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Make the for loop to make predictions for all 12 months.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nlyr</span>(ct_era5_ppt_resample))) {</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(i)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  model_rasters <span class="ot">&lt;-</span> <span class="fu">c</span>(igbp_ct_upland, ct_era5_tmean_resample[[i]], ct_era5_ppt_resample[[i]])</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(model_rasters) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Upland"</span>, <span class="st">"TA_F"</span>, <span class="st">"P_F"</span>)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  pred <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">predict</span>(<span class="at">object =</span> model_rasters, <span class="at">model =</span> fch4_rf)</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">units</span>(pred) <span class="ot">&lt;-</span> <span class="st">"g C m-2 month-1"</span> <span class="co"># Add the units</span></span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(pred) <span class="ot">&lt;-</span> <span class="st">"F_CH4"</span> <span class="co"># Name the layer</span></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeRaster</span>(pred, <span class="fu">file.path</span>(predictions_dir, <span class="fu">sprintf</span>(<span class="st">"model_pred_m%02d.tif"</span>, i)), <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Delete the json files created:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>json_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> predictions_dir, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.json$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(json_files)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>logical(0)</code></pre>
-</div>
-</div>
-<p>Make of list of all the files in a directory that you want to import, and import all the files in the list with <code>rast()</code>.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>pred_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> predictions_dir, <span class="at">pattern =</span> <span class="st">"model_pred_m"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">rast</span>(pred_files)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wad2m_global <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"path/to/WAD2M_monthly_inundation_fraction.nc"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace this pattern with the actual layer names in your WAD2M file.</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>wad2m_2018 <span class="ot">&lt;-</span> wad2m_global[[<span class="fu">grepl</span>(<span class="st">"2018"</span>, <span class="fu">names</span>(wad2m_global))]]</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>wad2m_ct_2018 <span class="ot">&lt;-</span> wad2m_2018 <span class="sc">%&gt;%</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(ct_extent) <span class="sc">%&gt;%</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(igbp_ct_upland) <span class="sc">%&gt;%</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">resample</span>(igbp_ct_upland, <span class="at">method =</span> <span class="st">"bilinear"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clamp</span>(<span class="at">lower =</span> <span class="dv">0</span>, <span class="at">upper =</span> <span class="dv">1</span>, <span class="at">values =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(wad2m_ct_2018) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"wad2m_fraction_m%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(wad2m_ct_2018,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">"data/products/wad2m_inundation_fraction_ct_2018.tif"</span>,</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="use-predictions" class="level1">
-<h1>(5) Use predictions</h1>
-<p>Create Connecticut’s 2018 methane budget. To get an annual budget, sum the total monthly fluxes.</p>
+<section id="if-your-target-year-is-not-available" class="level2">
+<h2 class="anchored" data-anchor-id="if-your-target-year-is-not-available">If your target year is not available</h2>
+<p>WAD2M may not cover the year you want to model. For example, WAD2M version 1.0 covers 2000-2018, but your final project might need a later year. In that case, do not leave inundation fraction out of the budget. Instead, calculate a <strong>mean monthly inundation climatology</strong> from the WAD2M years that are available.</p>
+<p>The idea is:</p>
+<ul>
+<li>average all available January layers to create a typical January inundation fraction;</li>
+<li>average all available February layers to create a typical February inundation fraction;</li>
+<li>repeat for all 12 months;</li>
+<li>use those 12 monthly averages to scale the target year’s flux predictions.</li>
+</ul>
+<p>This preserves seasonal wetland-area dynamics, even though it cannot represent the exact wetland extent of the missing year.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>predictions_2018_total <span class="ot">&lt;-</span> <span class="fu">sum</span>(predictions)</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(predictions_2018_total) <span class="ot">&lt;-</span> <span class="st">"g C m-2 year-1"</span> <span class="co"># add the units</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(predictions_2018_total) <span class="ot">&lt;-</span> <span class="st">"F_CH4"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>target_year <span class="ot">&lt;-</span> <span class="dv">2021</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>wad2m_global <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"path/to/WAD2M_monthly_inundation_fraction.nc"</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>wad2m_dates <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer =</span> <span class="fu">seq_len</span>(<span class="fu">nlyr</span>(wad2m_global)),</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer_name =</span> <span class="fu">names</span>(wad2m_global)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(layer_name, <span class="st">"</span><span class="sc">\\</span><span class="st">d{4}"</span>)),</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">as.integer</span>(<span class="fu">str_extract</span>(layer_name, <span class="st">"(?&lt;=-)</span><span class="sc">\\</span><span class="st">d{2}|(?&lt;=_)</span><span class="sc">\\</span><span class="st">d{2}$"</span>))</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>target_layers <span class="ot">&lt;-</span> wad2m_dates <span class="sc">%&gt;%</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> target_year)</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(target_layers) <span class="sc">==</span> <span class="dv">12</span>) {</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  wad2m_target <span class="ot">&lt;-</span> wad2m_global[[target_layers<span class="sc">$</span>layer]]</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  wad2m_monthly_climatology <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="cf">function</span>(month_id) {</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    month_layers <span class="ot">&lt;-</span> wad2m_dates <span class="sc">%&gt;%</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(month <span class="sc">==</span> month_id) <span class="sc">%&gt;%</span></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pull</span>(layer)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>(wad2m_global[[month_layers]], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>  wad2m_target <span class="ot">&lt;-</span> <span class="fu">rast</span>(wad2m_monthly_climatology)</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>wad2m_target_ct <span class="ot">&lt;-</span> wad2m_target <span class="sc">%&gt;%</span></span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crop</span>(ct_extent) <span class="sc">%&gt;%</span></span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">project</span>(igbp_ct_upland) <span class="sc">%&gt;%</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">resample</span>(igbp_ct_upland, <span class="at">method =</span> <span class="st">"bilinear"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clamp</span>(<span class="at">lower =</span> <span class="dv">0</span>, <span class="at">upper =</span> <span class="dv">1</span>, <span class="at">values =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(wad2m_target_ct) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"wad2m_fraction_m%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)</span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(wad2m_target_ct,</span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sprintf</span>(<span class="st">"data/products/wad2m_inundation_fraction_ct_%s.tif"</span>, target_year),</span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To determine the total amount of methane in 2018 for natural areas we need to consider the area:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>ct_area <span class="ot">&lt;-</span> <span class="fu">cellSize</span>(predictions_2018_total, <span class="at">unit =</span> <span class="st">"m"</span>)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>predictions_2018_total<span class="sc">$</span>F_CH4_total <span class="ot">&lt;-</span> (predictions_2018_total<span class="sc">$</span>F_CH4 <span class="sc">*</span> ct_area) <span class="sc">/</span> <span class="dv">1000000000000</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(predictions_2018_total<span class="sc">$</span>F_CH4_total) <span class="ot">&lt;-</span> <span class="st">"Gigatons of carbon per year"</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Total emissions in 2018:</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(predictions_2018_total<span class="sc">$</span>F_CH4_total, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                   sum
-F_CH4_total 0.09726513</code></pre>
-</div>
-</div>
-<p>Now you are ready to follow the same workflow for your model. (1) For your final project, determine where you will project your model. (2) Make a list of the variables, their units, the exact name and class of each variable in your model. (3) Determine where you can get a spatial version of each variable in your model. (4) Format each spatial layer. (5) Make predictions. (6) Use predictions.</p>
-<p>Ensure your raster layers all have the same CRS and resolution!</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Applying this to your own project
+Report this clearly
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The ERA5 rasters saved in <code>data_integration.qmd</code> cover the whole globe and every month from 2006-2018, so the workflow above transfers directly to your own final project — build your AOI with <code>rnaturalearth</code>/<code>rnaturalearthhires</code> (or your own shapefile) for wherever you’re working, and pick any year in that range by changing the <code>"2018"</code> filter above. If your project needs a year outside 2006-2018, you’ll need to download additional ERA5 years yourself (see <code>data_integration.qmd</code>’s download section) rather than assuming the saved files already cover it.</p>
+<p>If you use a monthly climatology because the target year is unavailable, say so in your methods. Write something like: “Because WAD2M was unavailable for the target year, monthly inundation fractions were estimated using the mean WAD2M fraction for each calendar month across available years.”</p>
 </div>
 </div>
+<p>Load the Connecticut 2018 WAD2M layer if it exists. The file should have 12 layers, one for each month of 2018. If it has one layer, the workflow will reuse that layer for all months. The fallback proxy below is only for teaching the unit conversion; replace it with real WAD2M before using the results scientifically.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>wad2m_path <span class="ot">&lt;-</span> <span class="st">"data/products/wad2m_inundation_fraction_ct_2018.tif"</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(wad2m_path)) {</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  wad2m_fraction <span class="ot">&lt;-</span> <span class="fu">rast</span>(wad2m_path)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>  wad2m_source <span class="ot">&lt;-</span> <span class="st">"WAD2M inundation fraction"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  natural_mask <span class="ot">&lt;-</span> igbp_ct[[<span class="dv">2018</span> <span class="sc">-</span> <span class="dv">2001</span> <span class="sc">+</span> <span class="dv">1</span>]]</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>  natural_mask[natural_mask <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">14</span>)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  natural_mask[<span class="sc">!</span><span class="fu">is.na</span>(natural_mask)] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  seasonal_fraction <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.04</span>, <span class="fl">0.05</span>, <span class="fl">0.07</span>, <span class="fl">0.10</span>, <span class="fl">0.12</span>, <span class="fl">0.11</span>,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>                         <span class="fl">0.09</span>, <span class="fl">0.08</span>, <span class="fl">0.07</span>, <span class="fl">0.06</span>, <span class="fl">0.05</span>, <span class="fl">0.04</span>)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>  wad2m_fraction <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="fu">lapply</span>(seasonal_fraction, <span class="cf">function</span>(x) natural_mask <span class="sc">*</span> x))</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>  wad2m_source <span class="ot">&lt;-</span> <span class="st">"seasonal classroom proxy, not WAD2M"</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>wad2m_source</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "seasonal classroom proxy, not WAD2M"</code></pre>
+</div>
+</div>
+<p>Align the inundation fraction layer to the prediction grid:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>wad2m_fraction <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(wad2m_fraction, igbp_ct_upland)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>wad2m_fraction <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">resample</span>(wad2m_fraction, igbp_ct_upland, <span class="at">method =</span> <span class="st">"bilinear"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>wad2m_fraction <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">clamp</span>(wad2m_fraction, <span class="at">lower =</span> <span class="dv">0</span>, <span class="at">upper =</span> <span class="dv">1</span>, <span class="at">values =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nlyr</span>(wad2m_fraction) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  wad2m_fraction <span class="ot">&lt;-</span> <span class="fu">rep</span>(wad2m_fraction, <span class="dv">12</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>wad2m_fraction <span class="ot">&lt;-</span> wad2m_fraction[[<span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>]]</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(wad2m_fraction) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"wad2m_fraction_m%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>terra<span class="sc">::</span><span class="fu">plot</span>(wad2m_fraction[[<span class="dv">1</span>]], <span class="at">main =</span> <span class="st">"January inundation fraction"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Check the fraction values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(wad2m_fraction, range, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                     X1   X2
+wad2m_fraction_m01 0.04 0.04
+wad2m_fraction_m02 0.05 0.05
+wad2m_fraction_m03 0.07 0.07
+wad2m_fraction_m04 0.10 0.10
+wad2m_fraction_m05 0.12 0.12
+wad2m_fraction_m06 0.11 0.11
+wad2m_fraction_m07 0.09 0.09
+wad2m_fraction_m08 0.08 0.08
+wad2m_fraction_m09 0.07 0.07
+wad2m_fraction_m10 0.06 0.06
+wad2m_fraction_m11 0.05 0.05
+wad2m_fraction_m12 0.04 0.04</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(wad2m_fraction, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mean
+wad2m_fraction_m01 0.04
+wad2m_fraction_m02 0.05
+wad2m_fraction_m03 0.07
+wad2m_fraction_m04 0.10
+wad2m_fraction_m05 0.12
+wad2m_fraction_m06 0.11
+wad2m_fraction_m07 0.09
+wad2m_fraction_m08 0.08
+wad2m_fraction_m09 0.07
+wad2m_fraction_m10 0.06
+wad2m_fraction_m11 0.05
+wad2m_fraction_m12 0.04</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="make-monthly-flux-predictions" class="level1">
+<h1>5. Make monthly flux predictions</h1>
+<p>Build a raster stack for January:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>model_rasters_m1 <span class="ot">&lt;-</span> <span class="fu">c</span>(igbp_ct_upland,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                      ct_era5_tmean_resample[[<span class="dv">1</span>]],</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                      ct_era5_ppt_resample[[<span class="dv">1</span>]])</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(model_rasters_m1) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Upland"</span>, <span class="st">"TA_F"</span>, <span class="st">"P_F"</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>model_rasters_m1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+size        : 5, 8, 3  (nrow, ncol, nlyr)
+resolution  : 0.25, 0.25  (x, y)
+extent      : -73.875, -71.875, 40.875, 42.125  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+source(s)   : memory
+names       : Upland,       TA_F,       P_F 
+min values  : upland, -4.4047914,  77.78263 
+max values  : upland,  0.8588806, 142.67540 </code></pre>
+</div>
+</div>
+<p>Check that the raster classes match the training data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(train<span class="sc">$</span>Upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "factor"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(train<span class="sc">$</span>Upland)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "inundated" "upland"   </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>model_rasters_m1<span class="sc">$</span>Upland</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+size        : 5, 8, 1  (nrow, ncol, nlyr)
+resolution  : 0.25, 0.25  (x, y)
+extent      : -73.875, -71.875, 40.875, 42.125  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+source(s)   : memory
+categories  : cover 
+name        : Upland 
+min value   : upland 
+max value   : upland </code></pre>
+</div>
+</div>
+<p>Predict January methane flux density:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>model_rasters_m1_pred <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">predict</span>(<span class="at">object =</span> model_rasters_m1, <span class="at">model =</span> fch4_rf)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(model_rasters_m1_pred) <span class="ot">&lt;-</span> <span class="st">"F_CH4"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(model_rasters_m1_pred) <span class="ot">&lt;-</span> <span class="st">"g C m-2 month-1"</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_rasters_m1_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Predict all 12 months:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>monthly_predictions <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="dv">12</span>)) {</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  model_rasters <span class="ot">&lt;-</span> <span class="fu">c</span>(igbp_ct_upland,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>                     ct_era5_tmean_resample[[i]],</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                     ct_era5_ppt_resample[[i]])</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(model_rasters) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Upland"</span>, <span class="st">"TA_F"</span>, <span class="st">"P_F"</span>)</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  pred <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">predict</span>(<span class="at">object =</span> model_rasters, <span class="at">model =</span> fch4_rf)</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(pred) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"F_CH4_m%02d"</span>, i)</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">units</span>(pred) <span class="ot">&lt;-</span> <span class="st">"g C m-2 month-1"</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>  monthly_predictions[[i]] <span class="ot">&lt;-</span> pred</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">rast</span>(monthly_predictions)</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>predictions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+size        : 5, 8, 12  (nrow, ncol, nlyr)
+resolution  : 0.25, 0.25  (x, y)
+extent      : -73.875, -71.875, 40.875, 42.125  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+source(s)   : memory
+names       :       F_CH4_m01,       F_CH4_m02,       F_CH4_m03,       F_CH4_m04,       F_CH4_m05,       F_CH4_m06,             ... 
+min values  :       0.3463437,       0.3571807,       0.3576182,       0.5576062,       0.6120633,       0.6136239,             ... 
+max values  :       0.3858116,       0.9608294,       0.7377671,       0.7411477,       0.8840865,       0.9260942,             ... 
+unit        : g C m-2 month-1 </code></pre>
+</div>
+</div>
+<p>Save the monthly prediction rasters if you want to use them later:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>predictions_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"products"</span>, <span class="st">"predictions"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(predictions_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nlyr</span>(predictions))) {</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">writeRaster</span>(predictions[[i]],</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">file.path</span>(predictions_dir, <span class="fu">sprintf</span>(<span class="st">"model_pred_m%02d.tif"</span>, i)),</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>              <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="convert-flux-density-to-emissions" class="level1">
+<h1>6. Convert flux density to emissions</h1>
+<p>The model predictions are flux densities:</p>
+<p><code>g C m-2 month-1</code></p>
+<p>To convert each grid cell to monthly emissions, multiply by inundated area:</p>
+<p><code>g C m-2 month-1 x m2 = g C month-1</code></p>
+<p>Keep the units visible as you work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>unit_conversion_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantity =</span> <span class="fu">c</span>(<span class="st">"predicted flux density"</span>,</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">"cell area"</span>,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>               <span class="st">"inundation fraction"</span>,</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>               <span class="st">"inundated area"</span>,</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>               <span class="st">"monthly emissions"</span>,</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>               <span class="st">"annual emissions"</span>,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>               <span class="st">"annual emissions"</span>),</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">calculation =</span> <span class="fu">c</span>(<span class="st">"random forest prediction"</span>,</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"terra::cellSize()"</span>,</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"WAD2M value"</span>,</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"cell area x inundation fraction"</span>,</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"flux density x inundated area"</span>,</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"sum monthly g C / 1e12"</span>,</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Tg C x 16 / 12"</span>),</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">unit =</span> <span class="fu">c</span>(<span class="st">"g C m-2 month-1"</span>,</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>           <span class="st">"m2 cell-1"</span>,</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>           <span class="st">"unitless"</span>,</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>           <span class="st">"m2 cell-1"</span>,</span>
+<span id="cb50-20"><a href="#cb50-20" aria-hidden="true" tabindex="-1"></a>           <span class="st">"g C cell-1 month-1"</span>,</span>
+<span id="cb50-21"><a href="#cb50-21" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Tg C year-1"</span>,</span>
+<span id="cb50-22"><a href="#cb50-22" aria-hidden="true" tabindex="-1"></a>           <span class="st">"Tg CH4 year-1"</span>)</span>
+<span id="cb50-23"><a href="#cb50-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb50-24"><a href="#cb50-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-25"><a href="#cb50-25" aria-hidden="true" tabindex="-1"></a>unit_conversion_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7 × 3
+  quantity               calculation                     unit              
+  &lt;chr&gt;                  &lt;chr&gt;                           &lt;chr&gt;             
+1 predicted flux density random forest prediction        g C m-2 month-1   
+2 cell area              terra::cellSize()               m2 cell-1         
+3 inundation fraction    WAD2M value                     unitless          
+4 inundated area         cell area x inundation fraction m2 cell-1         
+5 monthly emissions      flux density x inundated area   g C cell-1 month-1
+6 annual emissions       sum monthly g C / 1e12          Tg C year-1       
+7 annual emissions       Tg C x 16 / 12                  Tg CH4 year-1     </code></pre>
+</div>
+</div>
+<p>First calculate total cell area in square meters:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>cell_area_m2 <span class="ot">&lt;-</span> <span class="fu">cellSize</span>(predictions[[<span class="dv">1</span>]], <span class="at">unit =</span> <span class="st">"m"</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(cell_area_m2) <span class="ot">&lt;-</span> <span class="st">"cell_area_m2"</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(cell_area_m2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now calculate monthly inundated area:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>inundated_area_m2 <span class="ot">&lt;-</span> wad2m_fraction <span class="sc">*</span> cell_area_m2</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(inundated_area_m2) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"inundated_area_m2_m%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">global</span>(inundated_area_m2, sum, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                             sum
+inundated_area_m2_m01  577989158
+inundated_area_m2_m02  722486474
+inundated_area_m2_m03 1011481053
+inundated_area_m2_m04 1444972948
+inundated_area_m2_m05 1733967473
+inundated_area_m2_m06 1589470211
+inundated_area_m2_m07 1300475686
+inundated_area_m2_m08 1155978316
+inundated_area_m2_m09 1011481053
+inundated_area_m2_m10  866983737
+inundated_area_m2_m11  722486474
+inundated_area_m2_m12  577989158</code></pre>
+</div>
+</div>
+<p>Convert monthly flux density to monthly emissions:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>monthly_emissions_g_c <span class="ot">&lt;-</span> predictions <span class="sc">*</span> inundated_area_m2</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(monthly_emissions_g_c) <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"emissions_g_c_m%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(monthly_emissions_g_c) <span class="ot">&lt;-</span> <span class="st">"g C month-1"</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>monthly_emissions_g_c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class       : SpatRaster 
+size        : 5, 8, 12  (nrow, ncol, nlyr)
+resolution  : 0.25, 0.25  (x, y)
+extent      : -73.875, -71.875, 40.875, 42.125  (xmin, xmax, ymin, ymax)
+coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+source(s)   : memory
+names       : emiss~c_m01, emiss~c_m02, emiss~c_m03, emiss~c_m04, emiss~c_m05, emiss~c_m06,         ... 
+min values  :     7988884,    10271728,    14398034,    32071045,    42243817,    38822230,         ... 
+max values  :     8944436,    27844151,    29703174,    43035835,    61018501,    58817543,         ... 
+unit        : g C month-1 </code></pre>
+</div>
+</div>
+<p>Compute annual emissions per grid cell:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>annual_emissions_g_c <span class="ot">&lt;-</span> <span class="fu">sum</span>(monthly_emissions_g_c)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(annual_emissions_g_c) <span class="ot">&lt;-</span> <span class="st">"annual_emissions_g_c"</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(annual_emissions_g_c) <span class="ot">&lt;-</span> <span class="st">"g C year-1"</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(annual_emissions_g_c)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Convert <code>g C</code> to larger reporting units:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>annual_emissions_tg_c <span class="ot">&lt;-</span> annual_emissions_g_c <span class="sc">/</span> <span class="fl">1e12</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(annual_emissions_tg_c) <span class="ot">&lt;-</span> <span class="st">"annual_emissions_tg_c"</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(annual_emissions_tg_c) <span class="ot">&lt;-</span> <span class="st">"Tg C year-1"</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>annual_emissions_tg_ch4 <span class="ot">&lt;-</span> annual_emissions_tg_c <span class="sc">*</span> (<span class="dv">16</span> <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(annual_emissions_tg_ch4) <span class="ot">&lt;-</span> <span class="st">"annual_emissions_tg_ch4"</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="fu">units</span>(annual_emissions_tg_ch4) <span class="ot">&lt;-</span> <span class="st">"Tg CH4 year-1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The molecular-weight conversion is:</p>
+<p><code>Tg CH4 = Tg C x 16 / 12</code></p>
+<p>because methane is <code>CH4</code>, with molecular mass 16, and carbon has atomic mass 12.</p>
+</section>
+<section id="build-the-connecticut-methane-budget" class="level1">
+<h1>7. Build the Connecticut methane budget</h1>
+<p>Sum across grid cells:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>ct_budget <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantity =</span> <span class="fu">c</span>(<span class="st">"annual emissions"</span>, <span class="st">"annual emissions"</span>),</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">unit =</span> <span class="fu">c</span>(<span class="st">"Tg C year-1"</span>, <span class="st">"Tg CH4 year-1"</span>),</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">global</span>(annual_emissions_tg_c, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, <span class="dv">1</span>],</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">global</span>(annual_emissions_tg_ch4, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>ct_budget</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  quantity         unit            value
+  &lt;chr&gt;            &lt;chr&gt;           &lt;dbl&gt;
+1 annual emissions Tg C year-1   0.00961
+2 annual emissions Tg CH4 year-1 0.0128 </code></pre>
+</div>
+</div>
+<p>Create a monthly budget:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>monthly_budget <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">month =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>,</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">emissions_g_c =</span> <span class="fu">as.numeric</span>(<span class="fu">global</span>(monthly_emissions_g_c, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, ]),</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">emissions_tg_c =</span> emissions_g_c <span class="sc">/</span> <span class="fl">1e12</span>,</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">emissions_tg_ch4 =</span> emissions_tg_c <span class="sc">*</span> (<span class="dv">16</span> <span class="sc">/</span> <span class="dv">12</span>),</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">inundated_area_km2 =</span> <span class="fu">as.numeric</span>(<span class="fu">global</span>(inundated_area_m2, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, ]) <span class="sc">/</span> <span class="fl">1e6</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>monthly_budget</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 5
+   month emissions_g_c emissions_tg_c emissions_tg_ch4 inundated_area_km2
+   &lt;int&gt;         &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;              &lt;dbl&gt;
+ 1     1    206335226.       0.000206         0.000275               578.
+ 2     2    206335226.       0.000206         0.000275               578.
+ 3     3    206335226.       0.000206         0.000275               578.
+ 4     4    206335226.       0.000206         0.000275               578.
+ 5     5    206335226.       0.000206         0.000275               578.
+ 6     6    206335226.       0.000206         0.000275               578.
+ 7     7    206335226.       0.000206         0.000275               578.
+ 8     8    206335226.       0.000206         0.000275               578.
+ 9     9    206335226.       0.000206         0.000275               578.
+10    10    206335226.       0.000206         0.000275               578.
+11    11    206335226.       0.000206         0.000275               578.
+12    12    206335226.       0.000206         0.000275               578.</code></pre>
+</div>
+</div>
+<p>Plot the seasonal budget:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>monthly_budget <span class="sc">%&gt;%</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> emissions_tg_ch4)) <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Monthly Connecticut wetland methane emissions"</span>,</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month"</span>,</span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Tg CH4 month-1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="extract-yale-myers-forest" class="level1">
+<h1>8. Extract Yale-Myers Forest</h1>
+<p>Now connect the spatial budget back to Yale-Myers Forest. These values represent the coarse model grid cell containing Yale-Myers, not a field-scale measurement of the forest.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>yale_myers <span class="ot">&lt;-</span> <span class="fu">vect</span>(</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">site =</span> <span class="st">"Yale-Myers Forest"</span>,</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lon =</span> <span class="sc">-</span><span class="fl">72.123859</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat =</span> <span class="fl">41.952909</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">geom =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>),</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">crs =</span> <span class="st">"EPSG:4326"</span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>yale_myers <span class="ot">&lt;-</span> <span class="fu">project</span>(yale_myers, predictions)</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-13"><a href="#cb64-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(predictions[[<span class="dv">7</span>]], <span class="at">main =</span> <span class="st">"July predicted methane flux"</span>)</span>
+<span id="cb64-14"><a href="#cb64-14" aria-hidden="true" tabindex="-1"></a><span class="fu">points</span>(yale_myers, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Extract monthly flux density, inundation fraction, inundated area, and emissions for the grid cell containing Yale-Myers:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>yale_flux <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(predictions, yale_myers) <span class="sc">%&gt;%</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(),</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"flux_layer"</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"flux_g_c_m2_month"</span>)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>yale_fraction <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(wad2m_fraction, yale_myers) <span class="sc">%&gt;%</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(),</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"fraction_layer"</span>,</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"inundation_fraction"</span>)</span>
+<span id="cb65-12"><a href="#cb65-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-13"><a href="#cb65-13" aria-hidden="true" tabindex="-1"></a>yale_area <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(inundated_area_m2, yale_myers) <span class="sc">%&gt;%</span></span>
+<span id="cb65-14"><a href="#cb65-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb65-15"><a href="#cb65-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(),</span>
+<span id="cb65-16"><a href="#cb65-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"area_layer"</span>,</span>
+<span id="cb65-17"><a href="#cb65-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"inundated_area_m2"</span>)</span>
+<span id="cb65-18"><a href="#cb65-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-19"><a href="#cb65-19" aria-hidden="true" tabindex="-1"></a>yale_emissions <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(monthly_emissions_g_c, yale_myers) <span class="sc">%&gt;%</span></span>
+<span id="cb65-20"><a href="#cb65-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ID) <span class="sc">%&gt;%</span></span>
+<span id="cb65-21"><a href="#cb65-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(),</span>
+<span id="cb65-22"><a href="#cb65-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"emissions_layer"</span>,</span>
+<span id="cb65-23"><a href="#cb65-23" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"emissions_g_c_month"</span>)</span>
+<span id="cb65-24"><a href="#cb65-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-25"><a href="#cb65-25" aria-hidden="true" tabindex="-1"></a>yale_myers_monthly <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">month =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb65-26"><a href="#cb65-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(yale_flux, yale_fraction, yale_area, yale_emissions) <span class="sc">%&gt;%</span></span>
+<span id="cb65-27"><a href="#cb65-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb65-28"><a href="#cb65-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">emissions_tg_c_month =</span> emissions_g_c_month <span class="sc">/</span> <span class="fl">1e12</span>,</span>
+<span id="cb65-29"><a href="#cb65-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">emissions_tg_ch4_month =</span> emissions_tg_c_month <span class="sc">*</span> (<span class="dv">16</span> <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb65-30"><a href="#cb65-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb65-31"><a href="#cb65-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(month,</span>
+<span id="cb65-32"><a href="#cb65-32" aria-hidden="true" tabindex="-1"></a>         flux_g_c_m2_month,</span>
+<span id="cb65-33"><a href="#cb65-33" aria-hidden="true" tabindex="-1"></a>         inundation_fraction,</span>
+<span id="cb65-34"><a href="#cb65-34" aria-hidden="true" tabindex="-1"></a>         inundated_area_m2,</span>
+<span id="cb65-35"><a href="#cb65-35" aria-hidden="true" tabindex="-1"></a>         emissions_g_c_month,</span>
+<span id="cb65-36"><a href="#cb65-36" aria-hidden="true" tabindex="-1"></a>         emissions_tg_ch4_month)</span>
+<span id="cb65-37"><a href="#cb65-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-38"><a href="#cb65-38" aria-hidden="true" tabindex="-1"></a>yale_myers_monthly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 6
+   month flux_g_c_m2_month inundation_fraction inundated_area_m2
+   &lt;int&gt;             &lt;dbl&gt;               &lt;dbl&gt;             &lt;dbl&gt;
+ 1     1             0.368              0.0400         23006234.
+ 2     2             0.365              0.0500         28757793.
+ 3     3             0.364              0.0700         40260910.
+ 4     4             0.725              0.100          57515587.
+ 5     5             0.629              0.120          69018701.
+ 6     6             0.711              0.110          63267144.
+ 7     7             1.34               0.0900         51764029.
+ 8     8             1.17               0.0800         46012467.
+ 9     9             0.801              0.0700         40260910.
+10    10             0.627              0.0600         34509351.
+11    11             0.589              0.0500         28757793.
+12    12             0.353              0.0400         23006234.
+# ℹ 2 more variables: emissions_g_c_month &lt;dbl&gt;, emissions_tg_ch4_month &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Summarize the Yale-Myers grid cell:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>yale_myers_summary <span class="ot">&lt;-</span> yale_myers_monthly <span class="sc">%&gt;%</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_flux_g_c_m2_month =</span> <span class="fu">mean</span>(flux_g_c_m2_month, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_inundation_fraction =</span> <span class="fu">mean</span>(inundation_fraction, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_inundated_area_m2 =</span> <span class="fu">max</span>(inundated_area_m2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">annual_emissions_tg_ch4 =</span> <span class="fu">sum</span>(emissions_tg_ch4_month, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>yale_myers_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  mean_flux_g_c_m2_month mean_inundation_fraction max_inundated_area_m2
+                   &lt;dbl&gt;                    &lt;dbl&gt;                 &lt;dbl&gt;
+1                  0.670                   0.0733             69018701.
+# ℹ 1 more variable: annual_emissions_tg_ch4 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<p>Plot the seasonal signal for the Yale-Myers grid cell:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>yale_myers_monthly <span class="sc">%&gt;%</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> emissions_tg_ch4_month)) <span class="sc">+</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Yale-Myers grid-cell methane emissions"</span>,</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Month"</span>,</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Tg CH4 month-1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="why-wad2m-scaling-matters" class="level1">
+<h1>9. Why WAD2M scaling matters</h1>
+<p>Compare the WAD2M-scaled budget to a naive budget that assumes every valid cell is 100% emitting wetland area:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>naive_monthly_emissions_g_c <span class="ot">&lt;-</span> predictions <span class="sc">*</span> cell_area_m2</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>naive_annual_tg_ch4 <span class="ot">&lt;-</span> <span class="fu">sum</span>(naive_monthly_emissions_g_c) <span class="sc">/</span> <span class="fl">1e12</span> <span class="sc">*</span> (<span class="dv">16</span> <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(naive_annual_tg_ch4) <span class="ot">&lt;-</span> <span class="st">"naive_annual_tg_ch4"</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>comparison_budget <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"100% of each valid cell"</span>, <span class="st">"WAD2M-scaled inundated fraction"</span>),</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annual_tg_ch4 =</span> <span class="fu">c</span>(</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">global</span>(naive_annual_tg_ch4, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, <span class="dv">1</span>],</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">global</span>(annual_emissions_tg_ch4, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">percent_of_naive =</span> <span class="dv">100</span> <span class="sc">*</span> annual_tg_ch4 <span class="sc">/</span> <span class="fu">first</span>(annual_tg_ch4))</span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a>comparison_budget</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  method                          annual_tg_ch4 percent_of_naive
+  &lt;chr&gt;                                   &lt;dbl&gt;            &lt;dbl&gt;
+1 100% of each valid cell                0.163            100   
+2 WAD2M-scaled inundated fraction        0.0128             7.86</code></pre>
+</div>
+</div>
+<p>Plot the comparison:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>comparison_budget <span class="sc">%&gt;%</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> method, <span class="at">y =</span> annual_tg_ch4)) <span class="sc">+</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Effect of inundation-fraction scaling"</span>,</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Annual emissions (Tg CH4 year-1)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="inundation-area-uncertainty" class="level1">
+<h1>10. Inundation-area uncertainty</h1>
+<p>Wetland area is often one of the largest sources of uncertainty in methane budgets. Here we ask how much the annual Connecticut budget changes if inundation fraction is 50% lower or 50% higher than the mapped value.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>inundation_uncertainty <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">scenario =</span> <span class="fu">c</span>(<span class="st">"low inundation"</span>, <span class="st">"mapped inundation"</span>, <span class="st">"high inundation"</span>),</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">multiplier =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">1.5</span>)</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>budget_uncertainty <span class="ot">&lt;-</span> inundation_uncertainty <span class="sc">%&gt;%</span></span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annual_tg_ch4 =</span> <span class="fu">map_dbl</span>(multiplier, <span class="cf">function</span>(multiplier_value) {</span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>    adjusted_fraction <span class="ot">&lt;-</span> <span class="fu">clamp</span>(wad2m_fraction <span class="sc">*</span> multiplier_value,</span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">lower =</span> <span class="dv">0</span>,</span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">upper =</span> <span class="dv">1</span>,</span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a>                               <span class="at">values =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb73-12"><a href="#cb73-12" aria-hidden="true" tabindex="-1"></a>    adjusted_area <span class="ot">&lt;-</span> adjusted_fraction <span class="sc">*</span> cell_area_m2</span>
+<span id="cb73-13"><a href="#cb73-13" aria-hidden="true" tabindex="-1"></a>    adjusted_emissions <span class="ot">&lt;-</span> predictions <span class="sc">*</span> adjusted_area</span>
+<span id="cb73-14"><a href="#cb73-14" aria-hidden="true" tabindex="-1"></a>    adjusted_annual_tg_ch4 <span class="ot">&lt;-</span> <span class="fu">sum</span>(adjusted_emissions) <span class="sc">/</span> <span class="fl">1e12</span> <span class="sc">*</span> (<span class="dv">16</span> <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb73-15"><a href="#cb73-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-16"><a href="#cb73-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">global</span>(adjusted_annual_tg_ch4, <span class="st">"sum"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb73-17"><a href="#cb73-17" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb73-18"><a href="#cb73-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-19"><a href="#cb73-19" aria-hidden="true" tabindex="-1"></a>budget_uncertainty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  scenario          multiplier annual_tg_ch4
+  &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;
+1 low inundation           0.5       0.00641
+2 mapped inundation        1         0.0128 
+3 high inundation          1.5       0.0192 </code></pre>
+</div>
+</div>
+<p>Plot the uncertainty range:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>budget_uncertainty <span class="sc">%&gt;%</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> scenario, <span class="at">y =</span> annual_tg_ch4)) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sensitivity of the methane budget to inundation area"</span>,</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Annual emissions (Tg CH4 year-1)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="spatial_projections_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is not a full uncertainty analysis. It isolates one uncertainty source: the area used to scale flux density into emissions. A final project could also vary the methane model, predictor rasters, or the wetland mask.</p>
+</section>
+<section id="save-products" class="level1">
+<h1>11. Save products</h1>
+<p>Save the annual emission maps if you want to use them in a final report:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(annual_emissions_tg_c,</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"data/products/ct_annual_methane_emissions_tg_c_2018.tif"</span>,</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(annual_emissions_tg_ch4,</span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"data/products/ct_annual_methane_emissions_tg_ch4_2018.tif"</span>,</span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="assignment" class="level1">
+<h1>Assignment</h1>
+<p>For your final project, prepare a spatial methane visualization and budget. Include:</p>
+<ol type="1">
+<li>Your model formula and the exact raster layer names needed for prediction.</li>
+<li>A table listing each spatial predictor, units, CRS, resolution, and source.</li>
+<li>A map of predicted methane flux density in <code>g C m-2 month-1</code>.</li>
+<li>A map or summary of the WAD2M inundation fraction used to scale the model.</li>
+<li>A unit-conversion table showing:
+<ul>
+<li>flux density: <code>g C m-2 month-1</code>;</li>
+<li>cell area: <code>m2</code>;</li>
+<li>inundated area: <code>m2 x fraction</code>;</li>
+<li>monthly emissions: <code>g C month-1</code>;</li>
+<li>annual emissions: <code>Tg C year-1</code>;</li>
+<li>annual emissions: <code>Tg CH4 year-1</code>.</li>
+</ul></li>
+<li>A comparison between a naive 100% area budget and a WAD2M-scaled budget.</li>
+<li>A Yale-Myers or target-site extraction table.</li>
+<li>A simple inundation-area uncertainty analysis.</li>
+<li>One paragraph explaining why inundation fraction changes the interpretation of a spatial methane flux map.</li>
+</ol>
 
 
 </section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
-  window.document.addEventListener("DOMContentLoaded", function (event) {
-    const icon = "";
-    const anchorJS = new window.AnchorJS();
-    anchorJS.options = {
-      placement: 'right',
-      icon: icon
-    };
-    anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
     }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
     }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
       for (const childEl of codeEl.children) {
         if (isCodeAnnotation(childEl)) {
           childEl.remove();
         }
       }
       return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
     });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
-      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
-      var isInternal = (href) => {
-          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-      }
-      // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
-      for (var i=0; i<links.length; i++) {
-        const link = links[i];
-        if (!isInternal(link.href)) {
-          // undo the damage that might have been done by quarto-nav.js in the case of
-          // links that we want to consider external
-          if (link.dataset.originalHref !== undefined) {
-            link.href = link.dataset.originalHref;
-          }
-            // target, if specified
-            link.setAttribute("target", "_blank");
-            if (link.getAttribute("rel") === null) {
-              link.setAttribute("rel", "noopener");
-            }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
         }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
       }
-    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
-      const config = {
-        allowHTML: true,
-        maxWidth: 500,
-        delay: 100,
-        arrow: false,
-        appendTo: function(el) {
-            return el.parentElement;
-        },
-        interactive: true,
-        interactiveBorder: 10,
-        theme: 'quarto',
-        placement: 'bottom-start',
-      };
-      if (contentFn) {
-        config.content = contentFn;
-      }
-      if (onTriggerFn) {
-        config.onTrigger = onTriggerFn;
-      }
-      if (onUntriggerFn) {
-        config.onUntrigger = onUntriggerFn;
-      }
-      window.tippy(el, config); 
     }
-    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-    for (var i=0; i<noterefs.length; i++) {
-      const ref = noterefs[i];
-      tippyHover(ref, function() {
-        // use id or data attribute instead here
-        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-        try { href = new URL(href).hash; } catch {}
-        const id = href.replace(/^#\/?/, "");
-        const note = window.document.getElementById(id);
-        if (note) {
-          return note.innerHTML;
-        } else {
-          return "";
-        }
-      });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
     }
-    const xrefs = window.document.querySelectorAll('a.quarto-xref');
-    const processXRef = (id, note) => {
-      // Strip column container classes
-      const stripColumnClz = (el) => {
-        el.classList.remove("page-full", "page-columns");
-        if (el.children) {
-          for (const child of el.children) {
-            stripColumnClz(child);
-          }
-        }
-      }
-      stripColumnClz(note)
-      if (id === null || id.startsWith('sec-')) {
-        // Special case sections, only their first couple elements
-        const container = document.createElement("div");
-        if (note.children && note.children.length > 2) {
-          container.appendChild(note.children[0].cloneNode(true));
-          for (let i = 1; i < note.children.length; i++) {
-            const child = note.children[i];
-            if (child.tagName === "P" && child.innerText === "") {
-              continue;
-            } else {
-              container.appendChild(child.cloneNode(true));
-              break;
-            }
-          }
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(container);
-          }
-          return container.innerHTML
-        } else {
-          if (window.Quarto?.typesetMath) {
-            window.Quarto.typesetMath(note);
-          }
-          return note.innerHTML;
-        }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
       } else {
-        // Remove any anchor links if they are present
-        const anchorLink = note.querySelector('a.anchorjs-link');
-        if (anchorLink) {
-          anchorLink.remove();
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
         }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
         if (window.Quarto?.typesetMath) {
           window.Quarto.typesetMath(note);
         }
-        if (note.classList.contains("callout")) {
-          return note.outerHTML;
-        } else {
-          return note.innerHTML;
-        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
       }
     }
-    for (var i=0; i<xrefs.length; i++) {
-      const xref = xrefs[i];
-      tippyHover(xref, undefined, function(instance) {
-        instance.disable();
-        let url = xref.getAttribute('href');
-        let hash = undefined; 
-        if (url.startsWith('#')) {
-          hash = url;
-        } else {
-          try { hash = new URL(url).hash; } catch {}
-        }
-        if (hash) {
-          const id = hash.replace(/^#\/?/, "");
-          const note = window.document.getElementById(id);
-          if (note !== null) {
-            try {
-              const html = processXRef(id, note.cloneNode(true));
-              instance.setContent(html);
-            } finally {
-              instance.enable();
-              instance.show();
-            }
-          } else {
-            // See if we can fetch this
-            fetch(url.split('#')[0])
-            .then(res => res.text())
-            .then(html => {
-              const parser = new DOMParser();
-              const htmlDoc = parser.parseFromString(html, "text/html");
-              const note = htmlDoc.getElementById(id);
-              if (note !== null) {
-                const html = processXRef(id, note);
-                instance.setContent(html);
-              } 
-            }).finally(() => {
-              instance.enable();
-              instance.show();
-            });
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
           }
         } else {
-          // See if we can fetch a full url (with no hash to target)
-          // This is a special case and we should probably do some content thinning / targeting
-          fetch(url)
+          // See if we can fetch this
+          fetch(url.split('#')[0])
           .then(res => res.text())
           .then(html => {
             const parser = new DOMParser();
             const htmlDoc = parser.parseFromString(html, "text/html");
-            const note = htmlDoc.querySelector('main.content');
+            const note = htmlDoc.getElementById(id);
             if (note !== null) {
-              // This should only happen for chapter cross references
-              // (since there is no id in the URL)
-              // remove the first header
-              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
-                note.children[0].remove();
-              }
-              const html = processXRef(null, note);
+              const html = processXRef(id, note);
               instance.setContent(html);
             } 
           }).finally(() => {
@@ -1015,161 +1642,185 @@ F_CH4_total 0.09726513</code></pre>
             instance.show();
           });
         }
-      }, function(instance) {
-      });
-    }
-        let selectedAnnoteEl;
-        const selectorForAnnotation = ( cell, annotation) => {
-          let cellAttr = 'data-code-cell="' + cell + '"';
-          let lineAttr = 'data-code-annotation="' +  annotation + '"';
-          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-          return selector;
-        }
-        const selectCodeLines = (annoteEl) => {
-          const doc = window.document;
-          const targetCell = annoteEl.getAttribute("data-target-cell");
-          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-          const lineIds = lines.map((line) => {
-            return targetCell + "-" + line;
-          })
-          let top = null;
-          let height = null;
-          let parent = null;
-          if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
-            }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
-            }
-            selectedAnnoteEl = annoteEl;
-          }
-        };
-        const unselectCodeLines = () => {
-          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-          elementsIds.forEach((elId) => {
-            const div = window.document.getElementById(elId);
-            if (div) {
-              div.remove();
-            }
-          });
-          selectedAnnoteEl = undefined;
-        };
-          // Handle positioning of the toggle
-      window.addEventListener(
-        "resize",
-        throttle(() => {
-          elRect = undefined;
-          if (selectedAnnoteEl) {
-            selectCodeLines(selectedAnnoteEl);
-          }
-        }, 10)
-      );
-      function throttle(fn, ms) {
-      let throttle = false;
-      let timer;
-        return (...args) => {
-          if(!throttle) { // first call gets through
-              fn.apply(this, args);
-              throttle = true;
-          } else { // all the others get throttled
-              if(timer) clearTimeout(timer); // cancel #2
-              timer = setTimeout(() => {
-                fn.apply(this, args);
-                timer = throttle = false;
-              }, ms);
-          }
-        };
-      }
-        // Attach click handler to the DT
-        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-        for (const annoteDlNode of annoteDls) {
-          annoteDlNode.addEventListener('click', (event) => {
-            const clickedEl = event.target;
-            if (clickedEl !== selectedAnnoteEl) {
-              unselectCodeLines();
-              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-              if (activeEl) {
-                activeEl.classList.remove('code-annotation-active');
-              }
-              selectCodeLines(clickedEl);
-              clickedEl.classList.add('code-annotation-active');
-            } else {
-              // Unselect the line
-              unselectCodeLines();
-              clickedEl.classList.remove('code-annotation-active');
-            }
-          });
-        }
-    const findCites = (el) => {
-      const parentEl = el.parentElement;
-      if (parentEl) {
-        const cites = parentEl.dataset.cites;
-        if (cites) {
-          return {
-            el,
-            cites: cites.split(' ')
-          };
-        } else {
-          return findCites(el.parentElement)
-        }
       } else {
-        return undefined;
-      }
-    };
-    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-    for (var i=0; i<bibliorefs.length; i++) {
-      const ref = bibliorefs[i];
-      const citeInfo = findCites(ref);
-      if (citeInfo) {
-        tippyHover(citeInfo.el, function() {
-          var popup = window.document.createElement('div');
-          citeInfo.cites.forEach(function(cite) {
-            var citeDiv = window.document.createElement('div');
-            citeDiv.classList.add('hanging-indent');
-            citeDiv.classList.add('csl-entry');
-            var biblioDiv = window.document.getElementById('ref-' + cite);
-            if (biblioDiv) {
-              citeDiv.innerHTML = biblioDiv.innerHTML;
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
             }
-            popup.appendChild(citeDiv);
-          });
-          return popup.innerHTML;
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
         });
       }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
     }
-  });
-  </script>
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
