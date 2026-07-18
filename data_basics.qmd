@@ -654,6 +654,11 @@ print(subtract_two_nums(y = 1, x = 3))
 
 When functions become more complex, named arguments often make your code easier to read.
 
+::: {.callout-tip}
+## Course product
+This workshop produces a climate evidence brief. Use the standard deliverable shape from the Final Project Roadmap: one clear question, one reproducibility note, at least one table or summary, one or two figures, one interpretation paragraph, and one limitation or next-step paragraph.
+:::
+
 # Assignment
 
 Create a short climate evidence brief comparing Yale-Myers Forest with one U.S. location of your choice.

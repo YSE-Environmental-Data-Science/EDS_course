@@ -749,6 +749,11 @@ writeRaster(annual_emissions_tg_ch4,
             overwrite = TRUE)
 ```
 
+::: {.callout-tip}
+## Course product
+This workshop produces a spatial methane visualization and emissions budget. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on unit conversions, inundation-area scaling, and reproducibility of spatial products.
+:::
+
 # Assignment
 
 For your final project, prepare a spatial methane visualization and budget. Include:

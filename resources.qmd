@@ -4,36 +4,107 @@ editor:
   mode: source
 ---
 
-Here are some additional resources that serve as a good starting point to learning more about the different types of tools involved in environmental data science. All listed resources are beginner-friendly so please feel free to check them out.  
+This page is a guide for choosing the right resource when you get stuck. The list is intentionally curated rather than exhaustive. Start with the resource that matches your problem, then go deeper if you need more detail.
 
-## Git/GitHub
+## Start here
 
--   [Collaborative Coding with GitHub](https://lter.github.io/workshop-github/): An introductory workshop on how to use Git with GitHub and RStudio. This workshop was created by the [LTER Network](https://lternet.edu/) for their synthesis working groups but remains a great resource for all beginners, especially those who are hesitant to use the command line. There are also lessons on advanced Git/GitHub topics for those looking to further improve their skills. 
+| If you need help with... | Start with... | Useful for |
+|---|---|---|
+| learning R and tidy data | [R for Data Science](https://r4ds.hadley.nz/) | Data Basics, Data Integration |
+| `dplyr`, `tidyr`, or `ggplot2` syntax | [Posit Cheatsheets](https://posit.co/resources/cheatsheets/) | All workshops |
+| Git or GitHub setup | [Happy Git and GitHub for the useR](https://happygitwithr.com/) | Setup, collaboration |
+| GitHub collaboration | [Collaborative Coding with GitHub](https://lter.github.io/workshop-github/) | Group final projects |
+| vector and raster concepts | [Introduction to Geospatial Concepts](https://datacarpentry.github.io/organization-geospatial/) | Vector Data, Raster Data |
+| spatial data in R | [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.github.io/r-raster-vector-geospatial/) | Vector Data, Raster Data, Spatial Visualization |
+| writing a report | [Quarto Guide](https://quarto.org/docs/guide/) | Final project reports |
+| model interpretation | [randomForest package manual](https://cran.r-project.org/web/packages/randomForest/randomForest.pdf) | Random Forest, Sensitivity Analysis |
 
--   [Reproducible Approaches to Arctic Research Using R](https://learning.nceas.ucsb.edu/2024-02-arctic/): A course designed by the [NCEAS Learning Hub](https://www.nceas.ucsb.edu/learning-hub) to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the [Introduction to Git and GitHub](https://learning.nceas.ucsb.edu/2024-02-arctic/session_06.html) and [Collaborating with Git and GitHub](https://learning.nceas.ucsb.edu/2024-02-arctic/session_09.html) lessons, where the Git workflow and Git commands are explained thoroughly. 
+## What to use when you are stuck
 
--   [Happy Git and GitHub for the userR](https://happygitwithr.com/): A comprehensive guide by [Jenny Bryan](https://jennybryan.org/) on using Git, GitHub, and RStudio that covers everything from the basics to the more intricate topics. This book has a dedicated page for [troubleshooting](https://happygitwithr.com/troubleshooting) common problems a user might run into while setting up their computer. 
+| Problem | Resource |
+|---|---|
+| "I cannot push to GitHub." | [Happy Git troubleshooting](https://happygitwithr.com/troubleshooting) |
+| "I do not understand joins." | [R4DS joins](https://r4ds.hadley.nz/joins.html) |
+| "My data are wide when they should be long." | [R4DS data tidying](https://r4ds.hadley.nz/data-tidy.html) |
+| "My plot is not showing what I expect." | [R4DS data visualization](https://r4ds.hadley.nz/data-visualize.html) and the [ggplot2 cheatsheet](https://rstudio.github.io/cheatsheets/html/data-visualization.html) |
+| "My vector and raster layers do not line up." | [Data Carpentry geospatial concepts](https://datacarpentry.github.io/organization-geospatial/) and [terra spatial data tutorial](https://rspatial.org/spatial/1-introduction.html) |
+| "I need to crop, mask, resample, or project rasters." | [terra reference site](https://rspatial.github.io/terra/) |
+| "I need to buffer, join, or measure vector geometries." | [sf reference site](https://r-spatial.github.io/sf/) and [sf cheatsheet](https://rstudio.github.io/cheatsheets/sf.pdf) |
+| "I do not know what a flux variable means." | [AmeriFlux data variables](https://ameriflux.lbl.gov/data/aboutdata/data-variables/) |
+| "I need climate rasters for a final project." | [ERA5 documentation](https://confluence.ecmwf.int/spaces/CKB/pages/76414402/ERA5+data+documentation) |
+| "I need daily climate for a point location." | [Daymet overview](https://daymet.ornl.gov/overview) |
+| "I need wetland/inundation area for methane scaling." | [WAD2M paper](https://doi.org/10.5194/essd-13-2001-2021) |
 
-## Tidyverse
+## Git and GitHub
 
--   [Coding in the Tidyverse](https://lter.github.io/workshop-tidyverse/): A workshop on using `dplyr`, `tidyr`, and `ggplot2`, which are R packages that are part of the [Tidyverse](https://www.tidyverse.org/). The workshop covers the fundamental tools for tidying data in R, for example, wrangling, summarizing, reshaping, joining, and visualizing data. This workshop was created by the [LTER Network](https://lternet.edu/) for their synthesis working groups.
+-   [Collaborative Coding with GitHub](https://lter.github.io/workshop-github/): A beginner-friendly workshop on using Git with GitHub and RStudio. This is especially useful for group work because it emphasizes workflows, conflicts, branches, issues, and project documentation.
 
--   [Reproducible Approaches to Arctic Research Using R](https://learning.nceas.ucsb.edu/2024-02-arctic/): A course designed by the [NCEAS Learning Hub](https://www.nceas.ucsb.edu/learning-hub) to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the [Data Modeling Essentials](https://learning.nceas.ucsb.edu/2024-02-arctic/session_07.html) and [Cleaning and Wrangling Data](https://learning.nceas.ucsb.edu/2024-02-arctic/session_08.html) lessons, where the principles of tidy data and basic Tidyverse functions are explained. 
+-   [Happy Git and GitHub for the useR](https://happygitwithr.com/): A comprehensive guide to Git, GitHub, and RStudio. Use the [troubleshooting](https://happygitwithr.com/troubleshooting) page when authentication, pushing, pulling, or remotes get weird.
 
--   [R for Data Science](https://r4ds.hadley.nz/): An online textbook by written by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund that goes over the entire Tidyverse workflow from start to finish.
+-   [NCEAS Introduction to Git and GitHub](https://learning.nceas.ucsb.edu/2024-02-arctic/session_06.html) and [Collaborating with Git and GitHub](https://learning.nceas.ucsb.edu/2024-02-arctic/session_09.html): Clear lesson-style materials for learning Git commands and collaboration patterns.
 
--   [Posit Cheatsheets](https://posit.co/resources/cheatsheets/): A collection of cheatsheets created by [Posit](https://posit.co/) (formerly RStudio Inc.) to serve as helpful reminders on how to use the most important functions from a wide array of R packages. Here are the cheatsheets for [dplyr](https://rstudio.github.io/cheatsheets/html/data-transformation.html), [tidyr](https://rstudio.github.io/cheatsheets/html/tidyr.html), and [ggplot2](https://rstudio.github.io/cheatsheets/html/data-visualization.html).
+## Tidyverse and data wrangling
 
-## Spatial Data
+-   [R for Data Science](https://r4ds.hadley.nz/): The best general-purpose reference for tidy data workflows. Particularly useful sections include data visualization, data transformation, joins, tidying, functions, and Quarto.
 
--   [Introduction to Geospatial Concepts](https://datacarpentry.github.io/organization-geospatial/): A workshop from the [Data Carpentry](https://datacarpentry.org/) on core geospatial concepts such as raster data, vector data, and coordinate reference systems. This workshop is a prerequisite to their [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.github.io/r-raster-vector-geospatial/) workshop and is a great resource for reviewing the different kinds of geospatial data.
+-   [Coding in the Tidyverse](https://lter.github.io/workshop-tidyverse/): A workshop covering `dplyr`, `tidyr`, and `ggplot2` for wrangling, summarizing, reshaping, joining, and visualizing data.
 
--   [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.github.io/r-raster-vector-geospatial/): A workshop from the [Data Carpentry](https://datacarpentry.org/) that focuses on manipulating and plotting raster and vector data using the `terra`, `sf`, and `ggplot2` R packages. The functions and operations involved in a basic geospatial data workflow are taught in this workshop. 
+-   [Posit Cheatsheets](https://posit.co/resources/cheatsheets/): Quick references for common package syntax. Keep the [dplyr](https://rstudio.github.io/cheatsheets/html/data-transformation.html), [tidyr](https://rstudio.github.io/cheatsheets/html/tidyr.html), and [ggplot2](https://rstudio.github.io/cheatsheets/html/data-visualization.html) cheatsheets close while working through the course.
 
--   [NCEAS coreR for Delta Science Program](https://learning.nceas.ucsb.edu/2024-06-delta/): A course designed by the [NCEAS Learning Hub](https://www.nceas.ucsb.edu/learning-hub) to teach researchers techniques and tools to make their work more reproducible. Particularly relevant is the [Working with Spatial Data](https://learning.nceas.ucsb.edu/2024-06-delta/session_13.html) lesson that works with the `sf`, `dplyr`,  `ggplot2`, and `leaflet` R packages to manipulate and visualize vector data by following the Tidyverse principles. Interactive maps are also covered.
+-   [NCEAS Cleaning and Wrangling Data](https://learning.nceas.ucsb.edu/2024-02-arctic/session_08.html): A lesson on tidy data and wrangling that pairs well with Data Basics and Data Integration.
 
--   [Spatial manipulation with sf cheatsheet](https://rstudio.github.io/cheatsheets/sf.pdf): A handy cheatsheet that serves as a reminder on how to use common functions from the `sf` R package. 
+## Spatial data
 
--   [Spatial data with terra](https://rspatial.org/spatial/1-introduction.html): A tutorial showcasing functions from the `terra` R package to manipulate both raster and vector geospatial data. The tutorial was written by the team behind the development of [terra](https://rspatial.github.io/terra/index.html).
+-   [Introduction to Geospatial Concepts](https://datacarpentry.github.io/organization-geospatial/): A conceptual introduction to raster data, vector data, coordinate reference systems, spatial resolution, and extent.
 
+-   [Introduction to Geospatial Raster and Vector Data with R](https://datacarpentry.github.io/r-raster-vector-geospatial/): A practical workshop for manipulating and plotting raster and vector data with `terra`, `sf`, and `ggplot2`.
 
+-   [sf reference site](https://r-spatial.github.io/sf/): Function documentation and examples for vector data. Use this when working with points, polygons, joins, intersections, buffers, and distances.
+
+-   [Spatial manipulation with sf cheatsheet](https://rstudio.github.io/cheatsheets/sf.pdf): A quick reminder sheet for common `sf` operations.
+
+-   [terra reference site](https://rspatial.github.io/terra/) and [Spatial Data with terra](https://rspatial.org/spatial/1-introduction.html): Documentation and tutorials for raster workflows such as cropping, masking, projecting, resampling, extracting, stacking, and predicting.
+
+-   [NCEAS Working with Spatial Data](https://learning.nceas.ucsb.edu/2024-06-delta/session_13.html): A lesson using `sf`, `dplyr`, `ggplot2`, and `leaflet` to manipulate and visualize vector data.
+
+## Reporting and reproducibility
+
+-   [Quarto Guide](https://quarto.org/docs/guide/): The main reference for writing reproducible reports, websites, slides, and manuscripts with code and narrative text together.
+
+-   [Quarto Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html): Use this when formatting headings, lists, links, figures, tables, and code blocks.
+
+-   [Quarto Computations: Using R](https://quarto.org/docs/computations/r.html): Use this when controlling code output, messages, warnings, figures, and execution options in `.qmd` reports.
+
+-   [R4DS Quarto chapter](https://r4ds.hadley.nz/quarto.html): A friendly introduction to using Quarto for reproducible data analysis.
+
+## Modeling and interpretation
+
+-   [randomForest package manual](https://cran.r-project.org/web/packages/randomForest/randomForest.pdf): Reference for `randomForest()`, `predict()`, `importance()`, and `varImpPlot()`. Use this when checking arguments such as `ntree`, `mtry`, and `importance`.
+
+-   [R4DS model basics](https://r4ds.hadley.nz/model-basics.html): A gentle introduction to model thinking in R. It does not replace the course Random Forest workshop, but it is useful for thinking about predictors, response variables, and model diagnostics.
+
+-   [Tidymodels Learn](https://www.tidymodels.org/learn/): A broader modeling resource. This course uses `randomForest` directly, but tidymodels materials are useful for understanding resampling, recipes, model comparison, and evaluation metrics.
+
+## Environmental data products
+
+-   [AmeriFlux data variables](https://ameriflux.lbl.gov/data/aboutdata/data-variables/): Use this when interpreting flux variable names, timestamps, gap-filled variables, and quality-control conventions.
+
+-   [FLUXNET2015 dataset](https://fluxnet.org/data/fluxnet2015-dataset/): Background on the global flux dataset used in many ecosystem modeling studies.
+
+-   [Daymet overview](https://daymet.ornl.gov/overview): Background on gridded daily weather data for North America. Useful for climate summaries around Yale-Myers Forest and other point locations.
+
+-   [daymetr package](https://cran.r-project.org/web/packages/daymetr/index.html): R package for downloading Daymet data directly into R.
+
+-   [ERA5 data documentation](https://confluence.ecmwf.int/spaces/CKB/pages/76414402/ERA5+data+documentation): Reference for ERA5 climate and reanalysis variables used in Data Integration and Spatial Model Visualization.
+
+-   [WAD2M paper](https://doi.org/10.5194/essd-13-2001-2021): Background on the Wetland Area and Dynamics for Methane Modeling product used to scale spatial methane flux predictions by inundated area.
+
+## How to use resources well
+
+When you get stuck, write down three things before searching:
+
+1.  What object are you working with? For example, `data.frame`, `sf`, `SpatRaster`, model object, or Quarto document.
+2.  What operation are you trying to do? For example, join, summarize, crop, project, predict, render, or push.
+3.  What error message or unexpected result did you get?
+
+Then search using the package name and function name together, such as `terra resample`, `sf st_join`, `dplyr left_join`, `randomForest importance`, or `Quarto code chunk options`.

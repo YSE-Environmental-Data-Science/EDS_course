@@ -1,0 +1,122 @@
+---
+title: "Final Project Roadmap"
+editor:
+  mode: source
+---
+
+## The semester arc
+
+The final project asks you to build, evaluate, interpret, and spatialize a methane flux model. Each workshop creates one part of that workflow.
+
+| Workshop | Skill focus | Product you create | Final project use |
+|---|---|---|---|
+| Data Basics | climate data, summaries, plotting, functions | climate evidence brief | interpret site climate and seasonal drivers |
+| Vector Data | tower locations, spatial joins, representativeness | methane tower representation audit | decide whether training data represent your target site |
+| Raster Data | raster extraction, climate similarity, MDS | Yale-Myers tower analog table | identify comparable tower sites and model limits |
+| Data Integration | joins, temporal alignment, missingness, validation | model-ready methane table | create the dataset used for modeling |
+| Random Forest | model fitting, validation, variable selection | final random forest model and diagnostics | select and evaluate a methane flux model |
+| Sensitivity Analysis | scenarios, training-domain checks, interpretation | model-risk memo | explain where predictions are trustworthy |
+| Spatial Model Visualization | raster prediction, WAD2M scaling, unit conversion | spatial methane emissions budget | convert flux density to emissions in space |
+
+## Final project workflow
+
+1.  Define a methane flux question and study region.
+2.  Inventory candidate response data and predictors.
+3.  Compile a clean modeling table with clear join keys.
+4.  Compare model formulas and validation strategies.
+5.  Fit a final model and evaluate performance.
+6.  Test sensitivity and extrapolation risk.
+7.  Project the model in space only where all predictors can be mapped.
+8.  Scale flux density by wetland or inundated area.
+9.  Interpret results, limitations, and next data needs.
+
+## Final report checklist
+
+Your final report should include:
+
+-   research question and study region;
+-   data source table with units, spatial resolution, temporal resolution, and access notes;
+-   data integration workflow diagram or pseudocode;
+-   final modeling table description, including row count, site count, time period, and missingness;
+-   model comparison table;
+-   train/test and leave-one-site-out validation;
+-   variable importance and model interpretation;
+-   sensitivity analysis or scenario analysis;
+-   spatial prediction map if your predictors can be mapped;
+-   WAD2M or other inundation-area scaling if you estimate emissions;
+-   uncertainty or limitation statement;
+-   reproducibility statement describing code, data products, and package versions.
+
+## Standard workshop deliverable
+
+Unless a workshop gives different instructions, use this structure for short submissions:
+
+1.  One clear question.
+2.  One reproducibility note describing the data and code used.
+3.  One table.
+4.  One or two figures.
+5.  One interpretation paragraph.
+6.  One limitation or next-step paragraph.
+
+## Final project rubric
+
+| Category | What strong work shows |
+|---|---|
+| Data integration | Data sources, units, keys, missingness, and scale mismatches are documented and checked. |
+| Spatial reasoning | Vector and raster operations use appropriate CRS, resolution, extent, and extraction methods. |
+| Model development | Candidate models are compared with a clear response variable, predictors, and validation metrics. |
+| Validation | Random train/test assessment is paired with a site-aware assessment such as leave-one-site-out. |
+| Sensitivity and uncertainty | The report distinguishes model importance, sensitivity, extrapolation, and uncertainty. |
+| Spatial scaling | Flux density is converted to emissions using correct area and unit conversions. |
+| Interpretation | Results are connected to methane ecology, tower representativeness, and study-site limitations. |
+| Reproducibility | Code, data products, package needs, and generated outputs are organized and described. |
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| flux density | A rate per area, such as `g C m-2 month-1`. |
+| emissions | Total mass emitted over an area and time period, such as `Tg CH4 year-1`. |
+| inundation fraction | The fraction of a grid cell that is wetland or inundated area. |
+| WAD2M | Wetland Area and Dynamics for Methane Modeling, a monthly inundation/wetland fraction product. |
+| representativeness | How well available observations cover the conditions where predictions will be made. |
+| dissimilarity | A distance measure describing how different sites are in predictor space. |
+| extrapolation | Prediction for conditions outside the training data. |
+| RMSE | Root mean squared error; lower values indicate smaller average prediction errors. |
+| bias | Mean predicted value minus mean observed value. |
+| leave-one-site-out | A validation strategy that trains on all but one site, then tests on the held-out site. |
+| CRS | Coordinate reference system, the spatial coordinate framework for a map layer. |
+| resolution | Pixel or grid-cell size for raster data. |
+| extent | The spatial bounding box covered by a layer. |
+| static predictor | A predictor that does not change through time in the modeling table. |
+| dynamic predictor | A predictor that changes through time and must be joined by site and date. |
+
+## Troubleshooting
+
+| Symptom | Check first |
+|---|---|
+| Package will not load | Install it, restart R, and confirm the package name is spelled correctly. |
+| Quarto render fails | Read the first error, run that chunk interactively, then fix the object or package named in the error. |
+| Join creates too many rows | Check whether the join keys are unique before joining. |
+| Join creates many `NA` values | Check spelling, date classes, site IDs, and coordinate precision. |
+| Spatial layers do not overlap | Compare CRS, extent, and coordinate units. |
+| Raster stack will not combine | Check CRS, resolution, extent, and number of layers. |
+| `terra::predict()` returns `NA` | Check raster layer names, factor levels, missing values, and predictor classes. |
+| Random forest fails on a factor | Make sure prediction data use the same factor levels as the training data. |
+| Leave-one-site-out performs poorly | The model may depend on site-specific patterns or lack representative training sites. |
+| Spatial methane budget is too large | Confirm that flux density was multiplied by inundated area, not total area unless justified. |
+| WAD2M target year is unavailable | Use a mean monthly climatology from available WAD2M years and report that choice. |
+| Git push fails | Check authentication, remote URL, branch name, and whether you need to pull first. |
+
+## Reproducibility package
+
+By the end of the project, your working folder should contain enough information for someone else to understand what you did. A good final project package includes:
+
+-   raw data source notes or scripts;
+-   processed modeling table;
+-   model object or model-fitting script;
+-   validation results;
+-   sensitivity or uncertainty results;
+-   spatial prediction rasters if used;
+-   final report;
+-   README describing how to rerun the workflow.

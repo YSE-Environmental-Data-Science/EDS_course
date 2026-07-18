@@ -4,6 +4,47 @@ editor:
   mode: source
 ---
 
+## Software and packages
+
+Before starting the workshops, install R, RStudio, and the R packages used across the course. Some packages are used in only one workshop, but installing them now prevents small setup problems from interrupting class time.
+
+```{r}
+#| eval: false
+install.packages(c(
+  "curl",
+  "daymetr",
+  "dplyr",
+  "forcats",
+  "GGally",
+  "ggplot2",
+  "gtools",
+  "lubridate",
+  "randomForest",
+  "readr",
+  "sf",
+  "terra",
+  "tidyr",
+  "tidyverse",
+  "zoo"
+))
+```
+
+These packages are optional or may require additional setup:
+
+```{r}
+#| eval: false
+# ERA5 downloads require a CDS account and API key.
+install.packages("ecmwfr")
+
+# Helpful for spatial examples, but not required by the rendered workshops.
+install.packages("rnaturalearth")
+```
+
+::: {.callout-note}
+## Optional data products for final projects
+The course data package contains the files needed to run the core workshops. Final projects may require additional products, including ERA5 climate downloads and WAD2M inundation fractions. The Data Integration and Spatial Model Visualization workshops show where those products should be saved under `data/products/`.
+:::
+
 ## Data Acquisition
 
 The data files required for this course are available through the [Environmental Data Initiative](https://edirepository.org/) (EDI) repository. EDI is a data repository that hosts ecological and environmental data for the long-term. 

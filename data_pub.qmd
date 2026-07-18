@@ -40,6 +40,64 @@ If you are submitting your dataset/code to a [data repository](https://yse-envir
 
 There are many ways to create this EML file, such as programmatically through R or by filling out a web form offered by a data repository. EDI and KNB are two data repositories that have the web form option for researchers to generate their metadata file. 
 
+## What to preserve from a modeling project
+
+A methane flux modeling project produces more than one final figure. Preserve the pieces that would let someone understand, check, and reuse your workflow.
+
+| Product | Why it matters | Example |
+|---|---|---|
+| raw data source notes | documents where data came from and how it was accessed | data inventory table, download script, DOI list |
+| processed modeling table | records the exact rows and predictors used to fit the model | `methane_model_data.RDATA` or `methane_model_data.csv` |
+| model-fitting code | allows the model to be refit or audited | `.qmd` or `.R` script |
+| model object | stores the trained model used for prediction | `random_forest_model.RDATA` |
+| validation results | documents model performance and limits | train/test metrics, leave-one-site-out table |
+| sensitivity results | documents model response and extrapolation risk | scenario table, sensitivity curves |
+| spatial prediction rasters | stores mapped flux density or emissions | GeoTIFF files |
+| final report | explains the scientific question, methods, results, and interpretation | PDF, HTML, or Word export |
+| README | tells another person how to navigate the project | plain-text or Markdown file |
+
+### Metadata for model products
+
+For model-ready tables and rasters, metadata should include:
+
+1.  variable names and plain-language descriptions;
+2.  units, including any unit conversions;
+3.  spatial resolution, CRS, and extent for rasters;
+4.  temporal resolution and time period;
+5.  missing-value codes;
+6.  data sources and citations;
+7.  model formula or predictor list;
+8.  known limitations, such as extrapolation or representativeness concerns.
+
+### README template
+
+```{eval=F}
+# Project title
+
+## Question
+Briefly state the methane flux question and study region.
+
+## Files
+- data/raw/: original downloaded data or source notes
+- data/products/: processed tables, rasters, and model objects
+- scripts/ or qmd/: reproducible workflow
+- report/: final report and figures
+
+## Data sources
+List each dataset, citation, URL or DOI, access date, units, and processing notes.
+
+## Workflow
+1. Compile data
+2. Fit model
+3. Validate model
+4. Run sensitivity analysis
+5. Make spatial predictions
+6. Scale by inundation area
+
+## Reuse notes
+Describe package requirements, API keys that are needed, files that are too large to include, and any known limitations.
+```
+
 ## EDI Quick-Start Guide
 
 [EDI](https://edirepository.org/), or the Environmental Data Initiative, is a [DataONE](https://www.dataone.org/) data repository that hosts ecological and environmental data for the long-term. They have staff to support curation efforts and work closely with the [LTER Network](https://lternet.edu/) to promote best practices for [FAIR](https://www.go-fair.org/fair-principles/) (Findable, Accessible, Interoperable, and Reusable) data. 

@@ -504,6 +504,11 @@ ggplot(data = mds_scores,
        shape = "Wetland tower")
 ```
 
+::: {.callout-tip}
+## Course product
+This workshop produces a raster evidence brief and analog tower table. Use the standard deliverable shape from the Final Project Roadmap: one clear question, one reproducibility note, at least one table, one or two figures, one interpretation paragraph, and one limitation or next-step paragraph.
+:::
+
 # Assignment
 
 Create a short raster evidence brief that evaluates climate exposure and tower similarity for Yale-Myers Forest wetlands.

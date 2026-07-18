@@ -465,6 +465,11 @@ Use the objects created above to answer:
 4.  Do variable importance and sensitivity tell the same story?
 5.  What would make you cautious about using this model to estimate methane flux for Yale-Myers wetlands?
 
+::: {.callout-tip}
+## Course product
+This workshop produces a sensitivity report and model-risk memo. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on training-domain checks, scenarios, and what should not be trusted.
+:::
+
 # Assignment
 
 Prepare a short sensitivity analysis report for your final methane flux model. Include:

@@ -520,6 +520,11 @@ write.csv(fluxnet_ch4_df, "data/fluxnet_ch4.csv")
 
 S. Scheider, B. Graler, E. Pebesma, C. Stasch, 2016. Modelling spatio-temporal information generation. International Journal of Geographic Information Science, 30 (10), 1980-2008. Stasch, C., S. Scheider, E. Pebesma, W. Kuhn, 2014. Meaningful Spatial Prediction and Aggregation. Environmental Modelling & Software, 51, 149-165.
 
+::: {.callout-tip}
+## Course product
+This workshop produces a methane tower representation audit. Use the standard deliverable shape from the Final Project Roadmap: one clear question, one reproducibility note, at least one table, one or two figures, one interpretation paragraph, and one limitation or next-step paragraph.
+:::
+
 # Assignment
 
 Write a short FLUXNET CH4 representation audit. Your report should answer:

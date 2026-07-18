@@ -4,29 +4,51 @@
     "href": "resources.html",
     "title": "Additional Resources: Coding",
     "section": "",
-    "text": "Here are some additional resources that serve as a good starting point to learning more about the different types of tools involved in environmental data science. All listed resources are beginner-friendly so please feel free to check them out.",
+    "text": "This page is a guide for choosing the right resource when you get stuck. The list is intentionally curated rather than exhaustive. Start with the resource that matches your problem, then go deeper if you need more detail.",
     "crumbs": [
       "Resources",
       "Coding"
     ]
   },
   {
-    "objectID": "resources.html#gitgithub",
-    "href": "resources.html#gitgithub",
+    "objectID": "resources.html#start-here",
+    "href": "resources.html#start-here",
     "title": "Additional Resources: Coding",
-    "section": "Git/GitHub",
-    "text": "Git/GitHub\n\nCollaborative Coding with GitHub: An introductory workshop on how to use Git with GitHub and RStudio. This workshop was created by the LTER Network for their synthesis working groups but remains a great resource for all beginners, especially those who are hesitant to use the command line. There are also lessons on advanced Git/GitHub topics for those looking to further improve their skills.\nReproducible Approaches to Arctic Research Using R: A course designed by the NCEAS Learning Hub to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the Introduction to Git and GitHub and Collaborating with Git and GitHub lessons, where the Git workflow and Git commands are explained thoroughly.\nHappy Git and GitHub for the userR: A comprehensive guide by Jenny Bryan on using Git, GitHub, and RStudio that covers everything from the basics to the more intricate topics. This book has a dedicated page for troubleshooting common problems a user might run into while setting up their computer.",
+    "section": "Start here",
+    "text": "Start here\n\n\n\nIf you need help with…\nStart with…\nUseful for\n\n\n\n\nlearning R and tidy data\nR for Data Science\nData Basics, Data Integration\n\n\ndplyr, tidyr, or ggplot2 syntax\nPosit Cheatsheets\nAll workshops\n\n\nGit or GitHub setup\nHappy Git and GitHub for the useR\nSetup, collaboration\n\n\nGitHub collaboration\nCollaborative Coding with GitHub\nGroup final projects\n\n\nvector and raster concepts\nIntroduction to Geospatial Concepts\nVector Data, Raster Data\n\n\nspatial data in R\nIntroduction to Geospatial Raster and Vector Data with R\nVector Data, Raster Data, Spatial Visualization\n\n\nwriting a report\nQuarto Guide\nFinal project reports\n\n\nmodel interpretation\nrandomForest package manual\nRandom Forest, Sensitivity Analysis",
     "crumbs": [
       "Resources",
       "Coding"
     ]
   },
   {
-    "objectID": "resources.html#tidyverse",
-    "href": "resources.html#tidyverse",
+    "objectID": "resources.html#what-to-use-when-you-are-stuck",
+    "href": "resources.html#what-to-use-when-you-are-stuck",
     "title": "Additional Resources: Coding",
-    "section": "Tidyverse",
-    "text": "Tidyverse\n\nCoding in the Tidyverse: A workshop on using dplyr, tidyr, and ggplot2, which are R packages that are part of the Tidyverse. The workshop covers the fundamental tools for tidying data in R, for example, wrangling, summarizing, reshaping, joining, and visualizing data. This workshop was created by the LTER Network for their synthesis working groups.\nReproducible Approaches to Arctic Research Using R: A course designed by the NCEAS Learning Hub to teach researchers techniques and tools to make their work more reproducible. Particularly relevant are the Data Modeling Essentials and Cleaning and Wrangling Data lessons, where the principles of tidy data and basic Tidyverse functions are explained.\nR for Data Science: An online textbook by written by Hadley Wickham, Mine Çetinkaya-Rundel, and Garrett Grolemund that goes over the entire Tidyverse workflow from start to finish.\nPosit Cheatsheets: A collection of cheatsheets created by Posit (formerly RStudio Inc.) to serve as helpful reminders on how to use the most important functions from a wide array of R packages. Here are the cheatsheets for dplyr, tidyr, and ggplot2.",
+    "section": "What to use when you are stuck",
+    "text": "What to use when you are stuck\n\n\n\nProblem\nResource\n\n\n\n\n“I cannot push to GitHub.”\nHappy Git troubleshooting\n\n\n“I do not understand joins.”\nR4DS joins\n\n\n“My data are wide when they should be long.”\nR4DS data tidying\n\n\n“My plot is not showing what I expect.”\nR4DS data visualization and the ggplot2 cheatsheet\n\n\n“My vector and raster layers do not line up.”\nData Carpentry geospatial concepts and terra spatial data tutorial\n\n\n“I need to crop, mask, resample, or project rasters.”\nterra reference site\n\n\n“I need to buffer, join, or measure vector geometries.”\nsf reference site and sf cheatsheet\n\n\n“I do not know what a flux variable means.”\nAmeriFlux data variables\n\n\n“I need climate rasters for a final project.”\nERA5 documentation\n\n\n“I need daily climate for a point location.”\nDaymet overview\n\n\n“I need wetland/inundation area for methane scaling.”\nWAD2M paper",
+    "crumbs": [
+      "Resources",
+      "Coding"
+    ]
+  },
+  {
+    "objectID": "resources.html#git-and-github",
+    "href": "resources.html#git-and-github",
+    "title": "Additional Resources: Coding",
+    "section": "Git and GitHub",
+    "text": "Git and GitHub\n\nCollaborative Coding with GitHub: A beginner-friendly workshop on using Git with GitHub and RStudio. This is especially useful for group work because it emphasizes workflows, conflicts, branches, issues, and project documentation.\nHappy Git and GitHub for the useR: A comprehensive guide to Git, GitHub, and RStudio. Use the troubleshooting page when authentication, pushing, pulling, or remotes get weird.\nNCEAS Introduction to Git and GitHub and Collaborating with Git and GitHub: Clear lesson-style materials for learning Git commands and collaboration patterns.",
+    "crumbs": [
+      "Resources",
+      "Coding"
+    ]
+  },
+  {
+    "objectID": "resources.html#tidyverse-and-data-wrangling",
+    "href": "resources.html#tidyverse-and-data-wrangling",
+    "title": "Additional Resources: Coding",
+    "section": "Tidyverse and data wrangling",
+    "text": "Tidyverse and data wrangling\n\nR for Data Science: The best general-purpose reference for tidy data workflows. Particularly useful sections include data visualization, data transformation, joins, tidying, functions, and Quarto.\nCoding in the Tidyverse: A workshop covering dplyr, tidyr, and ggplot2 for wrangling, summarizing, reshaping, joining, and visualizing data.\nPosit Cheatsheets: Quick references for common package syntax. Keep the dplyr, tidyr, and ggplot2 cheatsheets close while working through the course.\nNCEAS Cleaning and Wrangling Data: A lesson on tidy data and wrangling that pairs well with Data Basics and Data Integration.",
     "crumbs": [
       "Resources",
       "Coding"
@@ -36,8 +58,52 @@
     "objectID": "resources.html#spatial-data",
     "href": "resources.html#spatial-data",
     "title": "Additional Resources: Coding",
-    "section": "Spatial Data",
-    "text": "Spatial Data\n\nIntroduction to Geospatial Concepts: A workshop from the Data Carpentry on core geospatial concepts such as raster data, vector data, and coordinate reference systems. This workshop is a prerequisite to their Introduction to Geospatial Raster and Vector Data with R workshop and is a great resource for reviewing the different kinds of geospatial data.\nIntroduction to Geospatial Raster and Vector Data with R: A workshop from the Data Carpentry that focuses on manipulating and plotting raster and vector data using the terra, sf, and ggplot2 R packages. The functions and operations involved in a basic geospatial data workflow are taught in this workshop.\nNCEAS coreR for Delta Science Program: A course designed by the NCEAS Learning Hub to teach researchers techniques and tools to make their work more reproducible. Particularly relevant is the Working with Spatial Data lesson that works with the sf, dplyr, ggplot2, and leaflet R packages to manipulate and visualize vector data by following the Tidyverse principles. Interactive maps are also covered.\nSpatial manipulation with sf cheatsheet: A handy cheatsheet that serves as a reminder on how to use common functions from the sf R package.\nSpatial data with terra: A tutorial showcasing functions from the terra R package to manipulate both raster and vector geospatial data. The tutorial was written by the team behind the development of terra.",
+    "section": "Spatial data",
+    "text": "Spatial data\n\nIntroduction to Geospatial Concepts: A conceptual introduction to raster data, vector data, coordinate reference systems, spatial resolution, and extent.\nIntroduction to Geospatial Raster and Vector Data with R: A practical workshop for manipulating and plotting raster and vector data with terra, sf, and ggplot2.\nsf reference site: Function documentation and examples for vector data. Use this when working with points, polygons, joins, intersections, buffers, and distances.\nSpatial manipulation with sf cheatsheet: A quick reminder sheet for common sf operations.\nterra reference site and Spatial Data with terra: Documentation and tutorials for raster workflows such as cropping, masking, projecting, resampling, extracting, stacking, and predicting.\nNCEAS Working with Spatial Data: A lesson using sf, dplyr, ggplot2, and leaflet to manipulate and visualize vector data.",
+    "crumbs": [
+      "Resources",
+      "Coding"
+    ]
+  },
+  {
+    "objectID": "resources.html#reporting-and-reproducibility",
+    "href": "resources.html#reporting-and-reproducibility",
+    "title": "Additional Resources: Coding",
+    "section": "Reporting and reproducibility",
+    "text": "Reporting and reproducibility\n\nQuarto Guide: The main reference for writing reproducible reports, websites, slides, and manuscripts with code and narrative text together.\nQuarto Markdown Basics: Use this when formatting headings, lists, links, figures, tables, and code blocks.\nQuarto Computations: Using R: Use this when controlling code output, messages, warnings, figures, and execution options in .qmd reports.\nR4DS Quarto chapter: A friendly introduction to using Quarto for reproducible data analysis.",
+    "crumbs": [
+      "Resources",
+      "Coding"
+    ]
+  },
+  {
+    "objectID": "resources.html#modeling-and-interpretation",
+    "href": "resources.html#modeling-and-interpretation",
+    "title": "Additional Resources: Coding",
+    "section": "Modeling and interpretation",
+    "text": "Modeling and interpretation\n\nrandomForest package manual: Reference for randomForest(), predict(), importance(), and varImpPlot(). Use this when checking arguments such as ntree, mtry, and importance.\nR4DS model basics: A gentle introduction to model thinking in R. It does not replace the course Random Forest workshop, but it is useful for thinking about predictors, response variables, and model diagnostics.\nTidymodels Learn: A broader modeling resource. This course uses randomForest directly, but tidymodels materials are useful for understanding resampling, recipes, model comparison, and evaluation metrics.",
+    "crumbs": [
+      "Resources",
+      "Coding"
+    ]
+  },
+  {
+    "objectID": "resources.html#environmental-data-products",
+    "href": "resources.html#environmental-data-products",
+    "title": "Additional Resources: Coding",
+    "section": "Environmental data products",
+    "text": "Environmental data products\n\nAmeriFlux data variables: Use this when interpreting flux variable names, timestamps, gap-filled variables, and quality-control conventions.\nFLUXNET2015 dataset: Background on the global flux dataset used in many ecosystem modeling studies.\nDaymet overview: Background on gridded daily weather data for North America. Useful for climate summaries around Yale-Myers Forest and other point locations.\ndaymetr package: R package for downloading Daymet data directly into R.\nERA5 data documentation: Reference for ERA5 climate and reanalysis variables used in Data Integration and Spatial Model Visualization.\nWAD2M paper: Background on the Wetland Area and Dynamics for Methane Modeling product used to scale spatial methane flux predictions by inundated area.",
+    "crumbs": [
+      "Resources",
+      "Coding"
+    ]
+  },
+  {
+    "objectID": "resources.html#how-to-use-resources-well",
+    "href": "resources.html#how-to-use-resources-well",
+    "title": "Additional Resources: Coding",
+    "section": "How to use resources well",
+    "text": "How to use resources well\nWhen you get stuck, write down three things before searching:\n\nWhat object are you working with? For example, data.frame, sf, SpatRaster, model object, or Quarto document.\nWhat operation are you trying to do? For example, join, summarize, crop, project, predict, render, or push.\nWhat error message or unexpected result did you get?\n\nThen search using the package name and function name together, such as terra resample, sf st_join, dplyr left_join, randomForest importance, or Quarto code chunk options.",
     "crumbs": [
       "Resources",
       "Coding"
@@ -48,7 +114,40 @@
     "href": "data_repos.html",
     "title": "Additional Resources: Data Repositories",
     "section": "",
-    "text": "Here is a partial list of data repositories where you can find datasets on nearly every subject in environmental science. This list is credited to the LTER Network’s Synthesis Skills for Early Career Researchers (SSECR) course and Ecological Data Synthesis: A Primer on Essential Methods course. The data repository’s associated R package is listed as well. The R packages can be installed from either CRAN or GitHub.\n\n\n\nName\nDescription\nR Package\n\n\n\n\nAmeriFlux\nProvides data on carbon, water, and energy fluxes in ecosystems across the Americas, aiding in climate change and carbon cycle research.\namerifluxr\n\n\nDataONE\nA network of around 60 data repositories. Aggregates environmental and ecological data from global sources, focusing on biodiversity, climate, and ecosystem research.\ndataone\n\n\nDaymet\nDaymet provides long-term, continuous, gridded estimates of daily weather and climatology variables for North America.\ndaymetr\n\n\nEDI\nContains a wide range of ecological and environmental datasets, including long-term observational data, experimental results, and field studies from diverse ecosystems.\nEDIutils\n\n\nEES-DIVE\nThe Environmental System Science Data Infrastructure for a Virtual Ecosystem (ESS-DIVE) includes a variety of observational, experimental, modeling and other data products from a wide range of ecological and urban systems.\n–\n\n\nGBIF\nThe Global Biodiversity Information Facility (GBIF) aggregates global species occurrence data and biodiversity records, supporting research in species distribution and conservation.\nrgbif\n\n\nGoogle Earth Engine\nGoogle Earth Engine is a cloud-based geospatial analysis platform that provides access to vast amounts of satellite imagery and environmental data for monitoring and understanding changes in the Earth’s surface.\nrgee\n\n\nKNB\nAn open-source data repository hosting international ecological and environmental research. A member of the DataOne network.\ndataone\n\n\nMicrosoft Planetary Computer\nThe Microsoft Planetary Computer is a cloud-based platform that combines global environmental datasets with advanced analytical tools to support sustainability and ecological research.\nrstac\n\n\nNASA\nProvides data on earth science, space exploration, and climate, including satellite imagery and observational data for both terrestrial and extraterrestrial studies. Nice GUI-based data download via AppEEARS.\nnasadata\n\n\nNCBI\nHosts genomic and biological data, including DNA, RNA, and protein sequences, supporting genomics and molecular biology research.\nrentrez\n\n\nNEON\nProvides ecological data from U.S. field sites, covering biodiversity, ecosystems, and environmental changes, supporting large-scale ecological research.\nneonUtilities\n\n\nNOAA\nOffers meteorological, oceanographic, and climate data, essential for understanding atmospheric conditions, marine environments, and long-term climate trends.\nGitHub: EpiNOAA-R\n\n\nOpen Traits Network\nWhile not a repository per se, the Open Traits Network has compiled an extensive lists of repositories for trait data. Check out their repository inventory for trait data\n–\n\n\nPhenoCam Network\nA network of digital cameras that tracks vegetation phenology through images across North America and around the world.\nphenocamapi\n\n\nUS Census Bureau\nCensus data containing information about education, employment, health, and housing across America.\ntidycensus\n\n\nUSGS\nHosts data on geology, hydrology, biology, and geography, including topographical maps and natural resource assessments.\ndataRetrieval\n\n\nUS National Park Service\nProvides geospatial and tabular data products, which includes national park boundaries, vegetation maps, geology maps, air quality, and water quality.\nGitHub: NPSutils",
+    "text": "This page lists data repositories and products that can support environmental data science projects. For this course, use it as a final-project planning guide: start with the response variable you want to model, then identify climate, vegetation, soil, land-cover, wetland-area, and validation data that match your study region and time period.\nThis list builds from resources shared by the LTER Network’s Synthesis Skills for Early Career Researchers course and Ecological Data Synthesis: A Primer on Essential Methods course.",
+    "crumbs": [
+      "Resources",
+      "Data Repositories"
+    ]
+  },
+  {
+    "objectID": "data_repos.html#start-with-your-final-project-need",
+    "href": "data_repos.html#start-with-your-final-project-need",
+    "title": "Additional Resources: Data Repositories",
+    "section": "Start with your final project need",
+    "text": "Start with your final project need\n\n\n\nFinal project need\nGood places to start\nNotes\n\n\n\n\nmethane, carbon, water, or energy fluxes\nAmeriFlux, FLUXNET, NEON\nCheck variable names, timestamps, gap filling, units, and site metadata.\n\n\ndaily point climate\nDaymet\nUseful for U.S. and North American site climate summaries.\n\n\nglobal monthly climate or reanalysis\nERA5, NOAA\nERA5 works well for gridded predictor rasters but requires careful unit conversion.\n\n\nvegetation index or land cover\nNASA AppEEARS, Google Earth Engine, Microsoft Planetary Computer\nUseful for NDVI, EVI, MODIS land cover, and other remote sensing products.\n\n\nwetland or inundation area\nWAD2M, NASA\nNeeded when converting methane flux density to emissions.\n\n\nsoils, elevation, hydrology, or disturbance\nUSGS, EES-DIVE, NEON\nUseful for static site predictors and interpretation.\n\n\necological datasets with metadata\nEDI, KNB, DataONE\nGood sources for reusable ecological datasets and examples of published metadata.\n\n\nbiodiversity or trait context\nGBIF, Open Traits Network\nUseful when projects include species distributions, plant traits, or ecosystem context.",
+    "crumbs": [
+      "Resources",
+      "Data Repositories"
+    ]
+  },
+  {
+    "objectID": "data_repos.html#repository-table",
+    "href": "data_repos.html#repository-table",
+    "title": "Additional Resources: Data Repositories",
+    "section": "Repository table",
+    "text": "Repository table\n\n\n\nName\nBest use in this course\nR package or access route\n\n\n\n\nAmeriFlux\nTower flux observations, site metadata, and variable conventions for carbon, water, energy, and methane studies.\namerifluxr\n\n\nFLUXNET\nGlobal flux tower data and background for cross-site modeling.\nwebsite download\n\n\nNEON\nU.S. ecological observations, meteorology, remote sensing, and site metadata.\nneonUtilities\n\n\nDaymet\nDaily gridded weather for North America, especially point-based climate summaries.\ndaymetr\n\n\nERA5 Climate Data Store\nGlobal reanalysis predictors such as precipitation, temperature, and vapor pressure variables.\necmwfr\n\n\nNASA AppEEARS\nPoint or area downloads for MODIS, VIIRS, vegetation indices, land cover, and other remote-sensing products.\nwebsite download\n\n\nNASA Open Data\nNASA-hosted environmental data products, including examples of methane upscaling products.\nwebsite/API\n\n\nWAD2M\nMonthly wetland/inundation fraction for scaling methane flux density to emissions.\ndata product download\n\n\nGoogle Earth Engine\nCloud analysis of satellite imagery and large gridded datasets.\nrgee\n\n\nMicrosoft Planetary Computer\nCloud-hosted environmental and remote-sensing datasets.\nrstac\n\n\nEDI\nLong-term ecological datasets and examples of well-documented data packages.\nEDIutils\n\n\nKNB\nEcological and environmental data packages with metadata and DOIs.\ndataone\n\n\nDataONE\nSearch across many environmental data repositories.\ndataone\n\n\nEES-DIVE\nEnvironmental system science datasets, model inputs, and data products.\nwebsite/API\n\n\nGBIF\nSpecies occurrence and biodiversity records.\nrgbif\n\n\nOpen Traits Network\nTrait dataset inventory and links to trait repositories.\nvaries\n\n\nPhenoCam Network\nCamera-derived vegetation phenology data.\nphenocamapi\n\n\nNOAA OneStop\nWeather, climate, oceanographic, and atmospheric data.\nvaries\n\n\nUSGS\nHydrology, geology, topography, land cover, and other environmental data.\ndataRetrieval\n\n\nUS National Park Service\nPark boundaries, vegetation, geology, air quality, and water quality data.\nNPSutils",
+    "crumbs": [
+      "Resources",
+      "Data Repositories"
+    ]
+  },
+  {
+    "objectID": "data_repos.html#before-using-a-dataset",
+    "href": "data_repos.html#before-using-a-dataset",
+    "title": "Additional Resources: Data Repositories",
+    "section": "Before using a dataset",
+    "text": "Before using a dataset\nFor each dataset you plan to use, record:\n\nThe citation or URL.\nThe variable names and units.\nThe spatial resolution and coordinate reference system.\nThe temporal resolution and years available.\nWhether the data are raw, gap-filled, modeled, or remotely sensed.\nThe license or data-use policy.\nAny processing or unit conversion needed before modeling.\n\nThis table becomes part of your final project methods section.",
     "crumbs": [
       "Resources",
       "Data Repositories"
@@ -57,6 +156,17 @@
   {
     "objectID": "random_forest.html",
     "href": "random_forest.html",
+    "title": "Random Forest Models: Predicting Methane Flux",
+    "section": "",
+    "text": "In Data Integration, we built the kind of table needed for methane flux modeling: one row per site-month, with methane flux as the response and climate, vegetation, and ecosystem variables as candidate predictors.\nIn this workshop, we will ask:\n\nCan we use climate, vegetation, and ecosystem predictors to estimate monthly methane flux, and how do we know whether the model is useful?\n\nBy the end of this workshop, you will be able to:\n\nIdentify a response variable and candidate predictors.\nPrepare a model-ready table for random forest regression.\nCompare candidate random forest models.\nEvaluate train and test performance using RMSE, MAE, R-squared, and bias.\nInterpret variable importance without treating it as causation.\nCompare random row splits with leave-one-site-out assessment.\nBuild a final model by selecting the best predictor from each category.\nSave a final model object for sensitivity analysis and spatial prediction.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"GGally\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(GGally)",
+    "crumbs": [
+      "Machine Learning in R",
+      "Random Forest"
+    ]
+  },
+  {
+    "objectID": "random_forest.html#from-integrated-data-to-prediction",
+    "href": "random_forest.html#from-integrated-data-to-prediction",
     "title": "Random Forest Models: Predicting Methane Flux",
     "section": "",
     "text": "In Data Integration, we built the kind of table needed for methane flux modeling: one row per site-month, with methane flux as the response and climate, vegetation, and ecosystem variables as candidate predictors.\nIn this workshop, we will ask:\n\nCan we use climate, vegetation, and ecosystem predictors to estimate monthly methane flux, and how do we know whether the model is useful?\n\nBy the end of this workshop, you will be able to:\n\nIdentify a response variable and candidate predictors.\nPrepare a model-ready table for random forest regression.\nCompare candidate random forest models.\nEvaluate train and test performance using RMSE, MAE, R-squared, and bias.\nInterpret variable importance without treating it as causation.\nCompare random row splits with leave-one-site-out assessment.\nBuild a final model by selecting the best predictor from each category.\nSave a final model object for sensitivity analysis and spatial prediction.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"GGally\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(GGally)",
@@ -166,14 +276,146 @@
     ]
   },
   {
-    "objectID": "sensitivity.html",
-    "href": "sensitivity.html",
-    "title": "Sensitivity Analysis: Stress Testing a Methane Flux Model",
+    "objectID": "final_project.html",
+    "href": "final_project.html",
+    "title": "Final Project Roadmap",
     "section": "",
-    "text": "In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where the model is being asked to extrapolate beyond the data it learned from.\nIn this workshop, we will ask:\n\nWhat does our methane model believe about climate, vegetation, and ecosystem controls, and can we trust those beliefs for Yale-Myers-like wetland conditions?\n\nBy the end of this workshop, you will be able to:\n\nIdentify which predictors are used by a fitted random forest model.\nSummarize the training conditions used to fit the model.\nBuild one-at-a-time sensitivity curves.\nCompare realistic methane flux scenarios.\nFlag scenarios that fall outside the model’s training range.\nBuild two-way sensitivity heatmaps to explore interactions.\nCompare sensitivity results with random forest variable importance.\nWrite a short model-risk interpretation for final project reporting.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(ggplot2)",
+    "text": "The final project asks you to build, evaluate, interpret, and spatialize a methane flux model. Each workshop creates one part of that workflow.\n\n\n\n\n\n\n\n\n\nWorkshop\nSkill focus\nProduct you create\nFinal project use\n\n\n\n\nData Basics\nclimate data, summaries, plotting, functions\nclimate evidence brief\ninterpret site climate and seasonal drivers\n\n\nVector Data\ntower locations, spatial joins, representativeness\nmethane tower representation audit\ndecide whether training data represent your target site\n\n\nRaster Data\nraster extraction, climate similarity, MDS\nYale-Myers tower analog table\nidentify comparable tower sites and model limits\n\n\nData Integration\njoins, temporal alignment, missingness, validation\nmodel-ready methane table\ncreate the dataset used for modeling\n\n\nRandom Forest\nmodel fitting, validation, variable selection\nfinal random forest model and diagnostics\nselect and evaluate a methane flux model\n\n\nSensitivity Analysis\nscenarios, training-domain checks, interpretation\nmodel-risk memo\nexplain where predictions are trustworthy\n\n\nSpatial Model Visualization\nraster prediction, WAD2M scaling, unit conversion\nspatial methane emissions budget\nconvert flux density to emissions in space",
     "crumbs": [
-      "Machine Learning in R",
-      "Sensitivity Analysis"
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#the-semester-arc",
+    "href": "final_project.html#the-semester-arc",
+    "title": "Final Project Roadmap",
+    "section": "",
+    "text": "The final project asks you to build, evaluate, interpret, and spatialize a methane flux model. Each workshop creates one part of that workflow.\n\n\n\n\n\n\n\n\n\nWorkshop\nSkill focus\nProduct you create\nFinal project use\n\n\n\n\nData Basics\nclimate data, summaries, plotting, functions\nclimate evidence brief\ninterpret site climate and seasonal drivers\n\n\nVector Data\ntower locations, spatial joins, representativeness\nmethane tower representation audit\ndecide whether training data represent your target site\n\n\nRaster Data\nraster extraction, climate similarity, MDS\nYale-Myers tower analog table\nidentify comparable tower sites and model limits\n\n\nData Integration\njoins, temporal alignment, missingness, validation\nmodel-ready methane table\ncreate the dataset used for modeling\n\n\nRandom Forest\nmodel fitting, validation, variable selection\nfinal random forest model and diagnostics\nselect and evaluate a methane flux model\n\n\nSensitivity Analysis\nscenarios, training-domain checks, interpretation\nmodel-risk memo\nexplain where predictions are trustworthy\n\n\nSpatial Model Visualization\nraster prediction, WAD2M scaling, unit conversion\nspatial methane emissions budget\nconvert flux density to emissions in space",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#final-project-workflow",
+    "href": "final_project.html#final-project-workflow",
+    "title": "Final Project Roadmap",
+    "section": "Final project workflow",
+    "text": "Final project workflow\n\nDefine a methane flux question and study region.\nInventory candidate response data and predictors.\nCompile a clean modeling table with clear join keys.\nCompare model formulas and validation strategies.\nFit a final model and evaluate performance.\nTest sensitivity and extrapolation risk.\nProject the model in space only where all predictors can be mapped.\nScale flux density by wetland or inundated area.\nInterpret results, limitations, and next data needs.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#final-report-checklist",
+    "href": "final_project.html#final-report-checklist",
+    "title": "Final Project Roadmap",
+    "section": "Final report checklist",
+    "text": "Final report checklist\nYour final report should include:\n\nresearch question and study region;\ndata source table with units, spatial resolution, temporal resolution, and access notes;\ndata integration workflow diagram or pseudocode;\nfinal modeling table description, including row count, site count, time period, and missingness;\nmodel comparison table;\ntrain/test and leave-one-site-out validation;\nvariable importance and model interpretation;\nsensitivity analysis or scenario analysis;\nspatial prediction map if your predictors can be mapped;\nWAD2M or other inundation-area scaling if you estimate emissions;\nuncertainty or limitation statement;\nreproducibility statement describing code, data products, and package versions.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#standard-workshop-deliverable",
+    "href": "final_project.html#standard-workshop-deliverable",
+    "title": "Final Project Roadmap",
+    "section": "Standard workshop deliverable",
+    "text": "Standard workshop deliverable\nUnless a workshop gives different instructions, use this structure for short submissions:\n\nOne clear question.\nOne reproducibility note describing the data and code used.\nOne table.\nOne or two figures.\nOne interpretation paragraph.\nOne limitation or next-step paragraph.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#final-project-rubric",
+    "href": "final_project.html#final-project-rubric",
+    "title": "Final Project Roadmap",
+    "section": "Final project rubric",
+    "text": "Final project rubric\n\n\n\n\n\n\n\nCategory\nWhat strong work shows\n\n\n\n\nData integration\nData sources, units, keys, missingness, and scale mismatches are documented and checked.\n\n\nSpatial reasoning\nVector and raster operations use appropriate CRS, resolution, extent, and extraction methods.\n\n\nModel development\nCandidate models are compared with a clear response variable, predictors, and validation metrics.\n\n\nValidation\nRandom train/test assessment is paired with a site-aware assessment such as leave-one-site-out.\n\n\nSensitivity and uncertainty\nThe report distinguishes model importance, sensitivity, extrapolation, and uncertainty.\n\n\nSpatial scaling\nFlux density is converted to emissions using correct area and unit conversions.\n\n\nInterpretation\nResults are connected to methane ecology, tower representativeness, and study-site limitations.\n\n\nReproducibility\nCode, data products, package needs, and generated outputs are organized and described.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#glossary",
+    "href": "final_project.html#glossary",
+    "title": "Final Project Roadmap",
+    "section": "Glossary",
+    "text": "Glossary\n\n\n\n\n\n\n\nTerm\nMeaning\n\n\n\n\nflux density\nA rate per area, such as g C m-2 month-1.\n\n\nemissions\nTotal mass emitted over an area and time period, such as Tg CH4 year-1.\n\n\ninundation fraction\nThe fraction of a grid cell that is wetland or inundated area.\n\n\nWAD2M\nWetland Area and Dynamics for Methane Modeling, a monthly inundation/wetland fraction product.\n\n\nrepresentativeness\nHow well available observations cover the conditions where predictions will be made.\n\n\ndissimilarity\nA distance measure describing how different sites are in predictor space.\n\n\nextrapolation\nPrediction for conditions outside the training data.\n\n\nRMSE\nRoot mean squared error; lower values indicate smaller average prediction errors.\n\n\nbias\nMean predicted value minus mean observed value.\n\n\nleave-one-site-out\nA validation strategy that trains on all but one site, then tests on the held-out site.\n\n\nCRS\nCoordinate reference system, the spatial coordinate framework for a map layer.\n\n\nresolution\nPixel or grid-cell size for raster data.\n\n\nextent\nThe spatial bounding box covered by a layer.\n\n\nstatic predictor\nA predictor that does not change through time in the modeling table.\n\n\ndynamic predictor\nA predictor that changes through time and must be joined by site and date.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#troubleshooting",
+    "href": "final_project.html#troubleshooting",
+    "title": "Final Project Roadmap",
+    "section": "Troubleshooting",
+    "text": "Troubleshooting\n\n\n\n\n\n\n\nSymptom\nCheck first\n\n\n\n\nPackage will not load\nInstall it, restart R, and confirm the package name is spelled correctly.\n\n\nQuarto render fails\nRead the first error, run that chunk interactively, then fix the object or package named in the error.\n\n\nJoin creates too many rows\nCheck whether the join keys are unique before joining.\n\n\nJoin creates many NA values\nCheck spelling, date classes, site IDs, and coordinate precision.\n\n\nSpatial layers do not overlap\nCompare CRS, extent, and coordinate units.\n\n\nRaster stack will not combine\nCheck CRS, resolution, extent, and number of layers.\n\n\nterra::predict() returns NA\nCheck raster layer names, factor levels, missing values, and predictor classes.\n\n\nRandom forest fails on a factor\nMake sure prediction data use the same factor levels as the training data.\n\n\nLeave-one-site-out performs poorly\nThe model may depend on site-specific patterns or lack representative training sites.\n\n\nSpatial methane budget is too large\nConfirm that flux density was multiplied by inundated area, not total area unless justified.\n\n\nWAD2M target year is unavailable\nUse a mean monthly climatology from available WAD2M years and report that choice.\n\n\nGit push fails\nCheck authentication, remote URL, branch name, and whether you need to pull first.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "final_project.html#reproducibility-package",
+    "href": "final_project.html#reproducibility-package",
+    "title": "Final Project Roadmap",
+    "section": "Reproducibility package",
+    "text": "Reproducibility package\nBy the end of the project, your working folder should contain enough information for someone else to understand what you did. A good final project package includes:\n\nraw data source notes or scripts;\nprocessed modeling table;\nmodel object or model-fitting script;\nvalidation results;\nsensitivity or uncertainty results;\nspatial prediction rasters if used;\nfinal report;\nREADME describing how to rerun the workflow.",
+    "crumbs": [
+      "Resources",
+      "Final Project Roadmap"
+    ]
+  },
+  {
+    "objectID": "sf.html",
+    "href": "sf.html",
+    "title": "Vector Data: Mapping Gaps in the Global Methane Tower Network",
+    "section": "",
+    "text": "Models are only as good as the places where we collect data. FLUXNET towers provide direct measurements of ecosystem-atmosphere exchange, and FLUXNET-CH4 towers are especially important for understanding methane emissions from natural ecosystems. But the tower network is not evenly distributed across the planet.\nIn this workshop, we will use vector data to ask:\n\nIf FLUXNET CH4 towers are used to understand natural methane emissions, where are we observing the planet, and where are we guessing?\n\nBy the end of the workshop, you will be able to:\n\nConvert tabular coordinates into simple feature objects.\nInspect geometries and coordinate reference systems.\nTransform vector data into an appropriate projected CRS.\nMeasure distances among point locations.\nUse country and continent polygons from rnaturalearth.\nUse spatial predicates and spatial joins to count towers inside regions.\nCalculate polygon area and tower density.\nEvaluate basic representativeness of the CH4 tower network.\nWrite spatial outputs for later workshops.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"rnaturalearth\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(sf)\nlibrary(rnaturalearth)\nlibrary(tidyverse)\nlibrary(ggplot2)",
+    "crumbs": [
+      "Introduction to R",
+      "Vector Data"
+    ]
+  },
+  {
+    "objectID": "sf.html#mapping-methane-observations",
+    "href": "sf.html#mapping-methane-observations",
+    "title": "Vector Data: Mapping Gaps in the Global Methane Tower Network",
+    "section": "",
+    "text": "Models are only as good as the places where we collect data. FLUXNET towers provide direct measurements of ecosystem-atmosphere exchange, and FLUXNET-CH4 towers are especially important for understanding methane emissions from natural ecosystems. But the tower network is not evenly distributed across the planet.\nIn this workshop, we will use vector data to ask:\n\nIf FLUXNET CH4 towers are used to understand natural methane emissions, where are we observing the planet, and where are we guessing?\n\nBy the end of the workshop, you will be able to:\n\nConvert tabular coordinates into simple feature objects.\nInspect geometries and coordinate reference systems.\nTransform vector data into an appropriate projected CRS.\nMeasure distances among point locations.\nUse country and continent polygons from rnaturalearth.\nUse spatial predicates and spatial joins to count towers inside regions.\nCalculate polygon area and tower density.\nEvaluate basic representativeness of the CH4 tower network.\nWrite spatial outputs for later workshops.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"rnaturalearth\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(sf)\nlibrary(rnaturalearth)\nlibrary(tidyverse)\nlibrary(ggplot2)",
+    "crumbs": [
+      "Introduction to R",
+      "Vector Data"
+    ]
+  },
+  {
+    "objectID": "terra.html",
+    "href": "terra.html",
+    "title": "Raster Data: Climate Exposure and Tower Similarity",
+    "section": "",
+    "text": "Vector data told us where FLUXNET CH4 towers are located. Raster data lets us ask what environmental conditions surround those towers. In this workshop, we will use gridded climate layers to evaluate the climate exposure represented by methane tower sites and to identify towers that may be useful analogs for thinking about methane fluxes in Yale-Myers Forest wetlands.\nWe will ask:\n\nWhat climate conditions do FLUXNET CH4 towers represent, and which towers are most similar to Yale-Myers Forest?\n\nBy the end of this workshop, you will be able to:\n\nRead and inspect raster data with terra.\nUnderstand SpatRaster and SpatVector objects.\nCrop and mask rasters to an area of interest.\nUse raster algebra to create new climate layers.\nSummarize raster values globally and by polygon zones.\nExtract raster values to point locations.\nCompare tower-site climate exposure to gridded climate space.\nCalculate environmental dissimilarity among tower sites.\nUse multidimensional scaling (MDS) to visualize which towers are more or less similar.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"terra\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"rnaturalearth\")\n\n\n\n\n\nlibrary(terra)\nlibrary(tidyverse)\nlibrary(rnaturalearth)\nlibrary(sf)",
+    "crumbs": [
+      "Introduction to R",
+      "Raster Data"
+    ]
+  },
+  {
+    "objectID": "terra.html#mapping-climate-surfaces",
+    "href": "terra.html#mapping-climate-surfaces",
+    "title": "Raster Data: Climate Exposure and Tower Similarity",
+    "section": "",
+    "text": "Vector data told us where FLUXNET CH4 towers are located. Raster data lets us ask what environmental conditions surround those towers. In this workshop, we will use gridded climate layers to evaluate the climate exposure represented by methane tower sites and to identify towers that may be useful analogs for thinking about methane fluxes in Yale-Myers Forest wetlands.\nWe will ask:\n\nWhat climate conditions do FLUXNET CH4 towers represent, and which towers are most similar to Yale-Myers Forest?\n\nBy the end of this workshop, you will be able to:\n\nRead and inspect raster data with terra.\nUnderstand SpatRaster and SpatVector objects.\nCrop and mask rasters to an area of interest.\nUse raster algebra to create new climate layers.\nSummarize raster values globally and by polygon zones.\nExtract raster values to point locations.\nCompare tower-site climate exposure to gridded climate space.\nCalculate environmental dissimilarity among tower sites.\nUse multidimensional scaling (MDS) to visualize which towers are more or less similar.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"terra\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"rnaturalearth\")\n\n\n\n\n\nlibrary(terra)\nlibrary(tidyverse)\nlibrary(rnaturalearth)\nlibrary(sf)",
+    "crumbs": [
+      "Introduction to R",
+      "Raster Data"
     ]
   },
   {
@@ -221,6 +463,17 @@
     ]
   },
   {
+    "objectID": "data_pub.html#what-to-preserve-from-a-modeling-project",
+    "href": "data_pub.html#what-to-preserve-from-a-modeling-project",
+    "title": "Additional Resources: Data Publication",
+    "section": "What to preserve from a modeling project",
+    "text": "What to preserve from a modeling project\nA methane flux modeling project produces more than one final figure. Preserve the pieces that would let someone understand, check, and reuse your workflow.\n\n\n\n\n\n\n\n\nProduct\nWhy it matters\nExample\n\n\n\n\nraw data source notes\ndocuments where data came from and how it was accessed\ndata inventory table, download script, DOI list\n\n\nprocessed modeling table\nrecords the exact rows and predictors used to fit the model\nmethane_model_data.RDATA or methane_model_data.csv\n\n\nmodel-fitting code\nallows the model to be refit or audited\n.qmd or .R script\n\n\nmodel object\nstores the trained model used for prediction\nrandom_forest_model.RDATA\n\n\nvalidation results\ndocuments model performance and limits\ntrain/test metrics, leave-one-site-out table\n\n\nsensitivity results\ndocuments model response and extrapolation risk\nscenario table, sensitivity curves\n\n\nspatial prediction rasters\nstores mapped flux density or emissions\nGeoTIFF files\n\n\nfinal report\nexplains the scientific question, methods, results, and interpretation\nPDF, HTML, or Word export\n\n\nREADME\ntells another person how to navigate the project\nplain-text or Markdown file\n\n\n\n\nMetadata for model products\nFor model-ready tables and rasters, metadata should include:\n\nvariable names and plain-language descriptions;\nunits, including any unit conversions;\nspatial resolution, CRS, and extent for rasters;\ntemporal resolution and time period;\nmissing-value codes;\ndata sources and citations;\nmodel formula or predictor list;\nknown limitations, such as extrapolation or representativeness concerns.\n\n\n\nREADME template\n# Project title\n\n## Question\nBriefly state the methane flux question and study region.\n\n## Files\n- data/raw/: original downloaded data or source notes\n- data/products/: processed tables, rasters, and model objects\n- scripts/ or qmd/: reproducible workflow\n- report/: final report and figures\n\n## Data sources\nList each dataset, citation, URL or DOI, access date, units, and processing notes.\n\n## Workflow\n1. Compile data\n2. Fit model\n3. Validate model\n4. Run sensitivity analysis\n5. Make spatial predictions\n6. Scale by inundation area\n\n## Reuse notes\nDescribe package requirements, API keys that are needed, files that are too large to include, and any known limitations.",
+    "crumbs": [
+      "Resources",
+      "Data Publication"
+    ]
+  },
+  {
     "objectID": "data_pub.html#edi-quick-start-guide",
     "href": "data_pub.html#edi-quick-start-guide",
     "title": "Additional Resources: Data Publication",
@@ -254,58 +507,25 @@
     ]
   },
   {
-    "objectID": "terra.html",
-    "href": "terra.html",
-    "title": "Raster Data: Climate Exposure and Tower Similarity",
+    "objectID": "sensitivity.html",
+    "href": "sensitivity.html",
+    "title": "Sensitivity Analysis: Stress Testing a Methane Flux Model",
     "section": "",
-    "text": "Vector data told us where FLUXNET CH4 towers are located. Raster data lets us ask what environmental conditions surround those towers. In this workshop, we will use gridded climate layers to evaluate the climate exposure represented by methane tower sites and to identify towers that may be useful analogs for thinking about methane fluxes in Yale-Myers Forest wetlands.\nWe will ask:\n\nWhat climate conditions do FLUXNET CH4 towers represent, and which towers are most similar to Yale-Myers Forest?\n\nBy the end of this workshop, you will be able to:\n\nRead and inspect raster data with terra.\nUnderstand SpatRaster and SpatVector objects.\nCrop and mask rasters to an area of interest.\nUse raster algebra to create new climate layers.\nSummarize raster values globally and by polygon zones.\nExtract raster values to point locations.\nCompare tower-site climate exposure to gridded climate space.\nCalculate environmental dissimilarity among tower sites.\nUse multidimensional scaling (MDS) to visualize which towers are more or less similar.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"terra\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"rnaturalearth\")\n\n\n\n\n\nlibrary(terra)\nlibrary(tidyverse)\nlibrary(rnaturalearth)\nlibrary(sf)",
+    "text": "In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where the model is being asked to extrapolate beyond the data it learned from.\nIn this workshop, we will ask:\n\nWhat does our methane model believe about climate, vegetation, and ecosystem controls, and can we trust those beliefs for Yale-Myers-like wetland conditions?\n\nBy the end of this workshop, you will be able to:\n\nIdentify which predictors are used by a fitted random forest model.\nSummarize the training conditions used to fit the model.\nBuild one-at-a-time sensitivity curves.\nCompare realistic methane flux scenarios.\nFlag scenarios that fall outside the model’s training range.\nBuild two-way sensitivity heatmaps to explore interactions.\nCompare sensitivity results with random forest variable importance.\nWrite a short model-risk interpretation for final project reporting.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(ggplot2)",
     "crumbs": [
-      "Introduction to R",
-      "Raster Data"
+      "Machine Learning in R",
+      "Sensitivity Analysis"
     ]
   },
   {
-    "objectID": "terra.html#rasters",
-    "href": "terra.html#rasters",
-    "title": "Introduction to rasters with the terra package",
-    "section": "Rasters",
-    "text": "Rasters\nA raster is a spatial data structure that subdivides an extent into rectangles known as “cells” (or “pixels”). Each cell has the capacity to store one or more values. This type of data structure is commonly referred to as a “grid” and is frequently juxtaposed with simple features.\nThe terra package offers functions designed for the creation, reading, manipulation, and writing of raster data. The terra package is built around a number of “classes” of which the SpatRaster and SpatVector are the most important.\n\nSpatRaster\nA SpatRaster object stores a number of fundamental parameters that describe it. These include the number of columns and rows, the coordinates of its spatial extent, and the coordinate reference system. In addition, a SpatRaster can store information about the file(s) in which the raster cell values are stored.\n\n\nSpatVector\nA SpatVector represents “vector” data, that is, points, lines or polygon geometries and their tabular attributes.\n\n\nWorking with climate data:\nTo become familiar with working with rasters, we will download climate data for an area of interest (AOI).\n\n# First create an AOI\nworld &lt;- ne_countries(scale = \"medium\", returnclass = \"sf\")\naoi_global &lt;- world %&gt;% filter(continent %in% c(\"Europe\", \"Asia\", \"North America\", \"South America\", \"Africa\", \"Oceania\"))\n\nVisualize your AOI:\n\n# Visualize it here\n# ...\n\nWe will use WorldClim, a set of global climate layers at spatial resolutions from 30 arc-seconds (~1 km) down to 10 arc-minutes. Its values represent average monthly climate normals for 1970-2000 (Fick & Hijmans, 2017).\nDownload climate data using the geodata package. For this exercise we will use climate normals, multi-decadal averages for climate variables like temperature and precipitation. They provide a baseline that allows us to understand the location’s average condition. geodata always downloads the full global raster, so we crop and mask it down to our AOI afterward.\nYou can access monthly precipitation (“prec”), monthly minimum temperature (“tmin”), monthly maximum temperature (“tmax”) climate normals and more.\nDownload monthly precipitation (prec), then crop and mask it to the AOI:\n\nnormals_ppt &lt;- worldclim_global(var = \"prec\", res = 10, path = tempdir()) %&gt;%\n  crop(aoi_global) %&gt;%\n  mask(aoi_global)\n\nCached as: /var/folders/9m/5sf47rls6b738n39cy9zj5ps6hq5rh/T//RtmpCKkF7z/climate/wc2.1_10m//wc2.1_10m_prec.zip\n\n\nWhat is this object:\n\nclass(normals_ppt)\n\n[1] \"SpatRaster\"\nattr(,\"package\")\n[1] \"terra\"\n\n\nA SpatRaster with multiple layers holds one raster per time step (here, one per calendar month) that all share the same spatial extent and resolution.\nTo access the raster stack:\n\nnormals_ppt\n\nclass       : SpatRaster\nsize        : 837, 2160, 12  (nrow, ncol, nlyr)\nresolution  : 0.1666667, 0.1666667  (x, y)\nextent      : -180, 180, -55.83333, 83.66667  (xmin, xmax, ymin, ymax)\ncoord. ref. : lon/lat WGS 84 (EPSG:4326)\nsource(s)   : memory\nnames       : wc2.1~ec_01, wc2.1~ec_02, wc2.1~ec_03, wc2.1~ec_04, wc2.1~ec_05, wc2.1~ec_06, ...\nmin values  :           0,           0,           0,           0,           0,           0, ...\nmax values  :         908,         793,         720,         680,         772,        1457, ...\n\nnormals_ppt %&gt;% names()\n\n [1] \"wc2.1_10m_prec_01\" \"wc2.1_10m_prec_02\" \"wc2.1_10m_prec_03\"\n [4] \"wc2.1_10m_prec_04\" \"wc2.1_10m_prec_05\" \"wc2.1_10m_prec_06\"\n [7] \"wc2.1_10m_prec_07\" \"wc2.1_10m_prec_08\" \"wc2.1_10m_prec_09\"\n[10] \"wc2.1_10m_prec_10\" \"wc2.1_10m_prec_11\" \"wc2.1_10m_prec_12\"\n\nggplot() + geom_spatraster(data = normals_ppt[[1]]) + scale_fill_gradient(na.value = \"transparent\")\n\n&lt;SpatRaster&gt; resampled to 500976 cells.\n\n\n\n\n\n\n\n\n\nWhat is the + scale_fill_gradient(na.value = \"transparent\") doing?\n\n\nRaster algebra\nMany generic functions that allow for simple and elegant raster algebra have been implemented for SpatRaster objects, including the normal algebraic operators such as +, -, *, /, logical operators such as &gt;, &gt;=, &lt;, ==, ! and functions such as abs, round, ceiling, floor, trunc, sqrt, log, log10, exp, cos, sin, max, min, range, prod, sum, any, all. In these functions you can mix terra objects with numbers, as long as the first argument is a terra object. If you use multiple SpatRaster objects, all objects must have the same resolution and origin.\nLet’s summarize monthly data to annual normals:\n\nnormals_ppt_annual &lt;- normals_ppt %&gt;% sum(na.rm = TRUE)\n\n# look at the object\nnormals_ppt_annual %&gt;% plot()\n\n\n\n\n\n\n\n# Check the name of the layers:\nnames(normals_ppt_annual)\n\n[1] \"sum\"\n\n# re-name the layers:\nnames(normals_ppt_annual) &lt;- \"ppt\"\n\nSummary functions (min(), max(), mean(), prod(), sum(), median(), cv(), range(), any(), all()) always return a SpatRaster object.\nUse global if instead of a SpatRaster you want a single number summarizing the cell values of each layer.\n\nnormals_ppt_annual %&gt;% global(na.rm = TRUE, mean)\n\n        mean\nppt 708.2135\n\n\n\n\nSpatial Summaries\nYou might also find it useful to create zonal summaries for each polygon within the simple feature. To do this we can use the function zonal, which takes a SpatRast and a SpatVect. Since aoi_global has one feature per country, this gives us a country-level summary:\n\nnormals_ppt_annual_country &lt;- zonal(x = normals_ppt_annual,\n                                     z = vect(aoi_global), fun = \"mean\", as.polygons = TRUE, na.rm = TRUE)\n\nWhat did the function return?\n\nclass(normals_ppt_annual_country)\n\n[1] \"SpatVector\"\nattr(,\"package\")\n[1] \"terra\"\n\n\nConvert the SpatVect back to a simple feature and plot it.\n\nnormals_ppt_annual_country_sf &lt;- st_as_sf(normals_ppt_annual_country)\n\nggplot(data = normals_ppt_annual_country_sf) + geom_sf(aes(fill = ppt))\n\n\n\n\n\n\n\n\n\n\nExtracting information to a point file:\nFor this exercise you will use your fluxnet_ch4_sf vector file you saved last week and the monthly precipitation data downloaded (normals_ppt).\nImport your point file fluxnet_ch4_sf:\n\nfluxnet_ch4_sf &lt;- st_read(dsn = \"data/products\", layer = \"fluxnet_ch4\")\n\nReading layer `fluxnet_ch4' from data source \n  `/Users/sm3466/Library/CloudStorage/Dropbox-YSE/Sparkle Malone/Teaching/EDS_course/data/products' \n  using driver `ESRI Shapefile'\nSimple feature collection with 81 features and 9 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: -18223020 ymin: -4162002 xmax: 19542570 ymax: 7939774\nProjected CRS: WGS 84 / World Equidistant Cylindrical\n\n\nEnsure both files have the same coordinate reference system (CRS):\n\nfluxnet_ch4_sf\n\nSimple feature collection with 81 features and 9 fields\nGeometry type: POINT\nDimension:     XY\nBounding box:  xmin: -18223020 ymin: -4162002 xmax: 19542570 ymax: 7939774\nProjected CRS: WGS 84 / World Equidistant Cylindrical\nFirst 10 features:\n   SITE_ID                   SITE_NA  FLUXNET2  FLUXNET_ LOCATIO IGBP  MAT\n1   AT-Neu                  Neustift CC-BY-4.0 CC-BY-4.0     970  GRA  6.5\n2   BR-Npw Northern Pantanal Wetland      &lt;NA&gt; CC-BY-4.0     120  WSA 24.9\n3   BW-Gum                      Guma      &lt;NA&gt; CC-BY-4.0     950  WET 21.0\n4   BW-Nxr                   Nxaraga      &lt;NA&gt; CC-BY-4.0     950  GRA 21.0\n5   CA-SCB          Scotty Creek Bog      &lt;NA&gt; CC-BY-4.0     280  WET -2.8\n6   CA-SCC    Scotty Creek Landscape      &lt;NA&gt; CC-BY-4.0     285  ENF -2.8\n7   CH-Cha                    Chamau CC-BY-4.0 CC-BY-4.0     393  GRA  9.5\n8   CH-Dav                     Davos CC-BY-4.0 CC-BY-4.0    1639  ENF  2.8\n9   CH-Oe2            Oensingen crop CC-BY-4.0 CC-BY-4.0     452  CRO  9.8\n10  CN-Hgu                  Hongyuan      &lt;NA&gt; CC-BY-4.0    3500  GRA  1.5\n      MAP     country                  geometry\n1   852.0     Austria   POINT (1259858 5245007)\n2  1486.0      Brazil POINT (-6279755 -1836549)\n3   460.0    Botswana  POINT (2490339 -2111141)\n4   460.0    Botswana  POINT (2580297 -2176085)\n5   388.0      Canada POINT (-13502876 6824876)\n6   387.6      Canada POINT (-13502965 6824764)\n7  1136.0 Switzerland  POINT (936241.4 5255415)\n8  1062.0 Switzerland   POINT (1097154 5211455)\n9  1155.0 Switzerland  POINT (860911.5 5263898)\n10  747.0       China  POINT (11420267 3656322)\n\nnormals_ppt\n\nclass       : SpatRaster\nsize        : 837, 2160, 12  (nrow, ncol, nlyr)\nresolution  : 0.1666667, 0.1666667  (x, y)\nextent      : -180, 180, -55.83333, 83.66667  (xmin, xmax, ymin, ymax)\ncoord. ref. : lon/lat WGS 84 (EPSG:4326)\nsource(s)   : memory\nnames       : wc2.1~ec_01, wc2.1~ec_02, wc2.1~ec_03, wc2.1~ec_04, wc2.1~ec_05, wc2.1~ec_06, ...\nmin values  :           0,           0,           0,           0,           0,           0, ...\nmax values  :         908,         793,         720,         680,         772,        1457, ...\n\n\nYou can transform one of the files if they don’t match. Here I transform the vector:\n\nfluxnet_ch4_sf &lt;- st_transform(fluxnet_ch4_sf, crs = crs(normals_ppt))\n\nTo check to see if everything lines up, I plot the files together:\n\nggplot() + geom_spatraster(data = normals_ppt[[1]]) + geom_sf(data = fluxnet_ch4_sf) + scale_fill_gradient(na.value = \"transparent\")\n\n&lt;SpatRaster&gt; resampled to 500976 cells.\n\n\n\n\n\n\n\n\n\nExtract information from your raster stack using terra::extract()\n\nfluxnet_ch4_ppt &lt;- terra::extract(normals_ppt, fluxnet_ch4_sf)\nhead(fluxnet_ch4_ppt)\n\n  ID wc2.1_10m_prec_01 wc2.1_10m_prec_02 wc2.1_10m_prec_03 wc2.1_10m_prec_04\n1  1                61                56                76                85\n2  2               215               190               174               112\n3  3               111               102                61                21\n4  4               110                91                59                19\n5  5                20                17                16                19\n6  6                20                17                16                19\n  wc2.1_10m_prec_05 wc2.1_10m_prec_06 wc2.1_10m_prec_07 wc2.1_10m_prec_08\n1               101               129               136               123\n2                57                25                20                20\n3                 2                 1                 0                 1\n4                 2                 1                 0                 1\n5                40                60                74                62\n6                40                60                74                62\n  wc2.1_10m_prec_09 wc2.1_10m_prec_10 wc2.1_10m_prec_11 wc2.1_10m_prec_12\n1                90                75                81                69\n2                53               102               163               202\n3                 4                24                48                83\n4                 4                21                44                79\n5                34                31                23                19\n6                34                31                23                19\n\n\nWhat did the extract function return?\n\nclass(fluxnet_ch4_ppt)\n\n[1] \"data.frame\"\n\n\nCombine extracted information to the simple feature:\n\nfluxnet_ch4_ppt_sf &lt;- fluxnet_ch4_sf %&gt;% cbind(fluxnet_ch4_ppt)\n\nVisualize your work. Each extracted column is named after its WorldClim layer (e.g. wc2.1_10m_prec_01), so look it up with names() instead of typing it in by hand:\n\nnames(fluxnet_ch4_ppt_sf)\n\n [1] \"SITE_ID\"           \"SITE_NA\"           \"FLUXNET2\"         \n [4] \"FLUXNET_\"          \"LOCATIO\"           \"IGBP\"             \n [7] \"MAT\"               \"MAP\"               \"country\"          \n[10] \"ID\"                \"wc2.1_10m_prec_01\" \"wc2.1_10m_prec_02\"\n[13] \"wc2.1_10m_prec_03\" \"wc2.1_10m_prec_04\" \"wc2.1_10m_prec_05\"\n[16] \"wc2.1_10m_prec_06\" \"wc2.1_10m_prec_07\" \"wc2.1_10m_prec_08\"\n[19] \"wc2.1_10m_prec_09\" \"wc2.1_10m_prec_10\" \"wc2.1_10m_prec_11\"\n[22] \"wc2.1_10m_prec_12\" \"geometry\"         \n\nppt_col &lt;- names(fluxnet_ch4_ppt_sf)[grepl(\"prec\", names(fluxnet_ch4_ppt_sf))][1]\n\nggplot() + geom_sf(data = aoi_global) + geom_sf(data = fluxnet_ch4_ppt_sf, aes(col = .data[[ppt_col]]))\n\n\n\n\n\n\n\n\nFLUXNET data can be used to understand patterns in natural methane fluxes. Evaluating the conditions where measurements are taken is essential to designing a useful model.",
-    "crumbs": [
-      "Introduction to R",
-      "Raster Data"
-    ]
-  },
-  {
-    "objectID": "terra.html#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment.",
-    "href": "terra.html#download-monthly-temperature-tmin-and-tmax-to-understand-the-differences-in-temperature-for-the-tower-locations.-use-precipitation-and-temperature-summaries-in-the-assignment.",
-    "title": "Introduction to rasters with the terra package",
-    "section": "Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.",
-    "text": "Download monthly temperature (tmin and tmax) to understand the differences in temperature for the tower locations. Use precipitation and temperature summaries in the assignment.",
-    "crumbs": [
-      "Introduction to R",
-      "Raster Data"
-    ]
-  },
-  {
-    "objectID": "terra.html#assignment",
-    "href": "terra.html#assignment",
-    "title": "Introduction to rasters with the terra package",
-    "section": "Assignment",
-    "text": "Assignment\nWe will use data from FLUXNET CH4 to explore patterns in natural methane emissions. Explore the distribution of tower sites and create visualizations that may be helpful to understand in the design and development of models. You are welcome to use any additional data or just new plot types.\n\nReferences\nFick, S.E. and R.J. Hijmans, 2017. WorldClim 2: new 1km spatial resolution climate surfaces for global land areas. International Journal of Climatology 37 (12): 4302-4315. https://doi.org/10.1002/joc.5086",
-    "crumbs": [
-      "Introduction to R",
-      "Raster Data"
-    ]
-  },
-  {
-    "objectID": "sf.html",
-    "href": "sf.html",
-    "title": "Vector Data: Mapping Gaps in the Global Methane Tower Network",
+    "objectID": "sensitivity.html#from-prediction-to-model-trust",
+    "href": "sensitivity.html#from-prediction-to-model-trust",
+    "title": "Sensitivity Analysis: Stress Testing a Methane Flux Model",
     "section": "",
-    "text": "Models are only as good as the places where we collect data. FLUXNET towers provide direct measurements of ecosystem-atmosphere exchange, and FLUXNET-CH4 towers are especially important for understanding methane emissions from natural ecosystems. But the tower network is not evenly distributed across the planet.\nIn this workshop, we will use vector data to ask:\n\nIf FLUXNET CH4 towers are used to understand natural methane emissions, where are we observing the planet, and where are we guessing?\n\nBy the end of the workshop, you will be able to:\n\nConvert tabular coordinates into simple feature objects.\nInspect geometries and coordinate reference systems.\nTransform vector data into an appropriate projected CRS.\nMeasure distances among point locations.\nUse country and continent polygons from rnaturalearth.\nUse spatial predicates and spatial joins to count towers inside regions.\nCalculate polygon area and tower density.\nEvaluate basic representativeness of the CH4 tower network.\nWrite spatial outputs for later workshops.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"rnaturalearth\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(sf)\nlibrary(rnaturalearth)\nlibrary(tidyverse)\nlibrary(ggplot2)",
+    "text": "In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where the model is being asked to extrapolate beyond the data it learned from.\nIn this workshop, we will ask:\n\nWhat does our methane model believe about climate, vegetation, and ecosystem controls, and can we trust those beliefs for Yale-Myers-like wetland conditions?\n\nBy the end of this workshop, you will be able to:\n\nIdentify which predictors are used by a fitted random forest model.\nSummarize the training conditions used to fit the model.\nBuild one-at-a-time sensitivity curves.\nCompare realistic methane flux scenarios.\nFlag scenarios that fall outside the model’s training range.\nBuild two-way sensitivity heatmaps to explore interactions.\nCompare sensitivity results with random forest variable importance.\nWrite a short model-risk interpretation for final project reporting.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(ggplot2)",
     "crumbs": [
-      "Introduction to R",
-      "Vector Data"
+      "Machine Learning in R",
+      "Sensitivity Analysis"
     ]
   },
   {
@@ -317,114 +537,6 @@
     "crumbs": [
       "Data Integration in R",
       "Data Integration"
-    ]
-  },
-  {
-    "objectID": "data_integration.html#getting-a-climate-data-store-cds-api-key",
-    "href": "data_integration.html#getting-a-climate-data-store-cds-api-key",
-    "title": "Introduction to Data Integration in R",
-    "section": "Getting a Climate Data Store (CDS) API key",
-    "text": "Getting a Climate Data Store (CDS) API key\nLater in this workshop you’ll download real historical climate data (ERA5) from the Copernicus Climate Data Store (CDS). This requires a free personal account and API key, separate from anything else in this course, so set it up now — it can take a few minutes for the account to activate.\n\nCreate a free account at https://cds.climate.copernicus.eu/.\nOnce logged in, open your user profile page and copy your Personal Access Token — this is your API key.\nIn R, register it once per computer (you’ll install the ecmwfr package later in this workshop, but you can do it now too):\n\n\ninstall.packages(\"ecmwfr\")\nlibrary(ecmwfr)\nwf_set_key(key = \"paste-your-personal-access-token-here\")\n\necmwfr stores the key in your system’s secure credential manager, so you only need to do this once — every future R session on this computer will use it automatically.\n\n\n\n\n\n\nWarningNever save your API key in a script\n\n\n\nType your key directly into the R console (or a chunk you run once and then delete), not into a .qmd file you save or push to GitHub. Treat it like a password — if it’s ever exposed, regenerate it from your CDS profile page.\n\n\n\nWorkshop Goals:\n\nUnderstand techniques for data Integration.\nObtain information from different data sources.\nCombine tabular and vector data.\nCombine tabular and raster data.\nCombine tabular data by an ID and time.\n\n\n\nChoose the right package\nR has many packages that can help you import, merge, and manipulate data from different sources. Some of the most popular and useful ones for tables include readr, dplyr, tidyr, and purrr. These packages are part of the tidyverse, a collection of packages that share a consistent and coherent syntax and philosophy for data analysis. For spatial data, the sf and terra packages are useful.\n\n\n\nType of Data\nLibrary\n\n\n\n\nTabular\ntidyverse\n\n\nVector\nsf\n\n\nRaster\nterra\n\n\n\n\n\nUse pipes and functions\nOne of the best features of the tidyverse is the pipe operator (%&gt;%), which allows you to chain multiple functions together and pass the output of one function as the input of the next one. This way, you can create a data integration pipeline that is clear and logical, and that avoids intermediate variables and nested functions.\n\n\nCheck and validate data\nData integration can introduce errors or inconsistencies in your data, such as duplicates, mismatches, outliers, or invalid values. Therefore, it is important to check and validate your data before and after you integrate it from multiple sources. You can use various tools and techniques to do this, such as summary statistics, data visualization, data profiling, or data quality rules.\nIn this workshop you will begin to extract information about the FLUXNET CH4 tower sites.\n\n\nInstall Packages:\n\ninstall.packages(\"zoo\")\ninstall.packages(\"rnaturalearth\")\ninstall.packages(\"ecmwfr\")\ninstall.packages(\"lubridate\")",
-    "crumbs": [
-      "Data Integration in R",
-      "Data Integration"
-    ]
-  },
-  {
-    "objectID": "data_basics.html",
-    "href": "data_basics.html",
-    "title": "Data Basics",
-    "section": "",
-    "text": "Yale-Myers Forest is a 7,840 acre research forest in northeastern Connecticut. It is a hub for education, research, and harvesting operations within the Yale Forest School system. The forest primarily consists of mixed hardwoods on glacial till soils, with hemlock, scattered white pine stands from old field origins, and red pine plantations established in the 1940s.\nIn this workshop, we will use daily climate data to ask a more interesting question:\n\nHas Yale-Myers Forest become warmer, wetter, or more climatically stressful since 1990?\n\nBy the end of the workshop, you will have built a small climate evidence brief for Yale-Myers Forest. Along the way, you will learn to:\n\nDownload climate data with daymetr.\nManipulate data with tidyverse:\n\nFormat date elements.\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets.\n\nVisualize data with ggplot2.\nWrite basic functions that make your analysis easier to reuse.",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
-  },
-  {
-    "objectID": "data_basics.html#learn-the-basics-of-manipulating-data-in-r",
-    "href": "data_basics.html#learn-the-basics-of-manipulating-data-in-r",
-    "title": "Data Basics",
-    "section": "",
-    "text": "In this workshop you will:\n\nDownload climate data with daymetr\nManipulate data with tidyverse:\n\nFormat date elements\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets\n\nVisualize data with ggplot2\nLearn to write basic functions",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
-  },
-  {
-    "objectID": "data_basics.html#calling-a-function-in-r",
-    "href": "data_basics.html#calling-a-function-in-r",
-    "title": "Data Basics",
-    "section": "Calling a Function in R",
-    "text": "Calling a Function in R\nIn all the above examples, we called the created functions by using the function name and adding the necessary arguments inside the parenthesis. In R, function arguments can be passed by position, by name (so-called named arguments), by mixing position-based and name-based matching, or by omitting the arguments altogether.\nIf we pass the arguments by position, we need to follow the same sequence of arguments as defined in the function:\n\nsubtract_two_nums &lt;- function(x, y) {\n  x - y\n}\n\nprint(subtract_two_nums(3, 1))\n\n[1] 2\n\n\nIn the above example, x is equal to 3 and y to 1, and not vice versa.\nIf we pass the arguments by name, i.e., explicitly specify what value each parameter defined in the function takes, the order of the arguments doesn’t matter:\n\nsubtract_two_nums &lt;- function(x, y) {\n  x - y\n}\nprint(subtract_two_nums(x = 3, y = 1))\n\n[1] 2\n\nprint(subtract_two_nums(y = 1, x = 3))\n\n[1] 2\n\n\nThings to remember when using functions inside other functions: - Functions can have default values for arguments. - Functions can return multiple values using a list or other data structures. - You can use the return() statement to specify the value to be returned by the function. - If you want to be able to use the function independent of another function, it should be created outside a function instead of nesting the functions.",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
-  },
-  {
-    "objectID": "spatial_projections.html",
-    "href": "spatial_projections.html",
-    "title": "Spatial Model Visualization: Scaling Methane Flux in Space",
-    "section": "",
-    "text": "In the Random Forest and Sensitivity Analysis workshops, we built and stress-tested a methane flux model. In this final workshop, we will project a model across Connecticut and turn gridded flux predictions into a methane emissions budget.\nThe key idea is a unit conversion:\n\nmethane flux density x inundated area = methane emissions\n\nOur random forest predicts methane flux as g C m-2 month-1. That is a rate per square meter. A map of predicted flux is not yet an emissions budget. To estimate emissions, we need to multiply by the area where methane-producing wetlands are present.\nThat is where the Wetland Area and Dynamics for Methane Modeling (WAD2M) product enters. WAD2M provides monthly wetland/inundation fractions on a global 0.25 degree grid. Zhang et al. (2021) describe WAD2M version 1.0 as a monthly product for 2000-2018 built for large-scale methane modeling. The NASA UpCH4 methane emissions product uses WAD2M to weight gridded methane flux predictions by fractional wetland extent before converting them to by-grid-cell emissions.\nUseful references:\n\nWAD2M paper: Zhang et al. 2021, Earth System Science Data\nWAD2M metadata summary: EPA HERO record\nExample methane upscaling product using WAD2M: NASA Open Data Portal, UpCH4\n\n\n\n\n\n\n\nData dependency\n\n\n\nThis workshop reuses the ERA5 climate rasters saved in data_integration.qmd: data/products/era5_ppt_monthly.tif and data/products/era5_tmean_monthly.tif.\nFor WAD2M, this workshop expects a Connecticut-ready 2018 monthly inundation fraction raster at data/products/wad2m_inundation_fraction_ct_2018.tif. If that file is not present, the code creates a clearly labeled seasonal classroom proxy from the provided MODIS land-cover raster so the unit-conversion workflow still runs.\n\n\nBy the end of this workshop, you will be able to:\n\nIdentify the variables, units, names, and classes needed for spatial prediction.\nAlign predictor rasters so they have the same CRS, resolution, extent, and layer names.\nPredict monthly methane flux density in space.\nExplain what WAD2M inundation fraction represents.\nConvert flux density to cell-level monthly and annual emissions.\nCompare budgets with and without inundation-fraction scaling.\nExtract predictions and emissions for the Yale-Myers Forest grid cell.\nTest how sensitive the budget is to inundation-area uncertainty.\nReport methane emissions in g C, Tg C, and Tg CH4.\n\n\n\n\nlibrary(randomForest)\nlibrary(terra)\nlibrary(tidyverse)",
-    "crumbs": [
-      "Dynamic Models in R",
-      "Spatial Model Visualization"
-    ]
-  },
-  {
-    "objectID": "setup.html",
-    "href": "setup.html",
-    "title": "Course Setup",
-    "section": "",
-    "text": "The data files required for this course are available through the Environmental Data Initiative (EDI) repository. EDI is a data repository that hosts ecological and environmental data for the long-term.\nThere are various ways to acquire data from data repositories. The method that a lot of people are accustomed to is by clicking “Download” to manually grab the files and then dragging them to the appropriate folder on their local computer. This method works, but it is not the most reproducible way to run your workflow since it’s difficult to document the clicking of your cursor.\nInstead, you can acquire data programmatically with R and save all the steps in this part of the workflow in a script. If you, or anyone else, want to reproduce the same results in the future, you can just rerun the same script.\nTo get the data programmatically through R, first navigate to the data package landing page at: https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f\n\n\n\nThe landing page shows a summary of the metadata for this data package. Metadata, or data about data, gives context to the variables in the dataset by documenting what was measured, who made the measurements, when and where were they made, and why was the data collected/created in the first place.\nWe will need the direct URL to “EDS_Course_Materials.zip” in order to download it through R. To get this specific URL, click on “View Full Metadata”.\n\n\n\nThis will bring us to a page with detailed descriptions of everything associated with this data package.\n\n\n\nScroll down to “Detailed Metadata” and click on the plus/minus symbols next to “Data Entities” to show more information on “EDS_Course_Materials.zip”.\n\n\n\nThis section describes what the file is for, along with additional metadata such as the file size and format. Copy the URL for this file.\nOnce you’ve got the URL, navigate to your workspace/working directory in RStudio for this course. You can check your current working directory by running getwd(). If the output of getwd() does not return the file path to your folder for this course, you will need to run setwd(dir = \"...\") by replacing ... with the file path of your choice.\nThen follow the code below to download and unzip “EDS_Course_Materials.zip”.\n\n## --------------------------------------------- ##\n#               EDI Download -----\n## --------------------------------------------- ##\n# If you don't have the curl package, install it first\n# install.packages(\"curl\")\n\n# Load package(s)\nlibrary(curl)\n\n# Let's download EDS_Course_Materials.zip from this EDI package:\n# https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f \n\n# Paste the direct URL to EDS_Course_Materials.zip\nedi_url &lt;- \"https://pasta.lternet.edu/package/data/eml/edi/2081/1/757761d2f8d14f9026c67a449beac216\"\n\n# Download the zip file to your local computer\ncurl::curl_download(url = edi_url, \n                    destfile = \"EDS_Course_Materials.zip\", \n                    quiet = F)\n\n# Unzip it into a folder called \"data\"\nunzip(\"EDS_Course_Materials.zip\", exdir = \"data\")\n\n\n\n\n\n\n\nNoteHaving trouble downloading?\n\n\n\nIf you’re having issues downloading the zip file through R, navigate back to the data package landing page on EDI and click on the Download button under “Data Entities: 1. EDS_Course_Materials”. \n\n\nDue to the way the data has been packaged, you may see this folder organization once you’ve unzipped the file:\nyour-working-directory/\n├── data/               \n│   ├── __MACOSX/             \n│   └── EDS_Course_Materials/             \n│       ├── EDS_Course_Materials_README.pdf\n│       ├── Elevation.tif\n│       ├── Elevation.tif.aux.json\n│       ├── ENV720-MOD13A3-061-results.csv\n│       ├── final_model.RDATA\n│       ├── FLUXNET_FLUXES.RDATA\n│       ├── FluxNet_Sites_2024.csv\n│       ├── GlobalClimate.tif\n│       ├── GlobalClimate.tif.aux.json\n│       ├── GlobalSoil_grids.tif\n│       ├── GlobalSoil_grids.tif.aux.json\n│       ├── MODIS_IGBP_2001-2022_CT.tif\n│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.json\n│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml\n│       ├── Monthly_Fluxes.RDATA\n│       ├── RANDOMFOREST_DATASET.RDATA\n│       ├── SensitivityProducts.RDATA\n│       ├── TERRA_PPT_2021_CT.tif\n│       └── TERRA_TMEAN_2021_CT.tif   \n│\n└── more_stuff/            \nFor the purposes of this course, we need to move all the content under data/EDS_Course_Materials to just the data folder. Run the following code to do so.\n\n## --------------------------------------------- ##\n#               Moving Files -----\n## --------------------------------------------- ##\n\n# List all the files inside \"data/EDS_Course_Materials\"\nnames &lt;- dir(file.path(\"data\", \"EDS_Course_Materials\")) \n\n# Create a function to move all the files from \"data/EDS_Course_Materials\" to \"data\"\nrelocate_function &lt;- function(file_name){\n  file.rename(from = file.path(\"data\", \"EDS_Course_Materials\", file_name),\n              to = file.path(\"data\", file_name))\n}\n\n# Apply the function to all files\nlapply(names, relocate_function)\n\n# Delete the now empty EDS_Course_Materials folder\nunlink(file.path(\"data\", \"EDS_Course_Materials\"), recursive = TRUE)\n\nIf you’ve followed all the steps correctly, your working directory should now look something like this:\nyour-working-directory/\n├── data/               \n│   ├── __MACOSX/             \n│   ├── EDS_Course_Materials_README.pdf\n│   ├── Elevation.tif\n│   ├── Elevation.tif.aux.json\n│   ├── ENV720-MOD13A3-061-results.csv\n│   ├── final_model.RDATA\n│   ├── FLUXNET_FLUXES.RDATA\n│   ├── FluxNet_Sites_2024.csv\n│   ├── GlobalClimate.tif\n│   ├── GlobalClimate.tif.aux.json\n│   ├── GlobalSoil_grids.tif\n│   ├── GlobalSoil_grids.tif.aux.json\n│   ├── MODIS_IGBP_2001-2022_CT.tif\n│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.json\n│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml\n│   ├── Monthly_Fluxes.RDATA\n│   ├── RANDOMFOREST_DATASET.RDATA\n│   ├── SensitivityProducts.RDATA\n│   ├── TERRA_PPT_2021_CT.tif\n│   └── TERRA_TMEAN_2021_CT.tif   \n│\n└── more_stuff/",
-    "crumbs": [
-      "Setup"
-    ]
-  },
-  {
-    "objectID": "setup.html#data-acquisition",
-    "href": "setup.html#data-acquisition",
-    "title": "Course Setup",
-    "section": "",
-    "text": "The data files required for this course are available through the Environmental Data Initiative (EDI) repository. EDI is a data repository that hosts ecological and environmental data for the long-term.\nThere are various ways to acquire data from data repositories. The method that a lot of people are accustomed to is by clicking “Download” to manually grab the files and then dragging them to the appropriate folder on their local computer. This method works, but it is not the most reproducible way to run your workflow since it’s difficult to document the clicking of your cursor.\nInstead, you can acquire data programmatically with R and save all the steps in this part of the workflow in a script. If you, or anyone else, want to reproduce the same results in the future, you can just rerun the same script.\nTo get the data programmatically through R, first navigate to the data package landing page at: https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f\n\n\n\nThe landing page shows a summary of the metadata for this data package. Metadata, or data about data, gives context to the variables in the dataset by documenting what was measured, who made the measurements, when and where were they made, and why was the data collected/created in the first place.\nWe will need the direct URL to “EDS_Course_Materials.zip” in order to download it through R. To get this specific URL, click on “View Full Metadata”.\n\n\n\nThis will bring us to a page with detailed descriptions of everything associated with this data package.\n\n\n\nScroll down to “Detailed Metadata” and click on the plus/minus symbols next to “Data Entities” to show more information on “EDS_Course_Materials.zip”.\n\n\n\nThis section describes what the file is for, along with additional metadata such as the file size and format. Copy the URL for this file.\nOnce you’ve got the URL, navigate to your workspace/working directory in RStudio for this course. You can check your current working directory by running getwd(). If the output of getwd() does not return the file path to your folder for this course, you will need to run setwd(dir = \"...\") by replacing ... with the file path of your choice.\nThen follow the code below to download and unzip “EDS_Course_Materials.zip”.\n\n## --------------------------------------------- ##\n#               EDI Download -----\n## --------------------------------------------- ##\n# If you don't have the curl package, install it first\n# install.packages(\"curl\")\n\n# Load package(s)\nlibrary(curl)\n\n# Let's download EDS_Course_Materials.zip from this EDI package:\n# https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f \n\n# Paste the direct URL to EDS_Course_Materials.zip\nedi_url &lt;- \"https://pasta.lternet.edu/package/data/eml/edi/2081/1/757761d2f8d14f9026c67a449beac216\"\n\n# Download the zip file to your local computer\ncurl::curl_download(url = edi_url, \n                    destfile = \"EDS_Course_Materials.zip\", \n                    quiet = F)\n\n# Unzip it into a folder called \"data\"\nunzip(\"EDS_Course_Materials.zip\", exdir = \"data\")\n\n\n\n\n\n\n\nNoteHaving trouble downloading?\n\n\n\nIf you’re having issues downloading the zip file through R, navigate back to the data package landing page on EDI and click on the Download button under “Data Entities: 1. EDS_Course_Materials”. \n\n\nDue to the way the data has been packaged, you may see this folder organization once you’ve unzipped the file:\nyour-working-directory/\n├── data/               \n│   ├── __MACOSX/             \n│   └── EDS_Course_Materials/             \n│       ├── EDS_Course_Materials_README.pdf\n│       ├── Elevation.tif\n│       ├── Elevation.tif.aux.json\n│       ├── ENV720-MOD13A3-061-results.csv\n│       ├── final_model.RDATA\n│       ├── FLUXNET_FLUXES.RDATA\n│       ├── FluxNet_Sites_2024.csv\n│       ├── GlobalClimate.tif\n│       ├── GlobalClimate.tif.aux.json\n│       ├── GlobalSoil_grids.tif\n│       ├── GlobalSoil_grids.tif.aux.json\n│       ├── MODIS_IGBP_2001-2022_CT.tif\n│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.json\n│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml\n│       ├── Monthly_Fluxes.RDATA\n│       ├── RANDOMFOREST_DATASET.RDATA\n│       ├── SensitivityProducts.RDATA\n│       ├── TERRA_PPT_2021_CT.tif\n│       └── TERRA_TMEAN_2021_CT.tif   \n│\n└── more_stuff/            \nFor the purposes of this course, we need to move all the content under data/EDS_Course_Materials to just the data folder. Run the following code to do so.\n\n## --------------------------------------------- ##\n#               Moving Files -----\n## --------------------------------------------- ##\n\n# List all the files inside \"data/EDS_Course_Materials\"\nnames &lt;- dir(file.path(\"data\", \"EDS_Course_Materials\")) \n\n# Create a function to move all the files from \"data/EDS_Course_Materials\" to \"data\"\nrelocate_function &lt;- function(file_name){\n  file.rename(from = file.path(\"data\", \"EDS_Course_Materials\", file_name),\n              to = file.path(\"data\", file_name))\n}\n\n# Apply the function to all files\nlapply(names, relocate_function)\n\n# Delete the now empty EDS_Course_Materials folder\nunlink(file.path(\"data\", \"EDS_Course_Materials\"), recursive = TRUE)\n\nIf you’ve followed all the steps correctly, your working directory should now look something like this:\nyour-working-directory/\n├── data/               \n│   ├── __MACOSX/             \n│   ├── EDS_Course_Materials_README.pdf\n│   ├── Elevation.tif\n│   ├── Elevation.tif.aux.json\n│   ├── ENV720-MOD13A3-061-results.csv\n│   ├── final_model.RDATA\n│   ├── FLUXNET_FLUXES.RDATA\n│   ├── FluxNet_Sites_2024.csv\n│   ├── GlobalClimate.tif\n│   ├── GlobalClimate.tif.aux.json\n│   ├── GlobalSoil_grids.tif\n│   ├── GlobalSoil_grids.tif.aux.json\n│   ├── MODIS_IGBP_2001-2022_CT.tif\n│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.json\n│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml\n│   ├── Monthly_Fluxes.RDATA\n│   ├── RANDOMFOREST_DATASET.RDATA\n│   ├── SensitivityProducts.RDATA\n│   ├── TERRA_PPT_2021_CT.tif\n│   └── TERRA_TMEAN_2021_CT.tif   \n│\n└── more_stuff/",
-    "crumbs": [
-      "Setup"
-    ]
-  },
-  {
-    "objectID": "data_basics.html#reading-the-climate-record-of-yale-myers-forest",
-    "href": "data_basics.html#reading-the-climate-record-of-yale-myers-forest",
-    "title": "Data Basics",
-    "section": "",
-    "text": "Yale-Myers Forest is a 7,840 acre research forest in northeastern Connecticut. It is a hub for education, research, and harvesting operations within the Yale Forest School system. The forest primarily consists of mixed hardwoods on glacial till soils, with hemlock, scattered white pine stands from old field origins, and red pine plantations established in the 1940s.\nIn this workshop, we will use daily climate data to ask a more interesting question:\n\nHas Yale-Myers Forest become warmer, wetter, or more climatically stressful since 1990?\n\nBy the end of the workshop, you will have built a small climate evidence brief for Yale-Myers Forest. Along the way, you will learn to:\n\nDownload climate data with daymetr.\nManipulate data with tidyverse:\n\nFormat date elements.\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets.\n\nVisualize data with ggplot2.\nWrite basic functions that make your analysis easier to reuse.",
-    "crumbs": [
-      "Introduction to R",
-      "Data Basics"
-    ]
-  },
-  {
-    "objectID": "sf.html#mapping-methane-observations",
-    "href": "sf.html#mapping-methane-observations",
-    "title": "Vector Data: Mapping Gaps in the Global Methane Tower Network",
-    "section": "",
-    "text": "Models are only as good as the places where we collect data. FLUXNET towers provide direct measurements of ecosystem-atmosphere exchange, and FLUXNET-CH4 towers are especially important for understanding methane emissions from natural ecosystems. But the tower network is not evenly distributed across the planet.\nIn this workshop, we will use vector data to ask:\n\nIf FLUXNET CH4 towers are used to understand natural methane emissions, where are we observing the planet, and where are we guessing?\n\nBy the end of the workshop, you will be able to:\n\nConvert tabular coordinates into simple feature objects.\nInspect geometries and coordinate reference systems.\nTransform vector data into an appropriate projected CRS.\nMeasure distances among point locations.\nUse country and continent polygons from rnaturalearth.\nUse spatial predicates and spatial joins to count towers inside regions.\nCalculate polygon area and tower density.\nEvaluate basic representativeness of the CH4 tower network.\nWrite spatial outputs for later workshops.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"rnaturalearth\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(sf)\nlibrary(rnaturalearth)\nlibrary(tidyverse)\nlibrary(ggplot2)",
-    "crumbs": [
-      "Introduction to R",
-      "Vector Data"
-    ]
-  },
-  {
-    "objectID": "terra.html#mapping-climate-surfaces",
-    "href": "terra.html#mapping-climate-surfaces",
-    "title": "Raster Data: Climate Exposure and Tower Similarity",
-    "section": "",
-    "text": "Vector data told us where FLUXNET CH4 towers are located. Raster data lets us ask what environmental conditions surround those towers. In this workshop, we will use gridded climate layers to evaluate the climate exposure represented by methane tower sites and to identify towers that may be useful analogs for thinking about methane fluxes in Yale-Myers Forest wetlands.\nWe will ask:\n\nWhat climate conditions do FLUXNET CH4 towers represent, and which towers are most similar to Yale-Myers Forest?\n\nBy the end of this workshop, you will be able to:\n\nRead and inspect raster data with terra.\nUnderstand SpatRaster and SpatVector objects.\nCrop and mask rasters to an area of interest.\nUse raster algebra to create new climate layers.\nSummarize raster values globally and by polygon zones.\nExtract raster values to point locations.\nCompare tower-site climate exposure to gridded climate space.\nCalculate environmental dissimilarity among tower sites.\nUse multidimensional scaling (MDS) to visualize which towers are more or less similar.\n\n\n\n\ninstall.packages(\"sf\")\ninstall.packages(\"terra\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"rnaturalearth\")\n\n\n\n\n\nlibrary(terra)\nlibrary(tidyverse)\nlibrary(rnaturalearth)\nlibrary(sf)",
-    "crumbs": [
-      "Introduction to R",
-      "Raster Data"
     ]
   },
   {
@@ -450,25 +562,36 @@
     ]
   },
   {
-    "objectID": "random_forest.html#from-integrated-data-to-prediction",
-    "href": "random_forest.html#from-integrated-data-to-prediction",
-    "title": "Random Forest Models: Predicting Methane Flux",
+    "objectID": "data_basics.html",
+    "href": "data_basics.html",
+    "title": "Data Basics",
     "section": "",
-    "text": "In Data Integration, we built the kind of table needed for methane flux modeling: one row per site-month, with methane flux as the response and climate, vegetation, and ecosystem variables as candidate predictors.\nIn this workshop, we will ask:\n\nCan we use climate, vegetation, and ecosystem predictors to estimate monthly methane flux, and how do we know whether the model is useful?\n\nBy the end of this workshop, you will be able to:\n\nIdentify a response variable and candidate predictors.\nPrepare a model-ready table for random forest regression.\nCompare candidate random forest models.\nEvaluate train and test performance using RMSE, MAE, R-squared, and bias.\nInterpret variable importance without treating it as causation.\nCompare random row splits with leave-one-site-out assessment.\nBuild a final model by selecting the best predictor from each category.\nSave a final model object for sensitivity analysis and spatial prediction.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"GGally\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(GGally)",
+    "text": "Yale-Myers Forest is a 7,840 acre research forest in northeastern Connecticut. It is a hub for education, research, and harvesting operations within the Yale Forest School system. The forest primarily consists of mixed hardwoods on glacial till soils, with hemlock, scattered white pine stands from old field origins, and red pine plantations established in the 1940s.\nIn this workshop, we will use daily climate data to ask a more interesting question:\n\nHas Yale-Myers Forest become warmer, wetter, or more climatically stressful since 1990?\n\nBy the end of the workshop, you will have built a small climate evidence brief for Yale-Myers Forest. Along the way, you will learn to:\n\nDownload climate data with daymetr.\nManipulate data with tidyverse:\n\nFormat date elements.\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets.\n\nVisualize data with ggplot2.\nWrite basic functions that make your analysis easier to reuse.",
     "crumbs": [
-      "Machine Learning in R",
-      "Random Forest"
+      "Introduction to R",
+      "Data Basics"
     ]
   },
   {
-    "objectID": "sensitivity.html#from-prediction-to-model-trust",
-    "href": "sensitivity.html#from-prediction-to-model-trust",
-    "title": "Sensitivity Analysis: Stress Testing a Methane Flux Model",
+    "objectID": "data_basics.html#reading-the-climate-record-of-yale-myers-forest",
+    "href": "data_basics.html#reading-the-climate-record-of-yale-myers-forest",
+    "title": "Data Basics",
     "section": "",
-    "text": "In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where the model is being asked to extrapolate beyond the data it learned from.\nIn this workshop, we will ask:\n\nWhat does our methane model believe about climate, vegetation, and ecosystem controls, and can we trust those beliefs for Yale-Myers-like wetland conditions?\n\nBy the end of this workshop, you will be able to:\n\nIdentify which predictors are used by a fitted random forest model.\nSummarize the training conditions used to fit the model.\nBuild one-at-a-time sensitivity curves.\nCompare realistic methane flux scenarios.\nFlag scenarios that fall outside the model’s training range.\nBuild two-way sensitivity heatmaps to explore interactions.\nCompare sensitivity results with random forest variable importance.\nWrite a short model-risk interpretation for final project reporting.\n\n\n\n\ninstall.packages(\"randomForest\")\ninstall.packages(\"tidyverse\")\ninstall.packages(\"ggplot2\")\n\n\n\n\n\nlibrary(randomForest)\nlibrary(tidyverse)\nlibrary(ggplot2)",
+    "text": "Yale-Myers Forest is a 7,840 acre research forest in northeastern Connecticut. It is a hub for education, research, and harvesting operations within the Yale Forest School system. The forest primarily consists of mixed hardwoods on glacial till soils, with hemlock, scattered white pine stands from old field origins, and red pine plantations established in the 1940s.\nIn this workshop, we will use daily climate data to ask a more interesting question:\n\nHas Yale-Myers Forest become warmer, wetter, or more climatically stressful since 1990?\n\nBy the end of the workshop, you will have built a small climate evidence brief for Yale-Myers Forest. Along the way, you will learn to:\n\nDownload climate data with daymetr.\nManipulate data with tidyverse:\n\nFormat date elements.\nUse select() to choose variables from a data frame.\nUse filter() to choose data based on values.\nUse mutate() to create new variables.\nUse reframe() to summarize datasets.\nUse full_join() to merge datasets.\n\nVisualize data with ggplot2.\nWrite basic functions that make your analysis easier to reuse.",
     "crumbs": [
-      "Machine Learning in R",
-      "Sensitivity Analysis"
+      "Introduction to R",
+      "Data Basics"
+    ]
+  },
+  {
+    "objectID": "spatial_projections.html",
+    "href": "spatial_projections.html",
+    "title": "Spatial Model Visualization: Scaling Methane Flux in Space",
+    "section": "",
+    "text": "In the Random Forest and Sensitivity Analysis workshops, we built and stress-tested a methane flux model. In this final workshop, we will project a model across Connecticut and turn gridded flux predictions into a methane emissions budget.\nThe key idea is a unit conversion:\n\nmethane flux density x inundated area = methane emissions\n\nOur random forest predicts methane flux as g C m-2 month-1. That is a rate per square meter. A map of predicted flux is not yet an emissions budget. To estimate emissions, we need to multiply by the area where methane-producing wetlands are present.\nThat is where the Wetland Area and Dynamics for Methane Modeling (WAD2M) product enters. WAD2M provides monthly wetland/inundation fractions on a global 0.25 degree grid. Zhang et al. (2021) describe WAD2M version 1.0 as a monthly product for 2000-2018 built for large-scale methane modeling. The NASA UpCH4 methane emissions product uses WAD2M to weight gridded methane flux predictions by fractional wetland extent before converting them to by-grid-cell emissions.\nUseful references:\n\nWAD2M paper: Zhang et al. 2021, Earth System Science Data\nWAD2M metadata summary: EPA HERO record\nExample methane upscaling product using WAD2M: NASA Open Data Portal, UpCH4\n\n\n\n\n\n\n\nData dependency\n\n\n\nThis workshop reuses the ERA5 climate rasters saved in data_integration.qmd: data/products/era5_ppt_monthly.tif and data/products/era5_tmean_monthly.tif.\nFor WAD2M, this workshop expects a Connecticut-ready 2018 monthly inundation fraction raster at data/products/wad2m_inundation_fraction_ct_2018.tif. If that file is not present, the code creates a clearly labeled seasonal classroom proxy from the provided MODIS land-cover raster so the unit-conversion workflow still runs.\n\n\nBy the end of this workshop, you will be able to:\n\nIdentify the variables, units, names, and classes needed for spatial prediction.\nAlign predictor rasters so they have the same CRS, resolution, extent, and layer names.\nPredict monthly methane flux density in space.\nExplain what WAD2M inundation fraction represents.\nConvert flux density to cell-level monthly and annual emissions.\nCompare budgets with and without inundation-fraction scaling.\nExtract predictions and emissions for the Yale-Myers Forest grid cell.\nTest how sensitive the budget is to inundation-area uncertainty.\nReport methane emissions in g C, Tg C, and Tg CH4.\n\n\n\n\nlibrary(randomForest)\nlibrary(terra)\nlibrary(tidyverse)",
+    "crumbs": [
+      "Dynamic Models in R",
+      "Spatial Model Visualization"
     ]
   },
   {
@@ -502,6 +625,36 @@
     "crumbs": [
       "Dynamic Models in R",
       "Spatial Model Visualization"
+    ]
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Course Setup",
+    "section": "",
+    "text": "Before starting the workshops, install R, RStudio, and the R packages used across the course. Some packages are used in only one workshop, but installing them now prevents small setup problems from interrupting class time.\n\ninstall.packages(c(\n  \"curl\",\n  \"daymetr\",\n  \"dplyr\",\n  \"forcats\",\n  \"GGally\",\n  \"ggplot2\",\n  \"gtools\",\n  \"lubridate\",\n  \"randomForest\",\n  \"readr\",\n  \"sf\",\n  \"terra\",\n  \"tidyr\",\n  \"tidyverse\",\n  \"zoo\"\n))\n\nThese packages are optional or may require additional setup:\n\n# ERA5 downloads require a CDS account and API key.\ninstall.packages(\"ecmwfr\")\n\n# Helpful for spatial examples, but not required by the rendered workshops.\ninstall.packages(\"rnaturalearth\")\n\n\n\n\n\n\n\nOptional data products for final projects\n\n\n\nThe course data package contains the files needed to run the core workshops. Final projects may require additional products, including ERA5 climate downloads and WAD2M inundation fractions. The Data Integration and Spatial Model Visualization workshops show where those products should be saved under data/products/.",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#software-and-packages",
+    "href": "setup.html#software-and-packages",
+    "title": "Course Setup",
+    "section": "",
+    "text": "Before starting the workshops, install R, RStudio, and the R packages used across the course. Some packages are used in only one workshop, but installing them now prevents small setup problems from interrupting class time.\n\ninstall.packages(c(\n  \"curl\",\n  \"daymetr\",\n  \"dplyr\",\n  \"forcats\",\n  \"GGally\",\n  \"ggplot2\",\n  \"gtools\",\n  \"lubridate\",\n  \"randomForest\",\n  \"readr\",\n  \"sf\",\n  \"terra\",\n  \"tidyr\",\n  \"tidyverse\",\n  \"zoo\"\n))\n\nThese packages are optional or may require additional setup:\n\n# ERA5 downloads require a CDS account and API key.\ninstall.packages(\"ecmwfr\")\n\n# Helpful for spatial examples, but not required by the rendered workshops.\ninstall.packages(\"rnaturalearth\")\n\n\n\n\n\n\n\nOptional data products for final projects\n\n\n\nThe course data package contains the files needed to run the core workshops. Final projects may require additional products, including ERA5 climate downloads and WAD2M inundation fractions. The Data Integration and Spatial Model Visualization workshops show where those products should be saved under data/products/.",
+    "crumbs": [
+      "Setup"
+    ]
+  },
+  {
+    "objectID": "setup.html#data-acquisition",
+    "href": "setup.html#data-acquisition",
+    "title": "Course Setup",
+    "section": "Data Acquisition",
+    "text": "Data Acquisition\nThe data files required for this course are available through the Environmental Data Initiative (EDI) repository. EDI is a data repository that hosts ecological and environmental data for the long-term.\nThere are various ways to acquire data from data repositories. The method that a lot of people are accustomed to is by clicking “Download” to manually grab the files and then dragging them to the appropriate folder on their local computer. This method works, but it is not the most reproducible way to run your workflow since it’s difficult to document the clicking of your cursor.\nInstead, you can acquire data programmatically with R and save all the steps in this part of the workflow in a script. If you, or anyone else, want to reproduce the same results in the future, you can just rerun the same script.\nTo get the data programmatically through R, first navigate to the data package landing page at: https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f\n\n\n\nThe landing page shows a summary of the metadata for this data package. Metadata, or data about data, gives context to the variables in the dataset by documenting what was measured, who made the measurements, when and where were they made, and why was the data collected/created in the first place.\nWe will need the direct URL to “EDS_Course_Materials.zip” in order to download it through R. To get this specific URL, click on “View Full Metadata”.\n\n\n\nThis will bring us to a page with detailed descriptions of everything associated with this data package.\n\n\n\nScroll down to “Detailed Metadata” and click on the plus/minus symbols next to “Data Entities” to show more information on “EDS_Course_Materials.zip”.\n\n\n\nThis section describes what the file is for, along with additional metadata such as the file size and format. Copy the URL for this file.\nOnce you’ve got the URL, navigate to your workspace/working directory in RStudio for this course. You can check your current working directory by running getwd(). If the output of getwd() does not return the file path to your folder for this course, you will need to run setwd(dir = \"...\") by replacing ... with the file path of your choice.\nThen follow the code below to download and unzip “EDS_Course_Materials.zip”.\n\n## --------------------------------------------- ##\n#               EDI Download -----\n## --------------------------------------------- ##\n# If you don't have the curl package, install it first\n# install.packages(\"curl\")\n\n# Load package(s)\nlibrary(curl)\n\n# Let's download EDS_Course_Materials.zip from this EDI package:\n# https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f \n\n# Paste the direct URL to EDS_Course_Materials.zip\nedi_url &lt;- \"https://pasta.lternet.edu/package/data/eml/edi/2081/1/757761d2f8d14f9026c67a449beac216\"\n\n# Download the zip file to your local computer\ncurl::curl_download(url = edi_url, \n                    destfile = \"EDS_Course_Materials.zip\", \n                    quiet = F)\n\n# Unzip it into a folder called \"data\"\nunzip(\"EDS_Course_Materials.zip\", exdir = \"data\")\n\n\n\n\n\n\n\nHaving trouble downloading?\n\n\n\nIf you’re having issues downloading the zip file through R, navigate back to the data package landing page on EDI and click on the Download button under “Data Entities: 1. EDS_Course_Materials”. \n\n\nDue to the way the data has been packaged, you may see this folder organization once you’ve unzipped the file:\nyour-working-directory/\n├── data/               \n│   ├── __MACOSX/             \n│   └── EDS_Course_Materials/             \n│       ├── EDS_Course_Materials_README.pdf\n│       ├── Elevation.tif\n│       ├── Elevation.tif.aux.json\n│       ├── ENV720-MOD13A3-061-results.csv\n│       ├── final_model.RDATA\n│       ├── FLUXNET_FLUXES.RDATA\n│       ├── FluxNet_Sites_2024.csv\n│       ├── GlobalClimate.tif\n│       ├── GlobalClimate.tif.aux.json\n│       ├── GlobalSoil_grids.tif\n│       ├── GlobalSoil_grids.tif.aux.json\n│       ├── MODIS_IGBP_2001-2022_CT.tif\n│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.json\n│       ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml\n│       ├── Monthly_Fluxes.RDATA\n│       ├── RANDOMFOREST_DATASET.RDATA\n│       ├── SensitivityProducts.RDATA\n│       ├── TERRA_PPT_2021_CT.tif\n│       └── TERRA_TMEAN_2021_CT.tif   \n│\n└── more_stuff/            \nFor the purposes of this course, we need to move all the content under data/EDS_Course_Materials to just the data folder. Run the following code to do so.\n\n## --------------------------------------------- ##\n#               Moving Files -----\n## --------------------------------------------- ##\n\n# List all the files inside \"data/EDS_Course_Materials\"\nnames &lt;- dir(file.path(\"data\", \"EDS_Course_Materials\")) \n\n# Create a function to move all the files from \"data/EDS_Course_Materials\" to \"data\"\nrelocate_function &lt;- function(file_name){\n  file.rename(from = file.path(\"data\", \"EDS_Course_Materials\", file_name),\n              to = file.path(\"data\", file_name))\n}\n\n# Apply the function to all files\nlapply(names, relocate_function)\n\n# Delete the now empty EDS_Course_Materials folder\nunlink(file.path(\"data\", \"EDS_Course_Materials\"), recursive = TRUE)\n\nIf you’ve followed all the steps correctly, your working directory should now look something like this:\nyour-working-directory/\n├── data/               \n│   ├── __MACOSX/             \n│   ├── EDS_Course_Materials_README.pdf\n│   ├── Elevation.tif\n│   ├── Elevation.tif.aux.json\n│   ├── ENV720-MOD13A3-061-results.csv\n│   ├── final_model.RDATA\n│   ├── FLUXNET_FLUXES.RDATA\n│   ├── FluxNet_Sites_2024.csv\n│   ├── GlobalClimate.tif\n│   ├── GlobalClimate.tif.aux.json\n│   ├── GlobalSoil_grids.tif\n│   ├── GlobalSoil_grids.tif.aux.json\n│   ├── MODIS_IGBP_2001-2022_CT.tif\n│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.json\n│   ├── MODIS_IGBP_2001-2022_CT.tif.aux.xml\n│   ├── Monthly_Fluxes.RDATA\n│   ├── RANDOMFOREST_DATASET.RDATA\n│   ├── SensitivityProducts.RDATA\n│   ├── TERRA_PPT_2021_CT.tif\n│   └── TERRA_TMEAN_2021_CT.tif   \n│\n└── more_stuff/",
+    "crumbs": [
+      "Setup"
     ]
   }
 ]

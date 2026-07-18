@@ -768,6 +768,11 @@ For your final methane model, identify:
 8.  The join key or extraction method.
 9.  A validation check for each predictor.
 
+::: {.callout-tip}
+## Course product
+This workshop produces a final project data integration plan. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on source documentation, units, join keys, missingness, and validation checks.
+:::
+
 ## Assignment
 
 Submit a 1-2 page **Final Project Data Integration Plan**. Include:

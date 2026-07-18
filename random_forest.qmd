@@ -514,6 +514,11 @@ save(fch4_rf, train, test, final_formula, final_predictors,
      file = "data/products/random_forest_model.RDATA")
 ```
 
+::: {.callout-tip}
+## Course product
+This workshop produces a model comparison and final random forest model. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on validation metrics, leave-one-site-out performance, and model limitations.
+:::
+
 # Assignment
 
 Build and compare at least three random forest models for methane flux:
