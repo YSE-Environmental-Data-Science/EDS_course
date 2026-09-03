@@ -270,7 +270,7 @@
     "href": "index.html#course-ouline",
     "title": "ENV 730",
     "section": "Course Ouline:",
-    "text": "Course Ouline:\n\n\n\n\n\n\n\n~Week\nWorkshop Topic\n\n\n\n\n1-6\nIntroduction to R\n\nOpen Science Best Practices\nData Basics (Importing, visualizing, manipulating data)\nVector Data Manipulation & Visualization (sf)\nRaster Data Manipulation & Visualization (terra)\n\n\n\n7-8\nData Integration in R\n\nTechniques for Data Integration\n\n\n\n9-10\nMachine Learning in R\n\nRandomForest Model Development: Fitting models\nRandomForest Model Development: Validating models\nRandomForest Model Development: Sensitivity Analysis\n\n\n\n11-12\nDynamic Models in R\n\nSpatial Model Visualization\nModel Competition\n\n\n\n13-16\nFinal Project (Independent)\n\nProposal Presentation\nFinal Report\nFinal Project Presentation",
+    "text": "Course Ouline:\n\n\n\n\n\n\n\n~Week\nWorkshop Topic\n\n\n\n\n1-5\nIntroduction to R\n\nOpen Science Best Practices\nData Basics (Importing, visualizing, manipulating data)\nVector Data Manipulation & Visualization (sf)\nRaster Data Manipulation & Visualization (terra)\n\n\n\n6-8\nData Integration in R\n\nTechniques for Data Integration\n\n\n\n9-10\nMachine Learning in R\n\nRandomForest Model Development: Fitting models\nRandomForest Model Development: Validating models\nRandomForest Model Development: Sensitivity Analysis\n\n\n\n11-12\nDynamic Models in R\n\nSpatial Model Visualization\nModel Competition\n\n\n\n13-16\nFinal Project (Independent)\n\nProposal Presentation\nFinal Report\nFinal Project Presentation",
     "crumbs": [
       "Syllabus"
     ]

@@ -1,10 +1,12 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - survey/skills_survey.html
 
 website:
   favicon: images/favicon.png
-  page-footer: "Copyright 2024, Sparkle L. Malone" 
+  page-footer: "Copyright 2024, Sparkle L. Malone"
   sidebar:
     style: "docked"
     search: true
@@ -17,7 +19,9 @@ website:
       - text: "Syllabus"
         href: index.qmd
       - text: "Setup"
-        href: setup.qmd        
+        href: setup.qmd
+      - text: "Class Survey"
+        href: class_survey.qmd
       - section: "Introduction to R"
         contents:
           - text: "Data Basics"
@@ -50,11 +54,11 @@ website:
             href: data_repos.qmd
           - text: "Data Publication"
             href: data_pub.qmd
-          
+
 
 format:
   html:
-    theme: 
+    theme:
       - yeti
       - styles.scss
     toc: true

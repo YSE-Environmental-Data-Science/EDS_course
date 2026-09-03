@@ -73,7 +73,7 @@ Before collaborating with an AI chatbot on your work for this course, please req
 +-------------+-------------------------------------------------------------+
 | ~Week       | Workshop Topic                                              |
 +=============+=============================================================+
-| 1-6         | **Introduction to R**                                       |
+| 1-5         | **Introduction to R**                                       |
 |             |                                                             |
 |             | -   Open Science Best Practices                             |
 |             |                                                             |
@@ -83,7 +83,7 @@ Before collaborating with an AI chatbot on your work for this course, please req
 |             |                                                             |
 |             | -   Raster Data Manipulation & Visualization (terra)        |
 +-------------+-------------------------------------------------------------+
-| 7-8         | **Data Integration in R**                                   |
+| 6-8         | **Data Integration in R**                                   |
 |             |                                                             |
 |             | -   Techniques for Data Integration                         |
 +-------------+-------------------------------------------------------------+

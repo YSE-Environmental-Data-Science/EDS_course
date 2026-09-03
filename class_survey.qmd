@@ -1,0 +1,27 @@
+---
+title: "Class Survey — Skills Map"
+---
+
+A quick first-day survey so we can get to know the class. Tell us **who you are and what you want to build**, then **rate your skills** (about five minutes). Your answers build a live map of the whole class — switch to the **Class map** tab inside the survey to see it fill in.
+
+::: {.callout-note appearance="simple"}
+No sign-in needed, and there are no wrong answers — the skills questions just help us pitch the workshops and pair people up.
+:::
+
+```{=html}
+<div id="eds-survey-wrap">
+  <iframe id="eds-survey" src="survey/skills_survey.html"
+          title="ENV 730 Class Skills Map"
+          style="width:100%;border:0;border-radius:14px;min-height:1500px;overflow:hidden"
+          loading="lazy"></iframe>
+</div>
+<script>
+  // resize the embedded survey to its content so there is no inner scrollbar
+  window.addEventListener('message', function (e) {
+    if (e.data && e.data.env730Height) {
+      var f = document.getElementById('eds-survey');
+      if (f) f.style.height = (e.data.env730Height + 24) + 'px';
+    }
+  });
+</script>
+```

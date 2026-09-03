@@ -8,3 +8,5 @@
 *.tif
 .DS_Store
 **/*.quarto_ipynb
+Games
+Lectures
