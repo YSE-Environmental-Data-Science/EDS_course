@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENV 730 Skills Map</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+  :root{
+    --ground:#F3F1E8; --surface:#FCFBF5; --surface-2:#ECE8DA; --line:#DBD5C6;
+    --text:#263029; --muted:#5E6B62; --heading:#1B3A2B;
+    --brand:#2C5F2D; --brand-soft:#6B8E4E; --accent:#B9772A; --accent-soft:#EBDCC1;
+    --on-accent:#FFFFFF; --dot:#2C5F2D; --grid:#E4DFD0;
+    --shadow:0 2px 6px rgba(28,45,34,.07),0 8px 22px rgba(28,45,34,.06);
+    --sans:"Public Sans",system-ui,-apple-system,Segoe UI,sans-serif;
+    --serif:"Fraunces","Iowan Old Style",Georgia,serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#121A15; --surface:#1A241D; --surface-2:#223029; --line:#33463A;
+    --text:#E7EEE4; --muted:#9DB0A2; --heading:#CFE3C4;
+    --brand:#9BC17E; --brand-soft:#7FA659; --accent:#E0A44E; --accent-soft:#3A2E1B;
+    --on-accent:#17130B; --dot:#9BC17E; --grid:#2A3A30;
+    --shadow:0 2px 6px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.28);
+  }}
+  :root[data-theme="dark"]{
+    --ground:#121A15; --surface:#1A241D; --surface-2:#223029; --line:#33463A;
+    --text:#E7EEE4; --muted:#9DB0A2; --heading:#CFE3C4;
+    --brand:#9BC17E; --brand-soft:#7FA659; --accent:#E0A44E; --accent-soft:#3A2E1B;
+    --on-accent:#17130B; --dot:#9BC17E; --grid:#2A3A30;
+    --shadow:0 2px 6px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.28);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--ground);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:clamp(1rem,3vw,2rem) clamp(1rem,3vw,1.5rem) 3rem}
+  h1,h2,h3{font-family:var(--serif);color:var(--heading);text-wrap:balance;margin:0}
+  .eyebrow{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--accent);margin:0}
+  header{margin-bottom:1.4rem}
+  header h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:600;line-height:1.03;margin:.35rem 0}
+  header p{margin:.3rem 0 0;color:var(--muted);max-width:52ch}
+  .tabs{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:.28rem;gap:.25rem;margin-bottom:1.5rem}
+  .tabs button{font-family:var(--sans);font-weight:600;font-size:.94rem;border:0;cursor:pointer;padding:.5rem 1.1rem;border-radius:999px;background:transparent;color:var(--muted)}
+  .tabs button[aria-selected="true"]{background:var(--surface);color:var(--heading);box-shadow:var(--shadow)}
+  .tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  section.panel{display:none} section.panel.active{display:block}
+  .step{font-family:var(--serif);font-size:1.25rem;color:var(--heading);font-weight:600;display:flex;align-items:center;gap:.6rem;margin:0 0 .25rem}
+  .step .n{display:inline-grid;place-items:center;width:1.6rem;height:1.6rem;border-radius:999px;background:var(--accent);color:var(--on-accent);font-family:var(--sans);font-size:.88rem;font-weight:700}
+  .step-sub{color:var(--muted);margin:.1rem 0 1rem;font-size:.95rem}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:clamp(1rem,2.4vw,1.6rem);box-shadow:var(--shadow);margin-bottom:1.5rem}
+  .field{margin-bottom:1.05rem}.field:last-child{margin-bottom:0}
+  label.q{display:block;font-weight:600;color:var(--heading);margin-bottom:.35rem;font-size:.96rem}
+  label.q .opt{font-weight:400;color:var(--muted);font-size:.83rem}
+  input[type=text],textarea{width:100%;font-family:var(--sans);font-size:1rem;color:var(--text);background:var(--ground);border:1.5px solid var(--line);border-radius:10px;padding:.55rem .7rem;resize:vertical}
+  input[type=text]:focus,textarea:focus{outline:none;border-color:var(--brand-soft);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand-soft) 25%,transparent)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.05rem}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+  .skill{display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:center;padding:.65rem 0;border-bottom:1px solid var(--line)}
+  .skill:last-of-type{border-bottom:0}
+  .skill .name{font-weight:600;color:var(--heading);font-size:1rem}
+  .skill .hint{color:var(--muted);font-size:.81rem;font-weight:400;display:block}
+  .rate{display:inline-flex;gap:.3rem}
+  .rate input{position:absolute;opacity:0;width:1px;height:1px}
+  .rate label{width:2.1rem;height:2.1rem;display:grid;place-items:center;border-radius:9px;cursor:pointer;background:var(--surface-2);color:var(--muted);font-weight:700;font-variant-numeric:tabular-nums;border:1.5px solid transparent}
+  .rate input:checked+label{background:var(--brand);color:#fff;border-color:var(--brand)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rate input:checked+label{color:#12180f}}
+  :root[data-theme="dark"] .rate input:checked+label{color:#12180f}
+  .rate input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+  .scale-key{display:flex;justify-content:space-between;color:var(--muted);font-size:.81rem;margin:.2rem 0 .9rem}
+  .actions{display:flex;flex-wrap:wrap;align-items:center;gap:1rem}
+  .btn{font-family:var(--sans);font-weight:700;font-size:1rem;border:0;cursor:pointer;background:var(--accent);color:var(--on-accent);padding:.65rem 1.4rem;border-radius:11px;box-shadow:var(--shadow)}
+  .btn:hover{filter:brightness(1.05)} .btn:disabled{opacity:.6;cursor:default}
+  .btn:focus-visible{outline:2px solid var(--heading);outline-offset:2px}
+  .note{color:var(--muted);font-size:.9rem}
+  .toast{background:var(--accent-soft);color:var(--heading);border-radius:10px;padding:.65rem 1rem;font-weight:600;font-size:.94rem;margin-bottom:1.1rem;display:none}
+  .toast.show{display:block}
+  .statrow{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;box-shadow:var(--shadow);flex:1;min-width:150px}
+  .stat .big{font-family:var(--serif);font-size:2rem;font-weight:600;color:var(--heading);line-height:1;font-variant-numeric:tabular-nums}
+  .stat .lbl{color:var(--muted);font-size:.84rem;margin-top:.3rem}
+  .banner{background:var(--accent-soft);color:var(--heading);border-radius:10px;padding:.55rem .9rem;font-size:.87rem;font-weight:600;margin-bottom:1.1rem;display:none}
+  .banner.show{display:block}
+  h2.block{font-size:1.3rem;font-weight:600;margin:0 0 .15rem}
+  .block-sub{color:var(--muted);font-size:.9rem;margin:0 0 1rem}
+  .maprow{display:grid;grid-template-columns:1.15fr .85fr;gap:1.4rem}@media(max-width:720px){.maprow{grid-template-columns:1fr}}
+  .plot{width:100%;height:auto;display:block}
+  .axis-x{text-align:center;color:var(--muted);font-size:.82rem;margin-top:.15rem;font-weight:600}
+  .quadkey{font-size:.82rem;color:var(--muted)} .quadkey b{color:var(--heading)}
+  .bars{display:flex;flex-direction:column;gap:.65rem}
+  .bar{display:grid;grid-template-columns:11rem 1fr 2.6rem;gap:.7rem;align-items:center}@media(max-width:560px){.bar{grid-template-columns:8.5rem 1fr 2.4rem}}
+  .bar .bn{font-size:.89rem;font-weight:600;color:var(--heading)}
+  .track{background:var(--line);border-radius:999px;height:.72rem;overflow:hidden}
+  .fill{background:var(--brand);height:100%;border-radius:999px;min-width:.72rem;transition:width .5s}
+  .bar .bv{font-variant-numeric:tabular-nums;font-weight:700;color:var(--brand);font-size:.9rem;text-align:right}
+  .interests{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+  .icard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow)}
+  .icard .who{font-family:var(--serif);font-weight:600;color:var(--heading);font-size:1.05rem}
+  .icard .prog{color:var(--muted);font-size:.81rem;margin-bottom:.5rem}
+  .icard dt{font-size:.69rem;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-top:.5rem}
+  .icard dd{margin:.1rem 0 0;font-size:.91rem;color:var(--text)}
+  .empty{color:var(--muted);text-align:center;padding:2.2rem 1rem}
+  .refresh{background:transparent;border:1.5px solid var(--line);color:var(--muted);border-radius:9px;padding:.35rem .8rem;font-family:var(--sans);font-weight:600;font-size:.85rem;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">ENV 730 · Getting to know the class</p>
+    <h1>Class Skills Map</h1>
+    <p>Tell us who you are and what you want to build — then rate your skills. Your answers build a live map of the whole class.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Views">
+    <button role="tab" id="tab-survey" aria-selected="true" aria-controls="panel-survey">Take the survey</button>
+    <button role="tab" id="tab-map" aria-selected="false" aria-controls="panel-map">Class map</button>
+  </div>
+
+  <section class="panel active" id="panel-survey" role="tabpanel" aria-labelledby="tab-survey">
+    <div class="toast" id="toast"></div>
+    <form id="form" novalidate>
+      <div class="card">
+        <div class="step"><span class="n">1</span> About you &amp; your interests</div>
+        <p class="step-sub">We start here — the science is more fun when we know what everyone cares about.</p>
+        <div class="grid2">
+          <div class="field"><label class="q" for="name">Name or initials</label>
+            <input type="text" id="name" autocomplete="off" placeholder="e.g. Jordan L."></div>
+          <div class="field"><label class="q" for="program">Program / department <span class="opt">(optional)</span></label>
+            <input type="text" id="program" autocomplete="off" placeholder="e.g. MESc, Forestry"></div>
+        </div>
+        <div class="field"><label class="q" for="system">An environmental system or topic you care about</label>
+          <input type="text" id="system" placeholder="e.g. coastal wetlands, wildfire, urban heat, permafrost"></div>
+        <div class="field"><label class="q" for="dataset">A dataset you’ve wrestled with — or wish you could <span class="opt">(optional)</span></label>
+          <input type="text" id="dataset" placeholder="e.g. Landsat NDVI, eddy-covariance flux, streamgauge records"></div>
+        <div class="field"><label class="q" for="question">A question you’d love to answer or model this term</label>
+          <textarea id="question" rows="2" placeholder="e.g. Can I predict methane flux from climate and land cover in my study region?"></textarea></div>
+        <div class="field"><label class="q" for="why">Why are you taking ENV 730? <span class="opt">(optional)</span></label>
+          <textarea id="why" rows="2" placeholder="What do you hope to walk away able to do?"></textarea></div>
+      </div>
+      <div class="card">
+        <div class="step"><span class="n">2</span> Your skills, honestly</div>
+        <p class="step-sub">No wrong answers — this just tells us where to spend time and how to pair people up.</p>
+        <div class="scale-key"><span>1 · New to it</span><span>3 · Can get by</span><span>5 · Could teach it</span></div>
+        <div id="skills"></div>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn" id="submit">Add me to the map</button>
+        <span class="note" id="formnote"></span>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" id="panel-map" role="tabpanel" aria-labelledby="tab-map">
+    <div class="banner" id="banner">Showing example responses so you can see how the map works. They clear the moment real classmates submit.</div>
+    <div class="statrow" id="statrow"></div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap">
+        <div><h2 class="block">Where the class sits</h2>
+        <p class="block-sub">Each dot is one person. Left–right is coding &amp; tools; up–down is analysis &amp; spatial. Hover for the name.</p></div>
+        <button class="refresh" id="refresh">↻ Refresh</button>
+      </div>
+      <div class="maprow">
+        <div><svg class="plot" id="scatter" viewBox="0 0 100 96" role="img" aria-label="Skills scatter map"></svg>
+          <div class="axis-x">Coding &amp; tools&nbsp;→</div></div>
+        <div class="quadkey">
+          <p style="margin:.2rem 0 1rem;color:var(--heading);font-weight:600;font-family:var(--serif);font-size:1.05rem">Four corners</p>
+          <p style="margin:0 0 .8rem"><b>Top-right — All-rounders.</b> Comfortable coding and analyzing; great peer mentors.</p>
+          <p style="margin:0 0 .8rem"><b>Top-left — Analysts &amp; domain.</b> Strong on stats, modeling, or field science; building coding fluency.</p>
+          <p style="margin:0 0 .8rem"><b>Bottom-right — Toolbuilders.</b> Handy in R and Git; ready to layer on modeling and spatial work.</p>
+          <p style="margin:0"><b>Bottom-left — Fresh start.</b> New to much of this — exactly who the course is built for.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2 class="block">Class skill levels</h2>
+      <p class="block-sub">Average self-rating per skill (1–5). Short bars are where we’ll slow down together.</p>
+      <div class="bars" id="bars"></div>
+    </div>
+    <div class="card">
+      <h2 class="block">What the class wants to work on</h2>
+      <p class="block-sub">Everyone’s systems and questions — your first-day directory of shared interests.</p>
+      <div class="interests" id="interests"></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  /* ========================================================================
+     PASTE YOUR APPS SCRIPT WEB APP URL BELOW (it ends in /exec).
+     Leave it as "" to preview the page with example data.
+     ======================================================================== */
+  const API_URL = "";
+
+  const SKILLS=[
+    {key:'r',name:'R programming',hint:'Writing and running R scripts'},
+    {key:'wrangle',name:'Data wrangling',hint:'tidyverse — dplyr, tidyr'},
+    {key:'viz',name:'Data visualization',hint:'ggplot2 and friends'},
+    {key:'stats',name:'Statistics',hint:'Regression, uncertainty, inference'},
+    {key:'ml',name:'Machine learning',hint:'Random forests, model tuning'},
+    {key:'spatial',name:'Spatial / GIS',hint:'sf, terra, rasters & vectors'},
+    {key:'git',name:'Git & reproducibility',hint:'GitHub, projects, version control'},
+    {key:'domain',name:'Environmental science',hint:'Your domain / field knowledge'},
+  ];
+  const CODING=['r','wrangle','viz','git'], ANALYSIS=['stats','ml','spatial','domain'];
+  const LS_DONE='env730_submitted';
+  const EXAMPLES=[
+    {name:'Ex: A. Rivera',program:'MESc',system:'Coastal salt marshes',dataset:'Sentinel-2 NDVI',question:'How does marsh greenness track sea-level rise?',r:3,wrangle:3,viz:4,stats:3,ml:2,spatial:4,git:2,domain:4,_ex:true},
+    {name:'Ex: T. Osei',program:'PhD, F&ES',system:'Boreal wildfire',dataset:'MODIS burned area',question:'Can I predict post-fire carbon loss?',r:4,wrangle:4,viz:3,stats:4,ml:4,spatial:3,git:4,domain:3,_ex:true},
+    {name:'Ex: M. Chen',program:'MEM',system:'Urban heat',dataset:'City sensor network',question:'Where are the hottest under-shaded blocks?',r:2,wrangle:2,viz:2,stats:3,ml:1,spatial:2,git:1,domain:4,_ex:true},
+    {name:'Ex: R. Patel',program:'MF',system:'Peatland methane',dataset:'FLUXNET-CH4',question:'Which towers are analogs for my site?',r:5,wrangle:4,viz:5,stats:3,ml:3,spatial:5,git:5,domain:3,_ex:true},
+  ];
+
+  // build skill rows
+  const skillsBox=document.getElementById('skills');
+  SKILLS.forEach(s=>{
+    const row=document.createElement('div'); row.className='skill';
+    const lab=document.createElement('div'); lab.innerHTML=`<span class="name">${s.name}</span><span class="hint">${s.hint}</span>`;
+    const rate=document.createElement('div'); rate.className='rate'; rate.setAttribute('role','radiogroup'); rate.setAttribute('aria-label',s.name);
+    for(let i=1;i<=5;i++){const id=`${s.key}_${i}`;
+      const inp=document.createElement('input'); inp.type='radio'; inp.name=s.key; inp.value=i; inp.id=id;
+      const l=document.createElement('label'); l.setAttribute('for',id); l.textContent=i; rate.append(inp,l);}
+    row.append(lab,rate); skillsBox.append(row);
+  });
+
+  // tabs
+  const tabs={survey:document.getElementById('tab-survey'),map:document.getElementById('tab-map')};
+  const panels={survey:document.getElementById('panel-survey'),map:document.getElementById('panel-map')};
+  function show(w){for(const k in tabs){const on=k===w;tabs[k].setAttribute('aria-selected',on);panels[k].classList.toggle('active',on);}postHeight();}
+  tabs.survey.onclick=()=>show('survey'); tabs.map.onclick=()=>show('map');
+  document.getElementById('refresh').onclick=()=>loadData();
+
+  // iframe auto-resize for embedding in the course site
+  function postHeight(){try{if(window.parent!==window)parent.postMessage({env730Height:document.documentElement.scrollHeight},'*');}catch(e){}}
+  window.addEventListener('load',()=>setTimeout(postHeight,300));
+  window.addEventListener('resize',postHeight);
+
+  // ---- data layer (JSONP read, no-cors POST) ----
+  let responses=[];
+  let cbN=0;
+  function loadData(){
+    if(!API_URL){ render(); return; }
+    const cb='__eds_cb_'+(++cbN);
+    const s=document.createElement('script');
+    window[cb]=function(payload){
+      try{ responses=(payload&&payload.responses)?payload.responses.map(normalize):[]; }catch(e){ responses=[]; }
+      render(); delete window[cb]; s.remove();
+    };
+    s.onerror=()=>{ delete window[cb]; s.remove(); render(); };
+    s.src=API_URL+(API_URL.indexOf('?')>-1?'&':'?')+'callback='+cb+'&t='+Date.now();
+    document.body.appendChild(s);
+  }
+  function normalize(r){const o={...r};['r','wrangle','viz','stats','ml','spatial','git','domain'].forEach(k=>{const v=parseFloat(o[k]);o[k]=isFinite(v)?v:null;});return o;}
+
+  document.getElementById('form').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const d=collect();
+    if(!d.name){flash('Please add your name or initials first.');document.getElementById('name').focus();return;}
+    if(!API_URL){toast('Preview mode — publish the page with your web-app URL to collect responses.');return;}
+    const btn=document.getElementById('submit'); btn.disabled=true; btn.textContent='Saving…';
+    try{
+      await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)});
+      try{localStorage.setItem(LS_DONE,'1');}catch(_){}
+      toast('You’re on the map! Loading the class view…');
+      btn.textContent='Submitted ✓';
+      setTimeout(()=>{loadData();show('map');},1200);
+    }catch(err){
+      toast('Could not save just now — please try again in a moment.');
+      btn.disabled=false; btn.textContent='Add me to the map';
+    }
+  });
+
+  function collect(){
+    const g=id=>document.getElementById(id).value.trim();
+    const o={name:g('name'),program:g('program'),system:g('system'),dataset:g('dataset'),question:g('question'),why:g('why')};
+    SKILLS.forEach(s=>{const el=document.querySelector(`input[name="${s.key}"]:checked`);o[s.key]=el?+el.value:'';});
+    return o;
+  }
+  function flash(m){document.getElementById('formnote').textContent=m;}
+  function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');postHeight();setTimeout(()=>{t.classList.remove('show');postHeight();},4500);}
+
+  // ---- rendering ----
+  const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:3;
+  const avg=(list,k)=>{const v=list.map(r=>r[k]).filter(x=>typeof x==='number');return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
+  const initials=n=>(n||'?').replace(/^Ex:\s*/,'').split(/\s+/).map(w=>w[0]).join('').slice(0,3).toUpperCase();
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+
+  function render(){
+    const real=responses.length>0, data=real?responses:EXAMPLES;
+    document.getElementById('banner').classList.toggle('show',!real);
+    const topInterest=(()=>{const c={};data.forEach(r=>{const s=(r.system||'').trim();if(s)c[s]=(c[s]||0)+1;});const e=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];return e?e[0]:'—';})();
+    const strongest=[...SKILLS].map(s=>({s,v:avg(data,s.key)})).filter(o=>o.v!=null).sort((a,b)=>b.v-a.v)[0];
+    document.getElementById('statrow').innerHTML=
+      `<div class="stat"><div class="big">${real?responses.length:0}</div><div class="lbl">responses so far</div></div>
+       <div class="stat"><div class="big" style="font-size:1.3rem;padding-top:.35rem">${esc(topInterest)}</div><div class="lbl">most-shared topic</div></div>
+       <div class="stat"><div class="big" style="font-size:1.3rem;padding-top:.35rem">${strongest?esc(strongest.s.name):'—'}</div><div class="lbl">class’s strongest area</div></div>`;
+    drawScatter(data); drawBars(data); drawInterests(data); postHeight();
+  }
+
+  function drawScatter(data){
+    const NS='http://www.w3.org/2000/svg', svg=document.getElementById('scatter'); svg.innerHTML='';
+    const pad=10,w=100,h=96,x0=pad,x1=w-3,y0=3,y1=h-pad;
+    const map=(v,a,b)=>a+((v-1)/4)*(b-a), gx=v=>map(v,x0,x1), gy=v=>map(v,y1,y0);
+    const el=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);return e;};
+    const midx=gx(3),midy=gy(3);
+    svg.append(el('line',{x1:midx,y1:y0,x2:midx,y2:y1,stroke:'var(--grid)','stroke-width':.5}));
+    svg.append(el('line',{x1:x0,y1:midy,x2:x1,y2:midy,stroke:'var(--grid)','stroke-width':.5}));
+    svg.append(el('rect',{x:x0,y:y0,width:x1-x0,height:y1-y0,fill:'none',stroke:'var(--line)','stroke-width':.6,rx:1.5}));
+    const corner=(x,y,t,a)=>{const e=el('text',{x,y,'text-anchor':a,fill:'var(--muted)','font-size':2.6,'font-family':'Public Sans, sans-serif','font-weight':600});e.textContent=t;svg.append(e);};
+    corner(x1-1,y0+3,'All-rounders','end');corner(x0+1,y0+3,'Analysts','start');
+    corner(x1-1,y1-1.5,'Toolbuilders','end');corner(x0+1,y1-1.5,'Fresh start','start');
+    const yl=el('text',{x:2.6,y:(y0+y1)/2,fill:'var(--muted)','font-size':2.7,'font-weight':600,'font-family':'Public Sans, sans-serif','text-anchor':'middle',transform:`rotate(-90 2.6 ${(y0+y1)/2})`});
+    yl.textContent='Analysis & spatial →'; svg.append(yl);
+    const seen={};
+    data.forEach(r=>{
+      const cod=mean(CODING.map(k=>r[k]).filter(n=>typeof n==='number'));
+      const ana=mean(ANALYSIS.map(k=>r[k]).filter(n=>typeof n==='number'));
+      const key=cod.toFixed(1)+'|'+ana.toFixed(1),cnt=seen[key]=(seen[key]||0)+1,ang=cnt*2.4,jr=cnt>1?1.1:0;
+      const cx=gx(cod)+Math.cos(ang)*jr, cy=gy(ana)+Math.sin(ang)*jr, isEx=r._ex;
+      const g=el('g',{});
+      const dot=el('circle',{cx,cy,r:2.3,fill:isEx?'var(--brand-soft)':'var(--dot)',opacity:isEx?.55:.9,stroke:'var(--surface)','stroke-width':.6});
+      const tt=el('title',{});tt.textContent=`${r.name||'—'} · coding ${cod.toFixed(1)}, analysis ${ana.toFixed(1)}`;dot.append(tt);
+      const lbl=el('text',{x:cx,y:cy+.9,'text-anchor':'middle',fill:isEx?'var(--heading)':'#fff','font-size':1.9,'font-weight':700,'font-family':'Public Sans, sans-serif','pointer-events':'none'});
+      lbl.textContent=initials(r.name); g.append(dot,lbl); svg.append(g);
+    });
+  }
+  function drawBars(data){
+    const box=document.getElementById('bars'); box.innerHTML='';
+    SKILLS.forEach(s=>{const v=avg(data,s.key);const row=document.createElement('div');row.className='bar';
+      row.innerHTML=`<span class="bn">${s.name}</span><span class="track"><span class="fill" style="width:${v?(v/5*100):0}%"></span></span><span class="bv">${v?v.toFixed(1):'–'}</span>`;
+      box.append(row);});
+  }
+  function drawInterests(data){
+    const box=document.getElementById('interests'); box.innerHTML='';
+    const withText=data.filter(r=>(r.system||r.question||r.dataset));
+    if(!withText.length){box.innerHTML='<div class="empty">No responses yet — be the first on the survey tab.</div>';return;}
+    withText.forEach(r=>{const c=document.createElement('div');c.className='icard';
+      let html=`<div class="who">${esc(r.name||'Someone')}</div>`;
+      if(r.program)html+=`<div class="prog">${esc(r.program)}</div>`; html+='<dl style="margin:0">';
+      if(r.system)html+=`<dt>Cares about</dt><dd>${esc(r.system)}</dd>`;
+      if(r.question)html+=`<dt>Wants to model</dt><dd>${esc(r.question)}</dd>`;
+      if(r.dataset)html+=`<dt>Has worked with</dt><dd>${esc(r.dataset)}</dd>`;
+      html+='</dl>'; c.innerHTML=html; box.append(c);});
+  }
+
+  // initial load + gentle polling so the map updates as others submit
+  loadData();
+  setInterval(()=>{ if(API_URL && panels.map.classList.contains('active')) loadData(); }, 20000);
+</script>
+</body>
+</html>
