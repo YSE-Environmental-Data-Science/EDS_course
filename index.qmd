@@ -13,10 +13,6 @@ Dr. Sparkle L. Malone
 
 sparkle.malone\@yale.edu
 
-Office Hours: Mondays 12pm-3pm
-
-Teaching Fellow: TBD
-
 ## Limited Enrollment
 
 <b>Prerequisites:</b>
@@ -59,10 +55,9 @@ Before collaborating with an AI chatbot on your work for this course, please req
 
 ## Assignments, Assessments & Grading
 
--   Exam (125 points): This exam is designed to evaluate basic knowledge of R and Rstudio. A score of 90% or higher signifies that students have a strong foundational knowledge of R and R studio and are prepared to focus on the content in this course.
--   Attendance: Regular in-person classroom attendance is required of all students. When extenuating circumstances require accommodation, Dr. Malone will arrange for remote attendance via zoom.
--   Post-workshop Assessments (\~150 points): Assessments are assignments that require direct application of tools and analysis approaches.
--   Major Assessments (200 points): Activities designed to test mastery of concepts.
+-   Exams/Assessments (100 points): This exam is designed to evaluate basic knowledge of R and Rstudio. A score of 90% or higher signifies that students have a strong foundational knowledge of R and R studio and are prepared to focus on the content in this course.
+-   Attendance (120): Regular in-person classroom attendance is required of all students. When extenuating circumstances require accommodation, Dr. Malone will arrange for remote attendance via zoom.
+-   Post-workshop Assessments (\~250 points): Assessments are assignments that require direct application of tools and analysis approaches.
 -   Final Project (200 points):
     -   Proposal Presentation (50 points)
     -   Final Report (100 points)

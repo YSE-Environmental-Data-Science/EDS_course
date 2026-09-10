@@ -496,7 +496,7 @@
     "href": "index.html#instructor",
     "title": "ENV 730",
     "section": "Instructor",
-    "text": "Instructor\nDr. Sparkle L. Malone\nsparkle.malone@yale.edu\nOffice Hours: Mondays 12pm-3pm\nTeaching Fellow: TBD",
+    "text": "Instructor\nDr. Sparkle L. Malone\nsparkle.malone@yale.edu",
     "crumbs": [
       "Syllabus"
     ]
@@ -556,7 +556,7 @@
     "href": "index.html#assignments-assessments-grading",
     "title": "ENV 730",
     "section": "Assignments, Assessments & Grading",
-    "text": "Assignments, Assessments & Grading\n\nExam (125 points): This exam is designed to evaluate basic knowledge of R and Rstudio. A score of 90% or higher signifies that students have a strong foundational knowledge of R and R studio and are prepared to focus on the content in this course.\nAttendance: Regular in-person classroom attendance is required of all students. When extenuating circumstances require accommodation, Dr. Malone will arrange for remote attendance via zoom.\nPost-workshop Assessments (~150 points): Assessments are assignments that require direct application of tools and analysis approaches.\nMajor Assessments (200 points): Activities designed to test mastery of concepts.\nFinal Project (200 points):\n\nProposal Presentation (50 points)\nFinal Report (100 points)\nFinal Project Presentation (50 points)",
+    "text": "Assignments, Assessments & Grading\n\nExams/Assessments (100 points): This exam is designed to evaluate basic knowledge of R and Rstudio. A score of 90% or higher signifies that students have a strong foundational knowledge of R and R studio and are prepared to focus on the content in this course.\nAttendance (120): Regular in-person classroom attendance is required of all students. When extenuating circumstances require accommodation, Dr. Malone will arrange for remote attendance via zoom.\nPost-workshop Assessments (~250 points): Assessments are assignments that require direct application of tools and analysis approaches.\nFinal Project (200 points):\n\nProposal Presentation (50 points)\nFinal Report (100 points)\nFinal Project Presentation (50 points)",
     "crumbs": [
       "Syllabus"
     ]

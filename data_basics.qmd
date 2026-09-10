@@ -75,7 +75,7 @@ Daymet stores time as `year` and day of year (`yday`). We need one actual date c
 Step 1. Use the year and day of year to create a date:
 
 ```{r}
-yale_myers$year_day <- paste(yale_myers$year, yale_myers$yday, sep = "-") %>%
+yale_myers$date <- paste(yale_myers$year, yale_myers$yday, sep = "-") %>%
   as.Date(format = "%Y-%j")
 ```
 
@@ -83,13 +83,6 @@ Look at your work:
 
 ```{r}
 head(yale_myers$year_day)
-```
-
-Step 2. Format the date as YYYY-mm-dd:
-
-```{r}
-yale_myers$date <- format(yale_myers$year_day, "%Y-%m-%d") %>%
-  as.Date()
 ```
 
 Check the result:
@@ -256,7 +249,7 @@ Subset mean annual temperature and year from the annual summary. Then rename `tm
 
 ```{r}
 yale_myers_annual_tmean <- yale_myers_annual %>%
-  mutate(yale_myers = tmean) %>%
+  rename(yale_myers = tmean) %>%
   select(year, yale_myers)
 ```
 
@@ -272,6 +265,8 @@ Save the three files `yale_myers`, `yale_myers_sub`, and `yale_myers_annual_tmea
 
 ```{r}
 #| eval: false
+dir.create("data/products") 
+
 save(yale_myers, yale_myers_sub, yale_myers_annual_tmean,
      file = "data/products/data_basics.RDATA")
 ```
@@ -589,13 +584,13 @@ Now write a function that summarizes monthly climate conditions for any Daymet-s
 summarize_monthly_climate <- function(data) {
   data %>%
     reframe(.by = month,
-            tmean = mean(tmean, na.rm = TRUE),
+            tmean_mean = mean(tmean, na.rm = TRUE),
             tmean_se = standard_error(tmean),
-            prcp = mean(prcp, na.rm = TRUE),
+            prcp_mean = mean(prcp, na.rm = TRUE),
             prcp_se = standard_error(prcp),
-            tmin = mean(tmin, na.rm = TRUE),
+            tmin_mean = mean(tmin, na.rm = TRUE),
             tmin_se = standard_error(tmin),
-            tmax = mean(tmax, na.rm = TRUE),
+            tmax_mean = mean(tmax, na.rm = TRUE),
             tmax_se = standard_error(tmax)) %>%
     arrange(month)
 }
@@ -621,11 +616,11 @@ Plot monthly mean temperature with standard error:
 
 ```{r}
 ggplot(data = monthly_location_compare,
-       aes(x = month, y = tmean, color = location, group = location)) +
+       aes(x = month, y = tmean_mean, color = location, group = location)) +
   geom_line() +
   geom_point() +
-  geom_errorbar(aes(ymin = tmean - tmean_se,
-                    ymax = tmean + tmean_se),
+  geom_errorbar(aes(ymin = tmean_mean - tmean_se,
+                    ymax = tmean_mean + tmean_se),
                 width = 0.2) +
   labs(title = "Monthly mean temperature with standard error",
        x = "Month",
@@ -667,10 +662,10 @@ Find a location of interest within the United States in Google Earth (<https://e
 
 Your brief should include figures and text that show:
 
-1.  Differences in monthly mean temperature (`tmean`) and standard error for both locations.
-2.  Differences in monthly precipitation (`prcp`) and standard error for both locations.
-3.  Differences in monthly minimum temperature (`tmin`) and standard error for both locations.
-4.  Differences in monthly maximum temperature (`tmax`) and standard error for both locations.
+1.  Differences in monthly mean temperature (`tmean_mean`) and standard error for both locations.
+2.  Differences in monthly precipitation (`prcp_mean`) and standard error for both locations.
+3.  Differences in monthly minimum temperature (`tmin_mean`) and standard error for both locations.
+4.  Differences in monthly maximum temperature (`tmax_mean`) and standard error for both locations.
 5.  One climate stress indicator of your choice, such as hot days, freeze days, or wettest day.
 6.  A short explanation of why the two locations are similar or different.
 

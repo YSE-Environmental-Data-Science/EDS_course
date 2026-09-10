@@ -1,0 +1,184 @@
+{"kind":"deck","id":"pr/81ul2q","name":"Deck"}
+{"kind":"layout","layoutId":"ee1a6607-dae7-4a49-916d-32ec52ab585c","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"780a187e-8978-40b4-8c67-45b7b568693a","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/ka2tlr","slide":1,"title":"A scale-inference error in the global methane budget","textShapes":18}
+{"kind":"textbox","id":"sh/2hsrydk7","slide":1,"text":"A scale-inference error in the global methane budget","textPreview":"A scale-inference error in the global methane budget","textChars":52,"textLines":1,"bbox":[80,28,1440,52]}
+{"kind":"textbox","id":"sh/pk3a9s3y","slide":1,"text":"The chamber-measured soil sink is treated as the whole upland budget, but they are different quantities","textPreview":"The chamber-measured soil sink is treated as the whole upland budget, but they are different quantities","textChars":103,"textLines":1,"bbox":[120,80,1360,34]}
+{"kind":"shape","id":"sh/oju90n2d","slide":1,"bbox":[110,145,670,625]}
+{"kind":"shape","id":"sh/fu1s3ylg","slide":1,"bbox":[945,145,645,625]}
+{"kind":"textbox","id":"sh/etsrutkb","slide":1,"text":"CHAMBER — measurement domain","textPreview":"CHAMBER — measurement domain","textChars":28,"textLines":1,"bbox":[230,165,430,38]}
+{"kind":"textbox","id":"sh/1wja583m","slide":1,"text":"ECOSYSTEM — inference domain","textPreview":"ECOSYSTEM — inference domain","textChars":28,"textLines":1,"bbox":[1075,165,410,38]}
+{"kind":"textbox","id":"sh/gva9w321","slide":1,"text":"sees only the soil surface","textPreview":"sees only the soil surface","textChars":26,"textLines":1,"bbox":[348,353,300,30]}
+{"kind":"shape","id":"sh/zq5sf2l0","slide":1,"bbox":[378,400,130,82]}
+{"kind":"textbox","id":"sh/ypwr6xkf","slide":1,"text":"chamber\ncollar","textPreview":"chamber | collar","textChars":14,"textLines":2,"bbox":[390,414,106,52]}
+{"kind":"shape","id":"sh/k3ypcbu1","slide":1,"bbox":[138,480,614,245]}
+{"kind":"textbox","id":"sh/54765gbm","slide":1,"text":"aerated soil · methanotrophy","textPreview":"aerated soil · methanotrophy","textChars":28,"textLines":1,"bbox":[280,497,330,27]}
+{"kind":"shape","id":"sh/yhg7a1cv","slide":1,"bbox":[424,545,38,100]}
+{"kind":"textbox","id":"sh/jipo36tg","slide":1,"text":"CH₄ uptake","textPreview":"CH₄ uptake","textChars":10,"textLines":1,"bbox":[472,582,155,30]}
+{"kind":"shape","id":"sh/wfyp8ru5","slide":1,"bbox":[165,650,560,68]}
+{"kind":"textbox","id":"sh/xg761wbq","slide":1,"text":"Assumed soil sink: −11 to −49 Tg CH₄ yr⁻¹","textPreview":"Assumed soil sink: −11 to −49 Tg CH₄ yr⁻¹","textChars":41,"textLines":1,"bbox":[185,663,520,42]}
+{"kind":"textbox","id":"sh/adw761cz","slide":1,"text":"≠","textPreview":"≠","textChars":1,"textLines":1,"bbox":[813,373,75,85]}
+{"kind":"shape","id":"sh/be5oz6tk","slide":1,"bbox":[972,480,610,245]}
+{"kind":"shape","id":"sh/obep4rut","slide":1,"bbox":[1000,260,65,295]}
+{"kind":"textbox","id":"sh/9cn6xwbe","slide":1,"text":"NET","textPreview":"NET","textChars":3,"textLines":1,"bbox":[1002,242,62,28]}
+{"kind":"textbox","id":"sh/pwveloj6","slide":1,"text":"SOURCE","textPreview":"SOURCE","textChars":6,"textLines":1,"bbox":[985,575,95,30]}
+{"kind":"textbox","id":"sh/4vmdcjil","slide":1,"text":"stems · canopy · microsites · transport · lateral flow","textPreview":"stems · canopy · microsites · transport · lateral flow","textChars":54,"textLines":1,"bbox":[1128,238,380,30]}
+{"kind":"shape","id":"sh/3udwje10","slide":1,"bbox":[1168,382,12,98]}
+{"kind":"shape","id":"sh/2t4va90f","slide":1,"bbox":[1134,310,78,98]}
+{"kind":"shape","id":"sh/hsvehoju","slide":1,"bbox":[1166,236,32,86]}
+{"kind":"shape","id":"sh/grmd8ji9","slide":1,"bbox":[1308,382,12,98]}
+{"kind":"shape","id":"sh/fqdcfe14","slide":1,"bbox":[1274,310,78,98]}
+{"kind":"shape","id":"sh/upkv690j","slide":1,"bbox":[1306,236,32,86]}
+{"kind":"shape","id":"sh/1ofet8ze","slide":1,"bbox":[1400,465,34,88]}
+{"kind":"textbox","id":"sh/0n6dk3it","slide":1,"text":"soil","textPreview":"soil","textChars":4,"textLines":1,"bbox":[1386,579,60,27]}
+{"kind":"shape","id":"sh/i90be5gb","slide":1,"bbox":[1445,535,90,38]}
+{"kind":"shape","id":"sh/ja9snahw","slide":1,"bbox":[1476,440,32,82]}
+{"kind":"textbox","id":"sh/kvitgfy1","slide":1,"text":"wet spot","textPreview":"wet spot","textChars":8,"textLines":1,"bbox":[1444,579,92,27]}
+{"kind":"shape","id":"sh/5wrapkzm","slide":1,"bbox":[1534,264,0,220]}
+{"kind":"textbox","id":"sh/a5gbalgz","slide":1,"text":"tower","textPreview":"tower","textChars":5,"textLines":1,"bbox":[1508,238,70,25]}
+{"kind":"shape","id":"sh/b6psjqhk","slide":1,"bbox":[1520,286,26,22]}
+{"kind":"shape","id":"sh/w7itcvy5","slide":1,"bbox":[1520,333,26,22]}
+{"kind":"shape","id":"sh/x8ral0zq","slide":1,"bbox":[1520,380,26,22]}
+{"kind":"shape","id":"sh/u1kbmpgj","slide":1,"bbox":[1520,427,26,22]}
+{"kind":"shape","id":"sh/f2tsvuho","slide":1,"bbox":[1520,474,26,22]}
+{"kind":"shape","id":"sh/fu9obml4","slide":1,"bbox":[1000,650,555,68]}
+{"kind":"textbox","id":"sh/et07ihkj","slide":1,"text":"Ecosystem-scale: +22 to +75 Tg CH₄ yr⁻¹","textPreview":"Ecosystem-scale: +22 to +75 Tg CH₄ yr⁻¹","textChars":39,"textLines":1,"bbox":[1020,663,515,42]}
+{"kind":"shape","id":"sh/1wr6dwja","slide":1,"bbox":[110,804,1480,76]}
+{"kind":"textbox","id":"sh/0vipkr2p","slide":1,"text":"83% of NEON upland sites (2021–2024) are net CH₄ sources — the soil sink is not the upland budget","textPreview":"83% of NEON upland sites (2021–2024) are net CH₄ sources — the soil sink is not the upland budget","textChars":97,"textLines":1,"bbox":[145,817,1410,48]}
+{"kind":"notes","id":"nt/ka2tlr","slide":1,"text":"Editable reconstruction based on the user-provided screenshot; all diagram elements are native PowerPoint objects."}
+{"kind":"slide","id":"sl/q7htq2","slide":2,"title":"The Upland Methane Constraint: from existing observatory data to a budget-rea...","textShapes":36}
+{"kind":"textbox","id":"sh/7itk7apw","slide":2,"text":"The Upland Methane Constraint: from existing observatory data to a budget-ready AI-ready product","textPreview":"The Upland Methane Constraint: from existing observatory data to a budget-ready AI-ready product","textChars":96,"textLines":1,"bbox":[80,28,1440,52]}
+{"kind":"textbox","id":"sh/8jmlgfqh","slide":2,"text":"No new field stations — value created by pipelining, harmonizing, and physically constraining data that already exist","textPreview":"No new field stations — value created by pipelining, harmonizing, and physically constraining data that already exist","textChars":117,"textLines":1,"bbox":[120,80,1360,34]}
+{"kind":"shape","id":"sh/9kvm9k72","slide":2,"bbox":[52,184,270,480]}
+{"kind":"textbox","id":"sh/ytk3a58f","slide":2,"text":"EXISTING COMMUNITY DATA","textPreview":"EXISTING COMMUNITY DATA","textChars":23,"textLines":1,"bbox":[72,205,230,32]}
+{"kind":"shape","id":"sh/zutk3apk","slide":2,"bbox":[73,263,228,82]}
+{"kind":"textbox","id":"sh/kv2lcfq5","slide":2,"text":"NEON gradient profiles","textPreview":"NEON gradient profiles","textChars":22,"textLines":1,"bbox":[83,273,208,30]}
+{"kind":"textbox","id":"sh/lwb25k7q","slide":2,"text":"47 towers · vertical CH₄","textPreview":"47 towers · vertical CH₄","textChars":24,"textLines":1,"bbox":[83,305,208,25]}
+{"kind":"shape","id":"sh/ip43m98j","slide":2,"bbox":[73,361,228,82]}
+{"kind":"textbox","id":"sh/jqx4fep4","slide":2,"text":"AmeriFlux / FLUXNET-CH₄","textPreview":"AmeriFlux / FLUXNET-CH₄","textChars":23,"textLines":1,"bbox":[83,371,208,30]}
+{"kind":"textbox","id":"sh/be103uto","slide":2,"text":"EC CH₄ fluxes","textPreview":"EC CH₄ fluxes","textChars":13,"textLines":1,"bbox":[83,403,208,25]}
+{"kind":"shape","id":"sh/adszupsj","slide":2,"bbox":[73,459,228,82]}
+{"kind":"textbox","id":"sh/xg3i5kbu","slide":2,"text":"ICOS + validation towers","textPreview":"ICOS + validation towers","textChars":24,"textLines":1,"bbox":[83,469,208,30]}
+{"kind":"textbox","id":"sh/wfa1wza9","slide":2,"text":"EC + gradient","textPreview":"EC + gradient","textChars":13,"textLines":1,"bbox":[83,501,208,25]}
+{"kind":"shape","id":"sh/jil07ut0","slide":2,"bbox":[73,557,228,82]}
+{"kind":"textbox","id":"sh/yhcjypsf","slide":2,"text":"Drivers","textPreview":"Drivers","textChars":7,"textLines":1,"bbox":[83,567,208,30]}
+{"kind":"textbox","id":"sh/lk3i94b6","slide":2,"text":"ERA5 · MODIS · WAD2M","textPreview":"ERA5 · MODIS · WAD2M","textChars":20,"textLines":1,"bbox":[83,599,208,25]}
+{"kind":"textbox","id":"sh/kju10zal","slide":2,"text":"open-licensed · not AI-ready today","textPreview":"open-licensed · not AI-ready today","textChars":34,"textLines":1,"bbox":[80,630,215,22]}
+{"kind":"shape","id":"sh/7ml0betw","slide":2,"bbox":[358,223,255,338]}
+{"kind":"shape","id":"sh/6lcj29sb","slide":2,"bbox":[358,223,255,49]}
+{"kind":"shape","id":"sh/i1g3adcj","slide":2,"bbox":[358,247,255,25]}
+{"kind":"textbox","id":"sh/32p43id4","slide":2,"text":"AIM 1","textPreview":"AIM 1","textChars":5,"textLines":1,"bbox":[378,230,215,28]}
+{"kind":"textbox","id":"sh/43ylc3up","slide":2,"text":"Automated GF pipeline","textPreview":"Automated GF pipeline","textChars":21,"textLines":1,"bbox":[373,282,225,36]}
+{"kind":"textbox","id":"sh/547m58va","slide":2,"text":"Reproducible, self-updating\nNEON gradient fluxes with\nuncertainty","textPreview":"Reproducible, self-updating | NEON gradient fluxes with | uncertainty","textChars":65,"textLines":3,"bbox":[381,323,209,95]}
+{"kind":"shape","id":"sh/udw36tcn","slide":2,"bbox":[382,480,207,53]}
+{"kind":"textbox","id":"sh/ve5kzyd8","slide":2,"text":"PRODUCT","textPreview":"PRODUCT","textChars":7,"textLines":1,"bbox":[394,487,183,17]}
+{"kind":"textbox","id":"sh/gfyl83ut","slide":2,"text":"NEON-GF-CH₄","textPreview":"NEON-GF-CH₄","textChars":11,"textLines":1,"bbox":[394,504,183,24]}
+{"kind":"shape","id":"sh/hg7218ve","slide":2,"bbox":[638,223,255,338]}
+{"kind":"shape","id":"sh/e903ixcr","slide":2,"bbox":[638,223,255,49]}
+{"kind":"shape","id":"sh/fa94b2tc","slide":2,"bbox":[638,247,255,25]}
+{"kind":"textbox","id":"sh/p4b61wfe","slide":2,"text":"AIM 2","textPreview":"AIM 2","textChars":5,"textLines":1,"bbox":[658,230,215,28]}
+{"kind":"textbox","id":"sh/o3258re9","slide":2,"text":"Harmonized corpus","textPreview":"Harmonized corpus","textChars":17,"textLines":1,"bbox":[653,282,225,36]}
+{"kind":"textbox","id":"sh/n2tozmxo","slide":2,"text":"Multi-network,\ncross-method, feature-rich\ntraining data","textPreview":"Multi-network, | cross-method, feature-rich | training data","textChars":55,"textLines":3,"bbox":[661,323,209,95]}
+{"kind":"shape","id":"sh/21kn6hw3","slide":2,"bbox":[662,480,207,53]}
+{"kind":"textbox","id":"sh/10b6xcfi","slide":2,"text":"PRODUCT","textPreview":"PRODUCT","textChars":7,"textLines":1,"bbox":[674,487,183,17]}
+{"kind":"textbox","id":"sh/0z2547ex","slide":2,"text":"UMC-Train","textPreview":"UMC-Train","textChars":9,"textLines":1,"bbox":[674,504,183,24]}
+{"kind":"shape","id":"sh/fy9ovmxc","slide":2,"bbox":[918,223,255,338]}
+{"kind":"shape","id":"sh/ex0n2hwr","slide":2,"bbox":[918,223,255,49]}
+{"kind":"shape","id":"sh/lwv69gvm","slide":2,"bbox":[918,247,255,25]}
+{"kind":"textbox","id":"sh/kvmpgbe1","slide":2,"text":"AIM 3","textPreview":"AIM 3","textChars":5,"textLines":1,"bbox":[938,230,215,28]}
+{"kind":"textbox","id":"sh/szax0bex","slide":2,"text":"Knowledge-guided ML","textPreview":"Knowledge-guided ML","textChars":19,"textLines":1,"bbox":[933,282,225,36]}
+{"kind":"textbox","id":"sh/t0je9gfi","slide":2,"text":"Physics-constrained\nupscaling that transfers to\nunseen sites","textPreview":"Physics-constrained | upscaling that transfers to | unseen sites","textChars":60,"textLines":3,"bbox":[941,323,209,95]}
+{"kind":"shape","id":"sh/6dsfy1wr","slide":2,"bbox":[942,480,207,53]}
+{"kind":"textbox","id":"sh/ry1w76xc","slide":2,"text":"PRODUCT","textPreview":"PRODUCT","textChars":7,"textLines":1,"bbox":[954,487,183,17]}
+{"kind":"textbox","id":"sh/g3ux4bet","slide":2,"text":"UMC-Grid","textPreview":"UMC-Grid","textChars":8,"textLines":1,"bbox":[954,504,183,24]}
+{"kind":"shape","id":"sh/143edgve","slide":2,"bbox":[1198,223,255,338]}
+{"kind":"shape","id":"sh/e1sf2lw3","slide":2,"bbox":[1198,223,255,49]}
+{"kind":"shape","id":"sh/f2lwbqdo","slide":2,"bbox":[1198,247,255,25]}
+{"kind":"textbox","id":"sh/o7ux8ve5","slide":2,"text":"AIM 4","textPreview":"AIM 4","textChars":5,"textLines":1,"bbox":[1218,230,215,28]}
+{"kind":"textbox","id":"sh/p83eh0vq","slide":2,"text":"Inversion & reconciliation","textPreview":"Inversion & reconciliation","textChars":26,"textLines":1,"bbox":[1213,282,225,36]}
+{"kind":"textbox","id":"sh/z2p07uxs","slide":2,"text":"Top-down, bottom-up &\nprocess-model constraint","textPreview":"Top-down, bottom-up & | process-model constraint","textChars":46,"textLines":2,"bbox":[1221,323,209,95]}
+{"kind":"shape","id":"sh/y1gzypg7","slide":2,"bbox":[1222,480,207,53]}
+{"kind":"textbox","id":"sh/lo7i94fy","slide":2,"text":"PRODUCT","textPreview":"PRODUCT","textChars":7,"textLines":1,"bbox":[1234,487,183,17]}
+{"kind":"textbox","id":"sh/k3yh0zyd","slide":2,"text":"UMC-Constraint","textPreview":"UMC-Constraint","textChars":14,"textLines":1,"bbox":[1234,504,183,24]}
+{"kind":"shape","id":"sh/by503uhw","slide":2,"bbox":[326,373,38,35]}
+{"kind":"shape","id":"sh/axwzupgb","slide":2,"bbox":[616,373,38,35]}
+{"kind":"shape","id":"sh/x0ni5kfm","slide":2,"bbox":[896,373,38,35]}
+{"kind":"shape","id":"sh/czehwfy1","slide":2,"bbox":[1176,373,38,35]}
+{"kind":"shape","id":"sh/vu90fex0","slide":2,"bbox":[1458,373,38,35]}
+{"kind":"shape","id":"sh/ut0z69gf","slide":2,"bbox":[1470,223,120,338]}
+{"kind":"textbox","id":"sh/6pk3ed0n","slide":2,"text":"GLOBAL\nCARBON\nPROJECT","textPreview":"GLOBAL | CARBON | PROJECT","textChars":21,"textLines":3,"bbox":[1480,275,100,108]}
+{"kind":"textbox","id":"sh/rqtk7ih8","slide":2,"text":"Global Methane\nBudget","textPreview":"Global Methane | Budget","textChars":21,"textLines":2,"bbox":[1480,407,100,55]}
+{"kind":"textbox","id":"sh/sr2lgnit","slide":2,"text":"IPCC · inventories","textPreview":"IPCC · inventories","textChars":18,"textLines":1,"bbox":[1480,487,100,25]}
+{"kind":"shape","id":"sh/tsv29sze","slide":2,"bbox":[358,605,1095,65]}
+{"kind":"textbox","id":"sh/et43ix0z","slide":2,"text":"Governed, versioned, FAIR open release · DOIs & provenance · continuously updated as networks grow","textPreview":"Governed, versioned, FAIR open release · DOIs & provenance · continuously updated as networks grow","textChars":98,"textLines":1,"bbox":[382,620,1047,36]}
+{"kind":"notes","id":"nt/q7htq2","slide":2,"text":"Editable reconstruction based on the user-provided screenshot; all diagram elements are native PowerPoint objects."}
+{"kind":"slide","id":"sl/8qn2r6","slide":3,"title":"Knowledge-guided machine learning restores site-to-site transferability","textShapes":21}
+{"kind":"textbox","id":"sh/j6po7m1w","slide":3,"text":"Knowledge-guided machine learning restores site-to-site transferability","textPreview":"Knowledge-guided machine learning restores site-to-site transferability","textChars":71,"textLines":1,"bbox":[80,28,1440,52]}
+{"kind":"textbox","id":"sh/47y50ri1","slide":3,"text":"Embedding methane process physics into learning fixes the leave-one-site-out collapse of standard models","textPreview":"Embedding methane process physics into learning fixes the leave-one-site-out collapse of standard models","textChars":104,"textLines":1,"bbox":[120,80,1360,34]}
+{"kind":"shape","id":"sh/58769wjm","slide":3,"bbox":[65,188,230,410]}
+{"kind":"textbox","id":"sh/uhwnuh0z","slide":3,"text":"INPUTS","textPreview":"INPUTS","textChars":6,"textLines":1,"bbox":[92,215,176,35]}
+{"kind":"textbox","id":"sh/vi5o3m1k","slide":3,"text":"Harmonized\nAI-ready features\n(UMC-Train)","textPreview":"Harmonized | AI-ready features | (UMC-Train)","textChars":40,"textLines":3,"bbox":[88,315,182,90]}
+{"kind":"textbox","id":"sh/wjy5wri5","slide":3,"text":"climate · soil moisture\naridity · land cover\nsite priors · footprint","textPreview":"climate · soil moisture | aridity · land cover | site priors · footprint","textChars":68,"textLines":3,"bbox":[86,442,186,82]}
+{"kind":"shape","id":"sh/h4765wjq","slide":3,"bbox":[340,166,520,170]}
+{"kind":"textbox","id":"sh/ed076l0j","slide":3,"text":"PROCESS CONSTRAINTS (knowledge)","textPreview":"PROCESS CONSTRAINTS (knowledge)","textChars":31,"textLines":1,"bbox":[380,187,440,34]}
+{"kind":"shape","id":"sh/fe9ofqho","slide":3,"bbox":[365,244,10,10]}
+{"kind":"textbox","id":"sh/fatk3a5s","slide":3,"text":"Diffusion-limited uptake","textPreview":"Diffusion-limited uptake","textChars":24,"textLines":1,"bbox":[383,237,225,28]}
+{"kind":"shape","id":"sh/e9kju5o7","slide":3,"bbox":[365,289,10,10]}
+{"kind":"textbox","id":"sh/1cb250ny","slide":3,"text":"Moisture & aridity thresholds","textPreview":"Moisture & aridity thresholds","textChars":29,"textLines":1,"bbox":[383,282,225,28]}
+{"kind":"shape","id":"sh/0b2lwf6d","slide":3,"bbox":[625,244,10,10]}
+{"kind":"textbox","id":"sh/nedk7a54","slide":3,"text":"Methanotroph / methanogen Q₁₀","textPreview":"Methanotroph / methanogen Q₁₀","textChars":29,"textLines":1,"bbox":[643,237,225,28]}
+{"kind":"shape","id":"sh/2dk3y5oj","slide":3,"bbox":[625,289,10,10]}
+{"kind":"textbox","id":"sh/pgv29knu","slide":3,"text":"Sign, monotonicity & mass balance","textPreview":"Sign, monotonicity & mass balance","textChars":33,"textLines":1,"bbox":[643,282,225,28]}
+{"kind":"shape","id":"sh/ofml0f6p","slide":3,"bbox":[340,392,235,138]}
+{"kind":"textbox","id":"sh/bidkbu50","slide":3,"text":"Reduced process\nemulator\n(MeMo-informed)","textPreview":"Reduced process | emulator | (MeMo-informed)","textChars":40,"textLines":3,"bbox":[363,422,189,78]}
+{"kind":"shape","id":"sh/ah432pof","slide":3,"bbox":[640,392,235,138]}
+{"kind":"textbox","id":"sh/698vqdcz","slide":3,"text":"ML residual\nnetwork\nlearns the correction","textPreview":"ML residual | network | learns the correction","textChars":41,"textLines":3,"bbox":[663,422,189,78]}
+{"kind":"shape","id":"sh/7a1wjitk","slide":3,"bbox":[298,385,43,50]}
+{"kind":"shape","id":"sh/sbaxsnu5","slide":3,"bbox":[588,432,38,38]}
+{"kind":"textbox","id":"sh/tcjelsbq","slide":3,"text":"+","textPreview":"+","textChars":1,"textLines":1,"bbox":[588,421,38,56]}
+{"kind":"shape","id":"sh/yl8vmdc3","slide":3,"bbox":[440,337,34,55]}
+{"kind":"shape","id":"sh/jmhwfit8","slide":3,"bbox":[746,337,34,55]}
+{"kind":"shape","id":"sh/knqdonut","slide":3,"bbox":[443,530,34,58]}
+{"kind":"shape","id":"sh/l8zeh8be","slide":3,"bbox":[744,530,34,58]}
+{"kind":"shape","id":"sh/2hsfyxc7","slide":3,"bbox":[340,598,535,78]}
+{"kind":"textbox","id":"sh/3ilwr2ts","slide":3,"text":"Constrained prediction = physics baseline + bounded ML residual","textPreview":"Constrained prediction = physics baseline + bounded ML residual","textChars":63,"textLines":1,"bbox":[360,614,495,46]}
+{"kind":"shape","id":"sh/dcnyhwvu","slide":3,"bbox":[878,619,42,36]}
+{"kind":"shape","id":"sh/cbehore9","slide":3,"bbox":[918,188,672,488]}
+{"kind":"textbox","id":"sh/ra5gf6do","slide":3,"text":"OUTPUT","textPreview":"OUTPUT","textChars":6,"textLines":1,"bbox":[1070,220,380,34]}
+{"kind":"textbox","id":"sh/q9czm1w3","slide":3,"text":"Global gridded\nupland CH₄ flux\n(UMC-Grid)","textPreview":"Global gridded | upland CH₄ flux | (UMC-Grid)","textChars":41,"textLines":3,"bbox":[1120,278,280,115]}
+{"kind":"textbox","id":"sh/p83ydwvy","slide":3,"text":"+ per-cell uncertainty\n+ source probability\n+ applicability mask","textPreview":"+ per-cell uncertainty | + source probability | + applicability mask","textChars":64,"textLines":3,"bbox":[1120,425,280,100]}
+{"kind":"shape","id":"sh/47uhkred","slide":3,"bbox":[65,710,1525,155]}
+{"kind":"textbox","id":"sh/36lgbmds","slide":3,"text":"Why it matters: recovering skill at unseen sites (leave-one-site-out)","textPreview":"Why it matters: recovering skill at unseen sites (leave-one-site-out)","textChars":69,"textLines":1,"bbox":[410,726,850,34]}
+{"kind":"shape","id":"sh/25czihw7","slide":3,"bbox":[140,772,280,76]}
+{"kind":"shape","id":"sh/947ipgv2","slide":3,"bbox":[150,780,255,55]}
+{"kind":"shape","id":"sh/o3yhwveh","slide":3,"bbox":[158,816,9,9]}
+{"kind":"shape","id":"sh/wv2h0ra1","slide":3,"bbox":[178,796,9,9]}
+{"kind":"shape","id":"sh/hwby9wrm","slide":3,"bbox":[197,797,9,9]}
+{"kind":"shape","id":"sh/u9kzyhsv","slide":3,"bbox":[218,814,9,9]}
+{"kind":"shape","id":"sh/vutg7m9g","slide":3,"bbox":[236,809,9,9]}
+{"kind":"shape","id":"sh/4zmh4bax","slide":3,"bbox":[255,810,9,9]}
+{"kind":"shape","id":"sh/50vydwri","slide":3,"bbox":[275,803,9,9]}
+{"kind":"shape","id":"sh/ixkz21s7","slide":3,"bbox":[294,808,9,9]}
+{"kind":"shape","id":"sh/jytgb69c","slide":3,"bbox":[313,810,9,9]}
+{"kind":"shape","id":"sh/s3mh8bq9","slide":3,"bbox":[331,797,9,9]}
+{"kind":"shape","id":"sh/t4vyhgru","slide":3,"bbox":[351,805,9,9]}
+{"kind":"shape","id":"sh/nahsnex8","slide":3,"bbox":[371,805,9,9]}
+{"kind":"textbox","id":"sh/298bu9gn","slide":3,"text":"Standard RF: CCC < 0.1 (flat — predicts the mean)","textPreview":"Standard RF: CCC < 0.1 (flat — predicts the mean)","textChars":49,"textLines":1,"bbox":[90,842,400,24]}
+{"kind":"textbox","id":"sh/pwjap4fy","slide":3,"text":"→","textPreview":"→","textChars":1,"textLines":1,"bbox":[805,779,70,55]}
+{"kind":"shape","id":"sh/ovqtwzyd","slide":3,"bbox":[1260,772,280,76]}
+{"kind":"shape","id":"sh/f6hsjuxw","slide":3,"bbox":[1270,780,255,55]}
+{"kind":"shape","id":"sh/e58rqpgb","slide":3,"bbox":[1273,820,9,9]}
+{"kind":"shape","id":"sh/18zal4f2","slide":3,"bbox":[1292,827,9,9]}
+{"kind":"shape","id":"sh/07qtszyh","slide":3,"bbox":[1310,817,9,9]}
+{"kind":"shape","id":"sh/z21svyxg","slide":3,"bbox":[1329,806,9,9]}
+{"kind":"shape","id":"sh/y1sb2twv","slide":3,"bbox":[1348,807,9,9]}
+{"kind":"shape","id":"sh/uxwvux03","slide":3,"bbox":[1367,800,9,9]}
+{"kind":"shape","id":"sh/vy5wn2ho","slide":3,"bbox":[1386,799,9,9]}
+{"kind":"shape","id":"sh/gzedwnyt","slide":3,"bbox":[1405,795,9,9]}
+{"kind":"shape","id":"sh/h0nepsze","slide":3,"bbox":[1424,781,9,9]}
+{"kind":"shape","id":"sh/ilwvyxgz","slide":3,"bbox":[1443,777,9,9]}
+{"kind":"shape","id":"sh/3m5wr2hk","slide":3,"bbox":[1462,786,9,9]}
+{"kind":"shape","id":"sh/4nyd07y5","slide":3,"bbox":[1481,780,9,9]}
+{"kind":"shape","id":"sh/5o7etczq","slide":3,"bbox":[1500,760,9,9]}
+{"kind":"textbox","id":"sh/ypcvmd0v","slide":3,"text":"KGML: constraints restore the 1:1 relationship","textPreview":"KGML: constraints restore the 1:1 relationship","textChars":46,"textLines":1,"bbox":[1210,842,380,24]}
+{"kind":"notes","id":"nt/8qn2r6","slide":3,"text":"Editable reconstruction based on the user-provided screenshot; all diagram elements are native PowerPoint objects."}
