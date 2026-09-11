@@ -12,7 +12,7 @@
     --ground:#F3F1E8; --surface:#FCFBF5; --surface-2:#ECE8DA; --line:#DBD5C6;
     --text:#263029; --muted:#5E6B62; --heading:#1B3A2B;
     --brand:#2C5F2D; --brand-soft:#6B8E4E; --accent:#B9772A; --accent-soft:#EBDCC1;
-    --on-accent:#FFFFFF; --dot:#2C5F2D; --grid:#E4DFD0;
+    --warn:#B4472F; --on-accent:#FFFFFF; --dot:#2C5F2D; --grid:#E4DFD0;
     --shadow:0 2px 6px rgba(28,45,34,.07),0 8px 22px rgba(28,45,34,.06);
     --sans:"Public Sans",system-ui,-apple-system,Segoe UI,sans-serif;
     --serif:"Fraunces","Iowan Old Style",Georgia,serif;
@@ -21,25 +21,28 @@
     --ground:#121A15; --surface:#1A241D; --surface-2:#223029; --line:#33463A;
     --text:#E7EEE4; --muted:#9DB0A2; --heading:#CFE3C4;
     --brand:#9BC17E; --brand-soft:#7FA659; --accent:#E0A44E; --accent-soft:#3A2E1B;
-    --on-accent:#17130B; --dot:#9BC17E; --grid:#2A3A30;
+    --warn:#E06A4E; --on-accent:#17130B; --dot:#9BC17E; --grid:#2A3A30;
     --shadow:0 2px 6px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.28);
   }}
   :root[data-theme="dark"]{
     --ground:#121A15; --surface:#1A241D; --surface-2:#223029; --line:#33463A;
     --text:#E7EEE4; --muted:#9DB0A2; --heading:#CFE3C4;
     --brand:#9BC17E; --brand-soft:#7FA659; --accent:#E0A44E; --accent-soft:#3A2E1B;
-    --on-accent:#17130B; --dot:#9BC17E; --grid:#2A3A30;
+    --warn:#E06A4E; --on-accent:#17130B; --dot:#9BC17E; --grid:#2A3A30;
     --shadow:0 2px 6px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.28);
   }
   *{box-sizing:border-box}
+  [hidden]{display:none!important}
   html,body{margin:0}
   body{background:var(--ground);color:var(--text);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
   .wrap{max-width:960px;margin:0 auto;padding:clamp(1rem,3vw,2rem) clamp(1rem,3vw,1.5rem) 3rem}
   h1,h2,h3{font-family:var(--serif);color:var(--heading);text-wrap:balance;margin:0}
   .eyebrow{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;font-weight:700;color:var(--accent);margin:0}
-  header{margin-bottom:1.4rem}
+  header{margin-bottom:1.2rem}
   header h1{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:600;line-height:1.03;margin:.35rem 0}
   header p{margin:.3rem 0 0;color:var(--muted);max-width:52ch}
+  .setupwarn{background:var(--warn);color:#fff;border-radius:10px;padding:.6rem .95rem;font-size:.9rem;font-weight:600;margin-bottom:1.2rem}
+  .setupwarn code{background:rgba(255,255,255,.22);padding:.05rem .3rem;border-radius:5px}
   .tabs{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:.28rem;gap:.25rem;margin-bottom:1.5rem}
   .tabs button{font-family:var(--sans);font-weight:600;font-size:.94rem;border:0;cursor:pointer;padding:.5rem 1.1rem;border-radius:999px;background:transparent;color:var(--muted)}
   .tabs button[aria-selected="true"]{background:var(--surface);color:var(--heading);box-shadow:var(--shadow)}
@@ -80,6 +83,8 @@
   .stat .lbl{color:var(--muted);font-size:.84rem;margin-top:.3rem}
   .banner{background:var(--accent-soft);color:var(--heading);border-radius:10px;padding:.55rem .9rem;font-size:.87rem;font-weight:600;margin-bottom:1.1rem;display:none}
   .banner.show{display:block}
+  .syncnote{background:var(--warn);color:#fff;border-radius:10px;padding:.55rem .9rem;font-size:.87rem;font-weight:600;margin-bottom:1.1rem;display:none}
+  .syncnote.show{display:block}
   h2.block{font-size:1.3rem;font-weight:600;margin:0 0 .15rem}
   .block-sub{color:var(--muted);font-size:.9rem;margin:0 0 1rem}
   .maprow{display:grid;grid-template-columns:1.15fr .85fr;gap:1.4rem}@media(max-width:720px){.maprow{grid-template-columns:1fr}}
@@ -94,7 +99,9 @@
   .bar .bv{font-variant-numeric:tabular-nums;font-weight:700;color:var(--brand);font-size:.9rem;text-align:right}
   .interests{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
   .icard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;box-shadow:var(--shadow)}
+  .icard.mine{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent),var(--shadow)}
   .icard .who{font-family:var(--serif);font-weight:600;color:var(--heading);font-size:1.05rem}
+  .icard .youtag{background:var(--accent);color:#fff;font-size:.6rem;font-weight:700;padding:.1rem .42rem;border-radius:999px;letter-spacing:.06em;vertical-align:middle;margin-left:.35rem}
   .icard .prog{color:var(--muted);font-size:.81rem;margin-bottom:.5rem}
   .icard dt{font-size:.69rem;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-top:.5rem}
   .icard dd{margin:.1rem 0 0;font-size:.91rem;color:var(--text)}
@@ -109,6 +116,8 @@
     <h1>Class Skills Map</h1>
     <p>Tell us who you are and what you want to build — then rate your skills. Your answers build a live map of the whole class.</p>
   </header>
+
+  <div class="setupwarn" id="setupwarn" hidden>Not connected yet — this page needs its web-app link before it can save responses. Set <code>API_URL</code> near the top of the page’s script.</div>
 
   <div class="tabs" role="tablist" aria-label="Views">
     <button role="tab" id="tab-survey" aria-selected="true" aria-controls="panel-survey">Take the survey</button>
@@ -151,6 +160,7 @@
 
   <section class="panel" id="panel-map" role="tabpanel" aria-labelledby="tab-map">
     <div class="banner" id="banner">Showing example responses so you can see how the map works. They clear the moment real classmates submit.</div>
+    <div class="syncnote" id="syncnote"></div>
     <div class="statrow" id="statrow"></div>
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap">
@@ -185,8 +195,9 @@
 
 <script>
   /* ========================================================================
-     PASTE YOUR APPS SCRIPT WEB APP URL BELOW (it ends in /exec).
-     Leave it as "" to preview the page with example data.
+     PASTE YOUR APPS SCRIPT WEB APP URL BELOW (it must be the deployed URL
+     ending in /exec, from Deploy ▸ Manage deployments; access = "Anyone").
+     Leave it "" to preview the page with example data.
      ======================================================================== */
   const API_URL = "https://script.google.com/macros/s/AKfycbwrJ8U_JSEUcNAbPYtBHy2arY0T_EebCfJJjuiPyJomScXlw2birc-WElANmIIZ_fk8Jw/exec";
 
@@ -233,39 +244,57 @@
   window.addEventListener('load',()=>setTimeout(postHeight,300));
   window.addEventListener('resize',postHeight);
 
+  // ---- state ----
+  let responses=[];        // rows from the server
+  let optimistic=null;     // my just-submitted row, shown until the server echoes it
+  let cbN=0, serverEverOk=false, awaitingSync=false;
+  if(!API_URL){ document.getElementById('setupwarn').hidden=false; }
+
+  const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:3;
+  const avg=(list,k)=>{const v=list.map(r=>r[k]).filter(x=>typeof x==='number');return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
+  const initials=n=>(n||'?').replace(/^Ex:\s*/,'').split(/\s+/).map(w=>w[0]).join('').slice(0,3).toUpperCase();
+  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  const norm=s=>String(s==null?'':s).trim().toLowerCase();
+  function sameEntry(a,b){if(!a||!b)return false;return norm(a.name)===norm(b.name)&&norm(a.system)===norm(b.system)&&norm(a.question)===norm(b.question);}
+  function normalize(r){const o={...r};['r','wrangle','viz','stats','ml','spatial','git','domain'].forEach(k=>{const v=parseFloat(o[k]);o[k]=isFinite(v)?v:null;});return o;}
+
   // ---- data layer (JSONP read, no-cors POST) ----
-  let responses=[];
-  let cbN=0;
   function loadData(){
     if(!API_URL){ render(); return; }
     const cb='__eds_cb_'+(++cbN);
     const s=document.createElement('script');
     window[cb]=function(payload){
+      serverEverOk=true;
       try{ responses=(payload&&payload.responses)?payload.responses.map(normalize):[]; }catch(e){ responses=[]; }
-      render(); delete window[cb]; s.remove();
+      if(optimistic && responses.some(r=>sameEntry(r,optimistic))){ optimistic=null; awaitingSync=false; }
+      updateSyncNote(); render(); delete window[cb]; s.remove();
     };
-    s.onerror=()=>{ delete window[cb]; s.remove(); render(); };
+    s.onerror=()=>{ delete window[cb]; s.remove(); updateSyncNote(); render(); };
     s.src=API_URL+(API_URL.indexOf('?')>-1?'&':'?')+'callback='+cb+'&t='+Date.now();
     document.body.appendChild(s);
   }
-  function normalize(r){const o={...r};['r','wrangle','viz','stats','ml','spatial','git','domain'].forEach(k=>{const v=parseFloat(o[k]);o[k]=isFinite(v)?v:null;});return o;}
+  function updateSyncNote(){
+    const el=document.getElementById('syncnote'); if(!el) return;
+    if(awaitingSync && optimistic && !serverEverOk){
+      el.textContent='You’re shown here on your screen, but we couldn’t reach the class sheet to save it. Check that the page’s web-app link is the deployed /exec URL and its access is set to “Anyone”.';
+      el.classList.add('show');
+    } else { el.classList.remove('show'); }
+  }
 
   document.getElementById('form').addEventListener('submit',async e=>{
     e.preventDefault();
     const d=collect();
     if(!d.name){flash('Please add your name or initials first.');document.getElementById('name').focus();return;}
-    if(!API_URL){toast('Preview mode — publish the page with your web-app URL to collect responses.');return;}
+    if(!API_URL){toast('Not connected yet — this page needs its web-app link before it can save responses.');show('survey');return;}
     const btn=document.getElementById('submit'); btn.disabled=true; btn.textContent='Saving…';
-    try{
-      await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)});
-      try{localStorage.setItem(LS_DONE,'1');}catch(_){}
-      toast('You’re on the map! Loading the class view…');
-      btn.textContent='Submitted ✓';
-      setTimeout(()=>{loadData();show('map');},1200);
-    }catch(err){
-      toast('Could not save just now — please try again in a moment.');
-      btn.disabled=false; btn.textContent='Add me to the map';
-    }
+    optimistic=normalize({...d,_mine:true}); awaitingSync=true;   // show me on the map immediately
+    try{ fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)}); }catch(err){}
+    try{localStorage.setItem(LS_DONE,'1');}catch(_){}
+    toast('You’re on the map! Syncing with the class…');
+    btn.textContent='Submitted ✓';
+    render(); show('map');
+    [1500,4000,9000,15000].forEach(t=>setTimeout(loadData,t));   // let the server row replace the optimistic one
+    setTimeout(updateSyncNote,16000);
   });
 
   function collect(){
@@ -278,21 +307,19 @@
   function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');postHeight();setTimeout(()=>{t.classList.remove('show');postHeight();},4500);}
 
   // ---- rendering ----
-  const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:3;
-  const avg=(list,k)=>{const v=list.map(r=>r[k]).filter(x=>typeof x==='number');return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
-  const initials=n=>(n||'?').replace(/^Ex:\s*/,'').split(/\s+/).map(w=>w[0]).join('').slice(0,3).toUpperCase();
-  const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-
   function render(){
-    const real=responses.length>0, data=real?responses:EXAMPLES;
-    document.getElementById('banner').classList.toggle('show',!real);
-    const topInterest=(()=>{const c={};data.forEach(r=>{const s=(r.system||'').trim();if(s)c[s]=(c[s]||0)+1;});const e=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];return e?e[0]:'—';})();
-    const strongest=[...SKILLS].map(s=>({s,v:avg(data,s.key)})).filter(o=>o.v!=null).sort((a,b)=>b.v-a.v)[0];
+    let data=responses.slice();
+    if(optimistic && !responses.some(r=>sameEntry(r,optimistic))) data=data.concat([optimistic]);
+    const hasReal=data.length>0;
+    const source=hasReal?data:EXAMPLES;
+    document.getElementById('banner').classList.toggle('show',!hasReal);
+    const topInterest=(()=>{const c={};source.forEach(r=>{const s=(r.system||'').trim();if(s)c[s]=(c[s]||0)+1;});const e=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];return e?e[0]:'—';})();
+    const strongest=[...SKILLS].map(s=>({s,v:avg(source,s.key)})).filter(o=>o.v!=null).sort((a,b)=>b.v-a.v)[0];
     document.getElementById('statrow').innerHTML=
-      `<div class="stat"><div class="big">${real?responses.length:0}</div><div class="lbl">responses so far</div></div>
+      `<div class="stat"><div class="big">${hasReal?data.length:0}</div><div class="lbl">responses so far</div></div>
        <div class="stat"><div class="big" style="font-size:1.3rem;padding-top:.35rem">${esc(topInterest)}</div><div class="lbl">most-shared topic</div></div>
        <div class="stat"><div class="big" style="font-size:1.3rem;padding-top:.35rem">${strongest?esc(strongest.s.name):'—'}</div><div class="lbl">class’s strongest area</div></div>`;
-    drawScatter(data); drawBars(data); drawInterests(data); postHeight();
+    drawScatter(source); drawBars(source); drawInterests(source); postHeight();
   }
 
   function drawScatter(data){
@@ -316,8 +343,9 @@
       const key=cod.toFixed(1)+'|'+ana.toFixed(1),cnt=seen[key]=(seen[key]||0)+1,ang=cnt*2.4,jr=cnt>1?1.1:0;
       const cx=gx(cod)+Math.cos(ang)*jr, cy=gy(ana)+Math.sin(ang)*jr, isEx=r._ex;
       const g=el('g',{});
+      if(r._mine) g.append(el('circle',{cx,cy,r:3.6,fill:'none',stroke:'var(--accent)','stroke-width':.9}));
       const dot=el('circle',{cx,cy,r:2.3,fill:isEx?'var(--brand-soft)':'var(--dot)',opacity:isEx?.55:.9,stroke:'var(--surface)','stroke-width':.6});
-      const tt=el('title',{});tt.textContent=`${r.name||'—'} · coding ${cod.toFixed(1)}, analysis ${ana.toFixed(1)}`;dot.append(tt);
+      const tt=el('title',{});tt.textContent=`${r.name||'—'}${r._mine?' (you)':''} · coding ${cod.toFixed(1)}, analysis ${ana.toFixed(1)}`;dot.append(tt);
       const lbl=el('text',{x:cx,y:cy+.9,'text-anchor':'middle',fill:isEx?'var(--heading)':'#fff','font-size':1.9,'font-weight':700,'font-family':'Public Sans, sans-serif','pointer-events':'none'});
       lbl.textContent=initials(r.name); g.append(dot,lbl); svg.append(g);
     });
@@ -332,8 +360,9 @@
     const box=document.getElementById('interests'); box.innerHTML='';
     const withText=data.filter(r=>(r.system||r.question||r.dataset));
     if(!withText.length){box.innerHTML='<div class="empty">No responses yet — be the first on the survey tab.</div>';return;}
-    withText.forEach(r=>{const c=document.createElement('div');c.className='icard';
-      let html=`<div class="who">${esc(r.name||'Someone')}</div>`;
+    withText.sort((a,b)=>(b._mine?1:0)-(a._mine?1:0));
+    withText.forEach(r=>{const c=document.createElement('div');c.className='icard'+(r._mine?' mine':'');
+      let html=`<div class="who">${esc(r.name||'Someone')}${r._mine?'<span class="youtag">YOU</span>':''}</div>`;
       if(r.program)html+=`<div class="prog">${esc(r.program)}</div>`; html+='<dl style="margin:0">';
       if(r.system)html+=`<dt>Cares about</dt><dd>${esc(r.system)}</dd>`;
       if(r.question)html+=`<dt>Wants to model</dt><dd>${esc(r.question)}</dd>`;

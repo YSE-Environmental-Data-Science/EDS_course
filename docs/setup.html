@@ -301,7 +301,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#software-and-packages" id="toc-software-and-packages" class="nav-link active" data-scroll-target="#software-and-packages">Software and packages</a></li>
-  <li><a href="#data-acquisition" id="toc-data-acquisition" class="nav-link" data-scroll-target="#data-acquisition">Data Acquisition</a></li>
+  <li><a href="#setup-your-directory-for-the-course" id="toc-setup-your-directory-for-the-course" class="nav-link" data-scroll-target="#setup-your-directory-for-the-course">Setup your directory for the course</a></li>
+  <li><a href="#data-acquisition-optional" id="toc-data-acquisition-optional" class="nav-link" data-scroll-target="#data-acquisition-optional">Data Acquisition (Optional)</a></li>
   </ul>
 </nav>
     </div>
@@ -371,8 +372,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="data-acquisition" class="level2">
-<h2 class="anchored" data-anchor-id="data-acquisition">Data Acquisition</h2>
+<section id="setup-your-directory-for-the-course" class="level2">
+<h2 class="anchored" data-anchor-id="setup-your-directory-for-the-course">Setup your directory for the course</h2>
+<ol type="1">
+<li>Create a folder for this course called “EDS730”</li>
+<li>Create a new Rstudio project called EDS730 and save it in your folder EDS730</li>
+<li>Download the course datafile from EDI: <a href="https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f">https://doi.org/10.6073/pasta/5100e60582808c66095e767be806109f</a></li>
+<li>Unzip and move the file into the EDS730 folder.</li>
+<li>Change the name of the folder “EDS_Course_Materials” to “data”</li>
+<li>In the data folder create a folder called “products”</li>
+<li>In the EDS730 folder create a folder called “scripts”</li>
+</ol>
+</section>
+<section id="data-acquisition-optional" class="level2">
+<h2 class="anchored" data-anchor-id="data-acquisition-optional">Data Acquisition (Optional)</h2>
 <p>The data files required for this course are available through the <a href="https://edirepository.org/">Environmental Data Initiative</a> (EDI) repository. EDI is a data repository that hosts ecological and environmental data for the long-term.</p>
 <p>There are various ways to acquire data from data repositories. The method that a lot of people are accustomed to is by clicking “Download” to manually grab the files and then dragging them to the appropriate folder on their local computer. This method works, but it is not the most reproducible way to run your workflow since it’s difficult to document the clicking of your cursor.</p>
 <p>Instead, you can acquire data programmatically with R and save all the steps in this part of the workflow in a script. If you, or anyone else, want to reproduce the same results in the future, you can just rerun the same script.</p>
@@ -394,11 +407,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </p><p><img src="images/setup4.png" align="center" width="100%"></p>
 <p></p>
 <p>This section describes what the file is for, along with additional metadata such as the file size and format. Copy the URL for this file.</p>
+<p>*ISSUE - EDI requires authentication for API access as of July 30, 2026: https://edirepository.org/news/news-20260727.00</p>
 <p>Once you’ve got the URL, navigate to your workspace/working directory in RStudio for this course. You can check your current working directory by running <code>getwd()</code>. If the output of <code>getwd()</code> does not return the file path to your folder for this course, you will need to run <code>setwd(dir = "...")</code> by replacing <code>...</code> with the file path of your choice.</p>
 <p>Then follow the code below to download and unzip “EDS_Course_Materials.zip”.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#               EDI Download -----</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#               EDI Download (Optional) -----</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## --------------------------------------------- ##</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If you don't have the curl package, install it first</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("curl")</span></span>

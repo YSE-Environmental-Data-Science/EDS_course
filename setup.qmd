@@ -53,6 +53,7 @@ The course data package contains the files needed to run the core workshops. Fin
 (4) Unzip and move the file into the EDS730 folder.
 (5) Change the name of the folder "EDS_Course_Materials" to "data"
 (6) In the data folder create a folder called "products"
+(7) In the EDS730 folder create a folder called "scripts"
 
 ## Data Acquisition (Optional)
 
