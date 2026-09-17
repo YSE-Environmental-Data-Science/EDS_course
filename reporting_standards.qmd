@@ -1,0 +1,73 @@
+---
+title: "Reporting Standards"
+editor:
+  mode: source
+---
+
+These standards apply to **every brief, report, and final project in ENV 730**. Every deliverable is graded as scientific writing, not as a folder of outputs. A plot with no sentence, or a question left unanswered, is incomplete.
+
+::: {.callout-important}
+## The one rule everything else follows
+
+You make the **entire argument in your writing**. Figures and citations are there to *support* that argument — they never stand in for it. The text carries the reasoning from start to finish; a plot or a citation is evidence you point to, not a substitute for saying what you found.
+:::
+
+## Four standards for every submission
+
+| Standard | What it means |
+|---|---|
+| **Make the argument in the text** | The whole argument lives in your prose, in complete sentences. Figures and citations support it — raw output, bullet fragments, or code alone is not a submission. |
+| **Answer the question with evidence** | Every question gets a direct claim, backed by a specific number or figure. Restating the question, or showing a plot without a conclusion, does not answer it. |
+| **Caption every figure and table** | Give each one a number and a caption that says what it shows and the takeaway, so it stands on its own away from the code. |
+| **Cite your figures and sources in the text** | Point to the support explicitly ("Figure 1 shows…"). Every figure, table, and reference must be mentioned in the writing where it backs your argument. |
+
+## Answer the question: make a claim, then prove it
+
+A question is answered when you **state a conclusion** and support it with evidence the reader can check.
+
+- State the claim in a sentence — the answer, not a description of the plot.
+- Back it with a specific value or a labelled figure, cited by number.
+- Do not leave the reader to infer it from a chart — say what the chart shows.
+- If two things differ, say which is larger, by how much, and where you see it.
+
+::: {.callout-tip}
+## Weak vs. strong
+
+**Weak:** a temperature plot, no text.
+
+**Strong:** "New Haven is milder in winter — mean January `tmean` is 2.4 °C versus −3.1 °C at Yale-Myers (Fig. 2)."
+:::
+
+## Every figure earns a caption and a mention
+
+A figure is evidence *only* if the reader knows what it is and you point them to it.
+
+- Number every figure and table (Figure 1, Figure 2, Table 1).
+- The caption states what it shows **plus the one takeaway**, and reads on its own.
+- Label axes with units — a bare plot is not yet evidence.
+- Mention each figure by number in the text. No orphan figures.
+
+::: {.callout-note}
+## A caption that works
+
+> **Figure 1.** Monthly mean temperature with standard error for Yale-Myers and New Haven, 1990–2018. New Haven is warmer in every month, and the gap is largest in winter.
+:::
+
+## What we are fixing this term
+
+| Common problem | The fix |
+|---|---|
+| Code and figures, but no text | Write prose that interprets the results and answers each question. |
+| Figures with no captions | Add a numbered caption stating what it shows and the takeaway. |
+| Figures never mentioned in the writing | Cite each one by number where it supports your point ("Fig. 3…"). |
+| The question is restated but not answered | Give a direct claim and the evidence behind it, not just the setup. |
+
+## Before you submit: a quick self-check
+
+- [ ] The full argument is made in my writing; figures and citations are there in support.
+- [ ] Every question is answered with a direct claim and the evidence behind it.
+- [ ] Every figure and table is numbered, captioned, and referenced by number in the text.
+- [ ] The writing is in complete sentences that interpret the results, not just describe them.
+- [ ] The work is reproducible — the data source and code are noted.
+
+These standards apply to every deliverable in the course. When in doubt, ask: *does the text make the argument, and does every figure and citation earn its place in support of it?*

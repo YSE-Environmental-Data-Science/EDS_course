@@ -22,6 +22,8 @@ website:
         href: setup.qmd
       - text: "Class Survey"
         href: class_survey.qmd
+      - text: "Reporting Standards"
+        href: reporting_standards.qmd
       - section: "Introduction to R"
         contents:
           - text: "Data Basics"
