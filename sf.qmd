@@ -140,30 +140,30 @@ fluxnet_ch4_located <- fluxnet_ch4 %>%
 ```
 
 ```{r}
-fluxnet_sites_sf <- st_as_sf(x = fluxnet_sites_located,
+fluxnet_sites_wgs84 <- st_as_sf(x = fluxnet_sites_located,
+                                coords = c("LOCATION_LONG", "LOCATION_LAT"),
+                                crs = 4326)
+
+fluxnet_ch4_wgs84 <- st_as_sf(x = fluxnet_ch4_located,
                               coords = c("LOCATION_LONG", "LOCATION_LAT"),
                               crs = 4326)
-
-fluxnet_ch4_sf <- st_as_sf(x = fluxnet_ch4_located,
-                            coords = c("LOCATION_LONG", "LOCATION_LAT"),
-                            crs = 4326)
 ```
 
 Now map the full FLUXNET network and the CH4 subset:
 
 ```{r}
 ggplot() +
-  geom_sf(data = fluxnet_sites_sf, color = "gray75", size = 1) +
-  geom_sf(data = fluxnet_ch4_sf, color = "red", size = 1.6) +
+  geom_sf(data = fluxnet_sites_wgs84, color = "gray75", size = 1) +
+  geom_sf(data = fluxnet_ch4_wgs84, color = "red", size = 1.6) +
   labs(title = "FLUXNET CH4 towers are a subset of the full FLUXNET network")
 ```
 
 Check the class and geometry:
 
 ```{r}
-class(fluxnet_ch4_sf)
-fluxnet_ch4_sf$geometry
-print(fluxnet_ch4_sf, n = 3)
+class(fluxnet_ch4_wgs84)
+fluxnet_ch4_wgs84$geometry
+print(fluxnet_ch4_wgs84, n = 3)
 ```
 
 Simple features describe real-world objects with both attributes and geometry. In this case, the attributes describe tower names, climate, elevation, and vegetation type, while the geometry records each tower's location.
@@ -173,16 +173,16 @@ Simple features describe real-world objects with both attributes and geometry. I
 `st_is_valid()` checks whether geometries are valid. Points are usually simple, but it is still a good habit to check spatial data before using it.
 
 ```{r}
-st_is_valid(fluxnet_ch4_sf)
+st_is_valid(fluxnet_ch4_wgs84)
 ```
 
 Coordinate reference systems (CRS) define how coordinates map to locations on Earth. Longitude/latitude coordinates are useful for storing global locations, but projected coordinates are better when measuring area and distance. We will transform the tower data to World Equidistant Cylindrical, EPSG 4087, so distance and area operations use meters.
 
 ```{r}
-fluxnet_sites_sf <- st_transform(fluxnet_sites_sf, crs = 4087)
-fluxnet_ch4_sf <- st_transform(fluxnet_ch4_sf, crs = 4087)
+fluxnet_sites_projected <- st_transform(fluxnet_sites_wgs84, crs = 4087)
+fluxnet_ch4_projected <- st_transform(fluxnet_ch4_wgs84, crs = 4087)
 
-fluxnet_ch4_sf
+fluxnet_ch4_projected
 ```
 
 # Are methane towers clustered?
@@ -190,16 +190,22 @@ fluxnet_ch4_sf
 If methane towers are clustered, models may describe those places well while leaving other climate or ecosystem conditions underrepresented. Use `st_distance()` to calculate the distance among CH4 towers, then identify each tower's nearest neighbor.
 
 ```{r}
-distance_matrix_km <- as.matrix(st_distance(fluxnet_ch4_sf)) / 1000
-diag(distance_matrix_km) <- NA
+distance_matrix_km <- as.matrix(st_distance(fluxnet_ch4_projected)) / 1000
+distance_matrix_no_self_km <- replace(
+  distance_matrix_km,
+  row(distance_matrix_km) == col(distance_matrix_km),
+  NA_real_
+)
 
-fluxnet_ch4_sf$nearest_neighbor_km <- apply(distance_matrix_km, 1, min, na.rm = TRUE)
+fluxnet_ch4_with_distance <- fluxnet_ch4_projected %>%
+  mutate(nearest_neighbor_km = apply(distance_matrix_no_self_km, 1, min,
+                                     na.rm = TRUE))
 ```
 
 Map nearest-neighbor distance. Larger values identify more isolated towers:
 
 ```{r}
-ggplot(data = fluxnet_ch4_sf) +
+ggplot(data = fluxnet_ch4_with_distance) +
   geom_sf(aes(color = nearest_neighbor_km), size = 2) +
   labs(title = "Nearest CH4 tower distance",
        color = "Nearest tower (km)")
@@ -208,7 +214,7 @@ ggplot(data = fluxnet_ch4_sf) +
 Look at the distribution:
 
 ```{r}
-ggplot(data = fluxnet_ch4_sf,
+ggplot(data = fluxnet_ch4_with_distance,
        aes(x = nearest_neighbor_km)) +
   geom_histogram(color = "black", fill = "white") +
   labs(title = "Distribution of nearest-neighbor distances",
@@ -219,7 +225,7 @@ ggplot(data = fluxnet_ch4_sf,
 Which towers are most isolated?
 
 ```{r}
-fluxnet_ch4_sf %>%
+fluxnet_ch4_with_distance %>%
   st_drop_geometry() %>%
   select(SITE_ID, SITE_NAME, IGBP, MAT, MAP, nearest_neighbor_km) %>%
   arrange(desc(nearest_neighbor_km)) %>%
@@ -252,17 +258,17 @@ Attach country and continent to all FLUXNET sites and to CH4 sites:
 world_context <- world %>%
   select(country = name, continent, geometry)
 
-fluxnet_sites_sf <- fluxnet_sites_sf %>%
+fluxnet_sites_joined <- fluxnet_sites_projected %>%
   st_join(world_context, join = st_within)
 
-fluxnet_ch4_sf <- fluxnet_ch4_sf %>%
+fluxnet_ch4_joined <- fluxnet_ch4_with_distance %>%
   st_join(world_context, join = st_within)
 ```
 
 Check whether any tower points did not fall within a country polygon:
 
 ```{r}
-fluxnet_sites_sf %>%
+fluxnet_sites_joined %>%
   filter(is.na(continent)) %>%
   st_drop_geometry() %>%
   select(SITE_ID, SITE_NAME)
@@ -299,14 +305,14 @@ add_known_geography <- function(sites) {
     )
 }
 
-fluxnet_sites_sf <- add_known_geography(fluxnet_sites_sf)
-fluxnet_ch4_sf <- add_known_geography(fluxnet_ch4_sf)
+fluxnet_sites_with_context <- add_known_geography(fluxnet_sites_joined)
+fluxnet_ch4_with_context <- add_known_geography(fluxnet_ch4_joined)
 ```
 
 Look at the new columns:
 
 ```{r}
-fluxnet_ch4_sf %>%
+fluxnet_ch4_with_context %>%
   st_drop_geometry() %>%
   select(SITE_ID, SITE_NAME, country, continent) %>%
   head()
@@ -317,7 +323,7 @@ Map the CH4 tower network with country context in the background:
 ```{r}
 ggplot() +
   geom_sf(data = world, fill = "gray95", color = "white") +
-  geom_sf(data = fluxnet_ch4_sf, aes(color = continent), size = 1.8) +
+  geom_sf(data = fluxnet_ch4_with_context, aes(color = continent), size = 1.8) +
   labs(title = "Global distribution of FLUXNET CH4 towers",
        color = "Continent")
 ```
@@ -363,7 +369,8 @@ ggplot(data = brazil) +
 The functions `st_intersects()`, `st_within()`, `st_contains()`, `st_disjoint()`, and related predicates tell us whether spatial features have a specific relationship. Use `st_intersects()` to identify CH4 towers in South America:
 
 ```{r}
-south_america_intersections <- st_intersects(south_america, fluxnet_ch4_sf)
+south_america_intersections <- st_intersects(south_america,
+                                             fluxnet_ch4_with_context)
 south_america_intersections
 
 south_america_tower_count <- lengths(south_america_intersections)
@@ -373,7 +380,7 @@ south_america_tower_count
 Count towers in Brazil:
 
 ```{r}
-brazil_intersections <- st_intersects(brazil, fluxnet_ch4_sf)
+brazil_intersections <- st_intersects(brazil, fluxnet_ch4_with_context)
 brazil_tower_count <- lengths(brazil_intersections)
 brazil_tower_count
 ```
@@ -418,11 +425,11 @@ Now we can ask whether FLUXNET CH4 sites are representative of the larger FLUXNE
 Count all FLUXNET sites by continent and CH4 sites by continent:
 
 ```{r}
-all_sites_by_continent <- fluxnet_sites_sf %>%
+all_sites_by_continent <- fluxnet_sites_with_context %>%
   st_drop_geometry() %>%
   count(continent, name = "all_fluxnet_sites")
 
-ch4_sites_by_continent <- fluxnet_ch4_sf %>%
+ch4_sites_by_continent <- fluxnet_ch4_with_context %>%
   st_drop_geometry() %>%
   count(continent, name = "ch4_sites")
 ```
@@ -456,11 +463,11 @@ ggplot(data = representation_by_continent,
 Compare ecosystem representation using `IGBP`:
 
 ```{r}
-all_sites_by_igbp <- fluxnet_sites_sf %>%
+all_sites_by_igbp <- fluxnet_sites_with_context %>%
   st_drop_geometry() %>%
   count(IGBP, name = "all_fluxnet_sites")
 
-ch4_sites_by_igbp <- fluxnet_ch4_sf %>%
+ch4_sites_by_igbp <- fluxnet_ch4_with_context %>%
   st_drop_geometry() %>%
   count(IGBP, name = "ch4_sites")
 
@@ -538,13 +545,13 @@ We will use the CH4 tower simple feature in later workshops. Save a shapefile ve
 
 ```{r}
 #| eval: false
-write_sf(fluxnet_ch4_sf, "data/products/fluxnet_ch4.shp")
+write_sf(fluxnet_ch4_with_context, "data/products/fluxnet_ch4.shp")
 ```
 
 It is also possible to convert a simple feature object back to a data frame:
 
 ```{r}
-fluxnet_ch4_df <- as.data.frame(fluxnet_ch4_sf)
+fluxnet_ch4_df <- as.data.frame(fluxnet_ch4_with_context)
 ```
 
 Check the class:
