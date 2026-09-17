@@ -259,6 +259,50 @@ fluxnet_ch4_sf <- fluxnet_ch4_sf %>%
   st_join(world_context, join = st_within)
 ```
 
+Check whether any tower points did not fall within a country polygon:
+
+```{r}
+fluxnet_sites_sf %>%
+  filter(is.na(continent)) %>%
+  st_drop_geometry() %>%
+  select(SITE_ID, SITE_NAME)
+```
+
+The four unmatched sites are not missing location data. Three (`US-Myb`,
+`US-Snd`, and `US-Sne`) are on Sherman Island in the Sacramento--San Joaquin
+River Delta, and one (`IT-Noe`) is on the coast of Sardinia, Italy. At the
+`"medium"` resolution used here, the Natural Earth country polygons do not
+capture enough of the narrow land--water boundaries to contain these points.
+This is an important reminder that an `NA` produced by a spatial join can
+reflect the resolution of the polygon data rather than an unknown site
+location.
+
+Because these unmatched values would otherwise be counted as their own group
+and bias the continent-level comparison, assign their known country and
+continent explicitly:
+
+```{r}
+add_known_geography <- function(sites) {
+  sites %>%
+    mutate(
+      country = case_when(
+        SITE_ID %in% c("US-Myb", "US-Snd", "US-Sne") ~
+          "United States of America",
+        SITE_ID == "IT-Noe" ~ "Italy",
+        TRUE ~ country
+      ),
+      continent = case_when(
+        SITE_ID %in% c("US-Myb", "US-Snd", "US-Sne") ~ "North America",
+        SITE_ID == "IT-Noe" ~ "Europe",
+        TRUE ~ continent
+      )
+    )
+}
+
+fluxnet_sites_sf <- add_known_geography(fluxnet_sites_sf)
+fluxnet_ch4_sf <- add_known_geography(fluxnet_ch4_sf)
+```
+
 Look at the new columns:
 
 ```{r}
