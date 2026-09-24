@@ -134,8 +134,40 @@ south_america <- world %>%
 
 Crop and mask mean annual precipitation to South America:
 
+### Check the coordinate reference system
+
+Before combining rasters with vector data, check the coordinate reference system (CRS):
+
 ```{r}
-south_america_ppt <- climate_stack$MAP %>%
+crs(global_climate, describe = TRUE)
+crs(south_america, describe = TRUE)
+```
+
+This raster is in longitude/latitude on the WGS84 datum, the same as the country polygons we will get from `rnaturalearth`. Even so, `terra` will warn that the CRSs do not match when we mask the raster with those polygons. terra doesn't compare CRSs by "is it WGS84?" It compares the full WKT definitions, and two WGS84 definitions can differ in ways that don't change the coordinates. Typically the GeoTIFF was written with a generic `+proj=longlat +datum=WGS84` definition, while `rnaturalearth` returns a full `EPSG:4326` definition.
+
+To avoid the mismatch, assign the raster the standard `EPSG:4326` definition:
+
+```{r}
+crs(global_climate) <- "EPSG:4326"
+crs(global_climate, describe = TRUE)
+
+south_america <- world %>%
+  filter(continent == "South America") %>%
+  st_union() %>%
+  st_as_sf() %>% st_transform('EPSG:4326')
+
+crs(south_america, describe = TRUE)
+
+```
+
+::: {.callout-warning}
+## Assigning versus projecting a CRS
+`crs(x) <- "EPSG:4326"` only relabels the CRS; it does not move any cells. That is appropriate here because the raster is already longitude/latitude WGS84 and only the text of the definition differs. If a raster were in a different CRS (for example, a projected UTM grid), relabeling it would place it in the wrong location. In that case, use `project()` to transform the data.
+:::
+
+Now we are ready to crop and mask the raster data
+```{r}
+south_america_ppt <- global_climate$MAP %>%
   crop(south_america) %>%
   mask(south_america)
 
@@ -503,11 +535,6 @@ ggplot(data = mds_scores,
        color = "Site group",
        shape = "Wetland tower")
 ```
-
-::: {.callout-tip}
-## Course product
-This workshop produces a raster evidence brief and analog tower table. Use the standard deliverable shape from the Final Project Roadmap: one clear question, one reproducibility note, at least one table, one or two figures, one interpretation paragraph, and one limitation or next-step paragraph.
-:::
 
 # Assignment
 
