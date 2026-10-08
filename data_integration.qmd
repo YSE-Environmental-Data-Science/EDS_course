@@ -753,7 +753,7 @@ For your final methane model, you will need to identify:
 This workshop produces a final project data integration plan. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on source documentation, units, join keys, missingness, and validation checks. Go find additional data you think will help your model make better methane predictions
 :::
 
-## Assignment
+## Future Assignment
 
 Submit a 1-2 page **Final Project Data Integration Plan**. Include:
 

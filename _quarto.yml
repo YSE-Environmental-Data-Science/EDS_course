@@ -56,6 +56,8 @@ website:
             href: data_repos.qmd
           - text: "Data Publication"
             href: data_pub.qmd
+          - text: "ERA5 Climate Data"
+            href: ERA5_Climatedata.qmd
 
 
 format:

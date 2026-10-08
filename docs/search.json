@@ -391,14 +391,22 @@
     "href": "ERA5_Climatedata.html",
     "title": "ERA5 Climate Data: Downloading and Building Monthly Climate Rasters",
     "section": "",
-    "text": "Tower meteorology only exists where there is a tower, and only for the months the tower was running. To model methane flux across space and time we need gridded climate predictors with complete coverage. ERA5 is the ECMWF global reanalysis: hourly-to-monthly estimates of the atmosphere at ~0.25° (~31 km) resolution from 1940 to present.\nIn this workshop we will:\n\nRequest ERA5 monthly means from the Copernicus Climate Data Store (CDS) with ecmwfr.\nRead the NetCDF files with terra.\nConvert units to monthly precipitation total (mm) and monthly mean air temperature (°C).\nName layers by YearMon so they join cleanly to site-month flux data.\nWrite era5_ppt_monthly.tif and era5_tmean_monthly.tif to the data folder.\n\nThese two GeoTIFFs are the files read in the Data Integration workshop."
+    "text": "Tower meteorology only exists where there is a tower, and only for the months the tower was running. To model methane flux across space and time we need gridded climate predictors with complete coverage. ERA5 is the ECMWF global reanalysis: hourly-to-monthly estimates of the atmosphere at ~0.25° (~31 km) resolution from 1940 to present.\nIn this workshop we will:\n\nRequest ERA5 monthly means from the Copernicus Climate Data Store (CDS) with ecmwfr.\nRead the NetCDF files with terra.\nConvert units to monthly precipitation total (mm) and monthly mean air temperature (°C).\nName layers by YearMon so they join cleanly to site-month flux data.\nWrite era5_ppt_monthly.tif and era5_tmean_monthly.tif to the data folder.\n\nThese two GeoTIFFs are the files read in the Data Integration workshop.",
+    "crumbs": [
+      "Resources",
+      "ERA5 Climate Data"
+    ]
   },
   {
     "objectID": "ERA5_Climatedata.html#why-era5",
     "href": "ERA5_Climatedata.html#why-era5",
     "title": "ERA5 Climate Data: Downloading and Building Monthly Climate Rasters",
     "section": "",
-    "text": "Tower meteorology only exists where there is a tower, and only for the months the tower was running. To model methane flux across space and time we need gridded climate predictors with complete coverage. ERA5 is the ECMWF global reanalysis: hourly-to-monthly estimates of the atmosphere at ~0.25° (~31 km) resolution from 1940 to present.\nIn this workshop we will:\n\nRequest ERA5 monthly means from the Copernicus Climate Data Store (CDS) with ecmwfr.\nRead the NetCDF files with terra.\nConvert units to monthly precipitation total (mm) and monthly mean air temperature (°C).\nName layers by YearMon so they join cleanly to site-month flux data.\nWrite era5_ppt_monthly.tif and era5_tmean_monthly.tif to the data folder.\n\nThese two GeoTIFFs are the files read in the Data Integration workshop."
+    "text": "Tower meteorology only exists where there is a tower, and only for the months the tower was running. To model methane flux across space and time we need gridded climate predictors with complete coverage. ERA5 is the ECMWF global reanalysis: hourly-to-monthly estimates of the atmosphere at ~0.25° (~31 km) resolution from 1940 to present.\nIn this workshop we will:\n\nRequest ERA5 monthly means from the Copernicus Climate Data Store (CDS) with ecmwfr.\nRead the NetCDF files with terra.\nConvert units to monthly precipitation total (mm) and monthly mean air temperature (°C).\nName layers by YearMon so they join cleanly to site-month flux data.\nWrite era5_ppt_monthly.tif and era5_tmean_monthly.tif to the data folder.\n\nThese two GeoTIFFs are the files read in the Data Integration workshop.",
+    "crumbs": [
+      "Resources",
+      "ERA5 Climate Data"
+    ]
   },
   {
     "objectID": "terra.html",
@@ -749,6 +757,17 @@
     "crumbs": [
       "Resources",
       "Coding"
+    ]
+  },
+  {
+    "objectID": "data_integration.html#future-assignment",
+    "href": "data_integration.html#future-assignment",
+    "title": "Data Integration: Building a Methane Flux Modeling Table",
+    "section": "Future Assignment",
+    "text": "Future Assignment\nSubmit a 1-2 page Final Project Data Integration Plan. Include:\n\nA short description of the methane flux question you want to answer.\nA table of at least five candidate predictors with source, units, spatial resolution, temporal resolution, static/dynamic status, and join key.\nOne paragraph describing likely missingness, scale mismatch, or join problems.\nA short workflow diagram or pseudocode showing how you will compile your modeling table.\nOne validation check you will use before modeling.\nA brief plan for comparing flux mean and variability across sites, including which predictors you would use to calculate tower dissimilarity.",
+    "crumbs": [
+      "Data Integration in R",
+      "Data Integration"
     ]
   }
 ]
