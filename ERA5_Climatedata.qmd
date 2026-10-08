@@ -1,0 +1,307 @@
+---
+title: "ERA5 Climate Data: Downloading and Building Monthly Climate Rasters"
+editor:
+  mode: source
+---
+
+## Why ERA5?
+
+Tower meteorology only exists where there is a tower, and only for the months the tower was running. To model methane flux across space and time we need gridded climate predictors with complete coverage. ERA5 is the ECMWF global reanalysis: hourly-to-monthly estimates of the atmosphere at ~0.25° (~31 km) resolution from 1940 to present.
+
+In this workshop we will:
+
+1.  Request ERA5 monthly means from the Copernicus Climate Data Store (CDS) with `ecmwfr`.
+2.  Read the NetCDF files with `terra`.
+3.  Convert units to **monthly precipitation total (mm)** and **monthly mean air temperature (°C)**.
+4.  Name layers by `YearMon` so they join cleanly to site-month flux data.
+5.  Write `era5_ppt_monthly.tif` and `era5_tmean_monthly.tif` to the data folder.
+
+These two GeoTIFFs are the files read in the Data Integration workshop.
+
+# Getting a Climate Data Store (CDS) API key
+
+1.  Create a free account at <https://cds.climate.copernicus.eu/>.
+2.  Log in, open your user profile page, and copy your **Personal Access Token**.
+3.  Open the dataset page for [ERA5 monthly averaged data on single levels](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels-monthly-means), scroll to the bottom of the **Download** tab, and accept the licence. Requests fail until you do this once.
+4.  Register your token once per computer:
+
+```{r}
+#| eval: false
+install.packages("ecmwfr")
+library(ecmwfr)
+wf_set_key(key = "paste-your-personal-access-token-here")
+```
+
+::: {.callout-warning}
+## Never save your API key in a script
+Type your key directly into the R console, not into a `.qmd` file you save or push to GitHub. Treat it like a password.
+:::
+
+# Load libraries
+
+```{r}
+#| output: false
+library(ecmwfr)
+library(terra)
+library(tidyverse)
+library(lubridate)
+library(zoo)
+```
+
+# Set up the download
+
+Choose the years and folders. The years should cover the flux record you plan to model.
+
+```{r}
+era5_years <- 2006:2018
+
+era5_dir <- file.path("data", "products", "era5")   # raw NetCDF downloads
+out_dir  <- file.path("data", "products")           # processed GeoTIFFs
+
+dir.create(era5_dir, showWarnings = FALSE, recursive = TRUE)
+
+t2m_file <- file.path(era5_dir, "era5_t2m_monthly.nc")
+tp_file  <- file.path(era5_dir, "era5_tp_monthly.nc")
+
+# Processing chunks below only run once both NetCDF files exist,
+# so this page still renders on a computer without the downloads.
+era5_downloaded <- file.exists(t2m_file) && file.exists(tp_file)
+```
+
+::: {.callout-note}
+## One request per variable
+We request temperature and precipitation separately. Temperature is an *instantaneous* variable and precipitation is an *accumulated* variable. When both are requested together, the CDS often returns a zip containing two NetCDF files instead of one, which complicates reading. Separate requests keep each download to a single, predictable file.
+:::
+
+# Download ERA5 monthly means
+
+Build the two requests. Each one covers every year and month at once.
+
+```{r}
+#| eval: false
+base_request <- list(
+  dataset_short_name = "reanalysis-era5-single-levels-monthly-means",
+  product_type       = "monthly_averaged_reanalysis",
+  year               = as.character(era5_years),
+  month              = sprintf("%02d", 1:12),
+  time               = "00:00",
+  data_format        = "netcdf",
+  download_format    = "unarchived"
+  # Optional: subset to a region to make the download much smaller.
+  # area = c(N, W, S, E), e.g. Connecticut: area = c(42.1, -73.8, 40.9, -71.7)
+)
+
+t2m_request <- c(base_request,
+                 list(variable = "2m_temperature",
+                      target   = basename(t2m_file)))
+
+tp_request  <- c(base_request,
+                 list(variable = "total_precipitation",
+                      target   = basename(tp_file)))
+```
+
+Send the requests. Each one waits in the CDS queue, then downloads to `era5_dir`. Depending on the queue this can take a few minutes to an hour.
+
+```{r}
+#| eval: false
+wf_request(request = t2m_request, path = era5_dir, transfer = TRUE, time_out = 3600)
+wf_request(request = tp_request,  path = era5_dir, transfer = TRUE, time_out = 3600)
+```
+
+::: {.callout-tip}
+## If the request times out
+A time-out in R does not cancel the job on the CDS server. Check your requests at <https://cds.climate.copernicus.eu/requests> and download the finished file manually into `data/products/era5/` with the same file name.
+:::
+
+# Read the NetCDF files
+
+```{r}
+#| eval: !expr era5_downloaded
+t2m <- rast(t2m_file)
+tp  <- rast(tp_file)
+
+t2m
+nlyr(t2m)
+nlyr(tp)
+```
+
+Each layer is one month. `terra` reads the time stamp of each layer from the NetCDF `valid_time` dimension:
+
+```{r}
+#| eval: !expr era5_downloaded
+head(time(t2m))
+head(time(tp))
+```
+
+Check that both files cover the same months, with exactly one layer per month:
+
+```{r}
+#| eval: !expr era5_downloaded
+era5_dates <- as.Date(time(t2m))
+
+all(as.Date(time(tp)) == era5_dates)
+anyDuplicated(zoo::as.yearmon(era5_dates)) == 0
+length(era5_dates) == length(era5_years) * 12
+```
+
+::: {.callout-note}
+## Duplicate months?
+If you request very recent months, ERA5 may include both the final product and the preliminary ERA5T product (an `expver` dimension). That doubles some months. For 2006–2018 this does not happen; if it does for your project, keep one layer per month before continuing.
+:::
+
+### Longitude convention
+
+The CDS NetCDF uses longitudes from 0 to 360. Our tower coordinates use −180 to 180, so rotate the rasters if needed:
+
+```{r}
+#| eval: !expr era5_downloaded
+ext(t2m)
+
+if (xmax(t2m) > 180) {
+  t2m <- rotate(t2m)
+  tp  <- rotate(tp)
+}
+
+ext(t2m)
+crs(t2m) <- "EPSG:4326"
+crs(tp)  <- "EPSG:4326"
+```
+
+# Unit conversions
+
+ERA5 units are not the units we want for modeling. Always check the documentation before using a reanalysis variable.
+
+| ERA5 variable | ERA5 units (monthly means) | Target | Conversion |
+|---|---|---|---|
+| `2m_temperature` (`t2m`) | K | mean monthly temperature, °C | `t2m - 273.15` |
+| `total_precipitation` (`tp`) | m per day (mean daily total for the month) | monthly total, mm | `tp × 1000 × days in month` |
+
+::: {.callout-important}
+## The precipitation trap
+In the *monthly averaged* product, `tp` is the **average daily** precipitation for that month, not the monthly total. Multiplying by 1000 gives mm per day; you must also multiply by the number of days in each month to get a monthly total. Forgetting this underestimates precipitation by a factor of ~30.
+:::
+
+### Mean monthly temperature (°C)
+
+```{r}
+#| eval: !expr era5_downloaded
+era5_tmean_monthly <- t2m - 273.15
+```
+
+### Monthly precipitation total (mm)
+
+Get the number of days in each month, then multiply layer by layer. Multiplying a `SpatRaster` by a numeric vector applies one value per layer.
+
+```{r}
+#| eval: !expr era5_downloaded
+days_per_month <- lubridate::days_in_month(era5_dates)
+head(days_per_month)
+
+era5_ppt_monthly <- tp * 1000 * days_per_month
+
+# Tiny negative values can occur from numerical processing; set them to zero
+era5_ppt_monthly <- clamp(era5_ppt_monthly, lower = 0, values = TRUE)
+```
+
+# Name layers by YearMon
+
+The Data Integration workshop converts layer names to `YearMon` with `zoo::as.yearmon()`. Use a `"YYYY-MM"` name so that conversion is unambiguous, and also store the dates with `time()`.
+
+```{r}
+#| eval: !expr era5_downloaded
+layer_names <- format(era5_dates, "%Y-%m")
+
+names(era5_tmean_monthly) <- layer_names
+names(era5_ppt_monthly)   <- layer_names
+
+time(era5_tmean_monthly) <- era5_dates
+time(era5_ppt_monthly)   <- era5_dates
+
+head(names(era5_ppt_monthly))
+head(zoo::as.yearmon(names(era5_ppt_monthly)))
+```
+
+# Sanity checks
+
+Before saving, confirm values are physically reasonable.
+
+```{r}
+#| eval: !expr era5_downloaded
+global(era5_tmean_monthly[[1:3]], c("min", "mean", "max"), na.rm = TRUE)
+global(era5_ppt_monthly[[1:3]],   c("min", "mean", "max"), na.rm = TRUE)
+```
+
+Expect temperatures roughly between −60 and 45 °C and monthly precipitation from 0 to well over 500 mm in the wettest tropical cells.
+
+Map one month of each:
+
+```{r}
+#| eval: !expr era5_downloaded
+par(mfrow = c(2, 1))
+plot(era5_tmean_monthly[["2018-07"]], main = "ERA5 mean temperature, July 2018 (°C)")
+plot(era5_ppt_monthly[["2018-07"]],   main = "ERA5 precipitation, July 2018 (mm)")
+par(mfrow = c(1, 1))
+```
+
+Check the seasonal cycle at a single location (here, New Haven, CT):
+
+```{r}
+#| eval: !expr era5_downloaded
+pt <- vect(data.frame(lon = -72.93, lat = 41.31), geom = c("lon", "lat"), crs = "EPSG:4326")
+
+nh_climate <- tibble(
+  YearMon = zoo::as.yearmon(names(era5_tmean_monthly)),
+  tmean_C = as.numeric(terra::extract(era5_tmean_monthly, pt, ID = FALSE)),
+  ppt_mm  = as.numeric(terra::extract(era5_ppt_monthly,   pt, ID = FALSE))
+)
+
+nh_climate %>%
+  mutate(month = month(as.Date(YearMon), label = TRUE)) %>%
+  summarize(.by = month,
+            tmean_C = mean(tmean_C),
+            ppt_mm  = mean(ppt_mm))
+```
+
+New Haven should show cold winters (around −2 °C in January), warm summers (around 23 °C in July), and roughly 80–120 mm of precipitation in every month.
+
+# Write the GeoTIFFs
+
+```{r}
+#| eval: !expr era5_downloaded
+writeRaster(era5_ppt_monthly,
+            filename = file.path(out_dir, "era5_ppt_monthly.tif"),
+            datatype = "FLT4S",
+            gdal = c("COMPRESS=DEFLATE"),
+            overwrite = TRUE)
+
+writeRaster(era5_tmean_monthly,
+            filename = file.path(out_dir, "era5_tmean_monthly.tif"),
+            datatype = "FLT4S",
+            gdal = c("COMPRESS=DEFLATE"),
+            overwrite = TRUE)
+```
+
+Read them back to confirm the layer names survived:
+
+```{r}
+#| eval: !expr era5_downloaded
+check_ppt <- rast(file.path(out_dir, "era5_ppt_monthly.tif"))
+nlyr(check_ppt)
+head(names(check_ppt))
+range(zoo::as.yearmon(names(check_ppt)))
+```
+
+# Document the product
+
+Record what you made so you (or anyone else) can reuse it:
+
+| File | Variable | Units | Resolution | Time span | Source |
+|---|---|---|---|---|---|
+| `era5_ppt_monthly.tif` | monthly precipitation total | mm month⁻¹ | 0.25°, EPSG:4326 | 2006-01 to 2018-12, one layer per month | ERA5 monthly averaged reanalysis, `total_precipitation`, × 1000 × days in month |
+| `era5_tmean_monthly.tif` | monthly mean 2 m air temperature | °C | 0.25°, EPSG:4326 | 2006-01 to 2018-12, one layer per month | ERA5 monthly averaged reanalysis, `2m_temperature`, − 273.15 |
+
+Cite ERA5 as: Hersbach, H. et al. (2023): ERA5 monthly averaged data on single levels from 1940 to present. Copernicus Climate Change Service (C3S) Climate Data Store (CDS). DOI: 10.24381/cds.f17050d7.
+
+# Next step
+
+These rasters are now ready for the Data Integration workshop, where we extract them to FLUXNET tower locations and join them to the site-month methane flux table by `SITE_ID` and `YearMon`.

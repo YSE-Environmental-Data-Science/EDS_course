@@ -49,26 +49,6 @@ Before writing code, make a data inventory. Every predictor you use in a model s
 Static predictors describe a site and can be repeated across months. Dynamic predictors change through time and must be joined by both site and time. Accidentally joining monthly data only by `SITE_ID` is one of the easiest ways to create duplicated or incorrect model data.
 :::
 
-# Getting a Climate Data Store (CDS) API key
-
-Later in this workshop, we will use ERA5 monthly climate data from the Copernicus Climate Data Store (CDS). This requires a free personal account and API key.
-
-1.  Create a free account at <https://cds.climate.copernicus.eu/>.
-2.  Once logged in, open your user profile page and copy your **Personal Access Token**.
-3.  Register it once per computer:
-
-```{r}
-#| eval: false
-install.packages("ecmwfr")
-library(ecmwfr)
-wf_set_key(key = "paste-your-personal-access-token-here")
-```
-
-::: {.callout-warning}
-## Never save your API key in a script
-Type your key directly into the R console, not into a `.qmd` file you save or push to GitHub. Treat it like a password.
-:::
-
 # Load libraries
 
 ```{r}
@@ -145,23 +125,67 @@ Country and continent are static site attributes. We get them by spatially joini
 world_sf <- ne_countries(scale = "medium", returnclass = "sf") %>%
   filter(continent %in% c("Europe", "Asia", "North America",
                           "South America", "Africa", "Oceania")) %>%
+  st_transform(crs = 4326)%>%
   st_make_valid()
 
 world_context <- world_sf %>%
   select(country = name, continent, geometry)
 
-fluxnet_ch4_sf <- fluxnet_ch4_sf %>%
+fluxnet_ch4_joined <- fluxnet_ch4_sf %>%
   st_join(world_context, join = st_within)
+
 ```
 
-Check the new attributes:
+Remember we discovered there were three sites (`US-Myb`,
+`US-Snd`, and `US-Sne`) are on Sherman Island in the Sacramento--San Joaquin
+River Delta, and one (`IT-Noe`) is on the coast of Sardinia, Italy. At the
+`"medium"` resolution used here, the Natural Earth country polygons do not
+capture enough of the narrow land--water boundaries to contain these points.
+This is an important reminder that an `NA` produced by a spatial join can
+reflect the resolution of the polygon data rather than an unknown site
+location.
+
+Because these unmatched values would otherwise be counted as their own group
+and bias the continent-level comparison, assign their known country and
+continent explicitly:
 
 ```{r}
-fluxnet_ch4_sf %>%
+add_known_geography <- function(sites) {
+  sites %>%
+    mutate(
+      country = case_when(
+        SITE_ID %in% c("US-Myb", "US-Snd", "US-Sne") ~
+          "United States of America",
+        SITE_ID == "IT-Noe" ~ "Italy",
+        TRUE ~ country
+      ),
+      continent = case_when(
+        SITE_ID %in% c("US-Myb", "US-Snd", "US-Sne") ~ "North America",
+        SITE_ID == "IT-Noe" ~ "Europe",
+        TRUE ~ continent
+      )
+    )
+}
+
+fluxnet_ch4_with_context <- add_known_geography(fluxnet_ch4_joined)
+```
+
+Look at the new columns:
+
+```{r}
+
+# Check the new attributes:
+  
+fluxnet_ch4_with_context %>%
   st_drop_geometry() %>%
   select(SITE_ID, SITE_NAME, country, continent) %>%
   head()
+
+fluxnet_ch4_with_context %>%
+  st_drop_geometry() %>%
+  select(SITE_ID, SITE_NAME, country, continent) %>% summary
 ```
+
 
 # Extract static raster predictors
 
@@ -177,7 +201,7 @@ names(soil)
 Transform the tower points to the raster CRS, then extract:
 
 ```{r}
-fluxnet_ch4_soil <- st_transform(fluxnet_ch4_sf, crs = crs(soil))
+fluxnet_ch4_soil <- st_transform(fluxnet_ch4_with_context, crs = crs(soil))
 
 soil_values <- terra::extract(soil, vect(fluxnet_ch4_soil)) %>%
   select(-ID) %>%
@@ -194,7 +218,7 @@ names(climate)
 ```
 
 ```{r}
-fluxnet_ch4_climate <- st_transform(fluxnet_ch4_sf, crs = crs(climate))
+fluxnet_ch4_climate <- st_transform(fluxnet_ch4_with_context, crs = crs(climate))
 
 climate_values <- terra::extract(climate, vect(fluxnet_ch4_climate)) %>%
   select(-ID) %>%
@@ -212,7 +236,7 @@ names(elevation)
 ```
 
 ```{r}
-fluxnet_ch4_elevation <- st_transform(fluxnet_ch4_sf, crs = crs(elevation))
+fluxnet_ch4_elevation <- st_transform(fluxnet_ch4_with_context, crs = crs(elevation))
 
 elevation_values <- terra::extract(elevation, vect(fluxnet_ch4_elevation)) %>%
   select(-ID) %>%
@@ -224,7 +248,7 @@ elevation_values <- terra::extract(elevation, vect(fluxnet_ch4_elevation)) %>%
 Combine the site metadata and static raster values:
 
 ```{r}
-site_static <- fluxnet_ch4_sf %>%
+site_static <- fluxnet_ch4_with_context %>%
   st_drop_geometry() %>%
   bind_cols(soil_values, climate_values, elevation_values)
 ```
@@ -273,8 +297,10 @@ fluxnet_vi_monthly <- modis_vi %>%
          QAQC = MOD13A3_061__1_km_monthly_VI_Quality) %>%
   mutate(date_formatted = as.Date(Date),
          YearMon = zoo::as.yearmon(date_formatted)) %>%
-  filter(QAQC > 0) %>%
+  filter(QAQC > 0 & QAQC != 65535 ) %>%
   distinct(SITE_ID, YearMon, .keep_all = TRUE)
+
+fluxnet_vi_monthly
 ```
 
 Check the keys:
@@ -282,6 +308,7 @@ Check the keys:
 ```{r}
 find_duplicate_keys(fluxnet_vi_monthly, SITE_ID, YearMon)
 range(fluxnet_vi_monthly$YearMon)
+
 ```
 
 # Monthly flux data
@@ -379,53 +406,9 @@ flux_model_base %>%
   count(SITE_ID, sort = TRUE) %>%
   head()
 ```
-
-# ERA5 monthly reanalysis data
-
-The static climate layer (`GlobalClimate.tif`) gives each site one long-term average. ERA5 gives monthly climate values that can be joined to site-month flux rows.
-
-The download workflow is shown below, but the course data folder already includes processed ERA5 rasters:
-
--   `data/products/era5_ppt_monthly.tif`
--   `data/products/era5_tmean_monthly.tif`
-
-### Download ERA5 data
-
-```{r}
-#| eval: false
-library(ecmwfr)
-
-era5_years <- 2006:2018
-
-era5_requests <- lapply(era5_years, function(yr) {
-  list(
-    dataset_short_name = "reanalysis-era5-single-levels-monthly-means",
-    product_type = "monthly_averaged_reanalysis",
-    variable = c("2m_temperature", "total_precipitation"),
-    year = as.character(yr),
-    month = sprintf("%02d", 1:12),
-    time = "00:00",
-    data_format = "netcdf",
-    target = paste0("era5_", yr, ".nc")
-  )
-})
-
-era5_dir <- file.path("data", "products", "era5")
-dir.create(era5_dir, showWarnings = FALSE, recursive = TRUE)
-
-wf_request_batch(request_list = era5_requests,
-                 workers = 2,
-                 retry = 30,
-                 user = "ecmwfr",
-                 path = era5_dir)
-```
-
-::: {.callout-note}
-## Why we use the processed rasters below
-ERA5 downloads depend on an external account, API key, and queue. For this workshop, we use processed rasters that have already been downloaded and converted to the right units so the data integration workflow is reproducible in class.
-:::
-
 ### Extract ERA5 values to tower sites
+
+Download era5_ppt_monthly and era5_tmean_monthl from canvas and add these data to your /data folder.
 
 Read the processed monthly ERA5 rasters:
 
@@ -447,7 +430,7 @@ names(era5_tmean_monthly) <- as.character(zoo::as.yearmon(names(era5_tmean_month
 Transform tower points and extract monthly values:
 
 ```{r}
-fluxnet_ch4_era5 <- st_transform(fluxnet_ch4_sf, crs = crs(era5_ppt_monthly))
+fluxnet_ch4_era5 <- st_transform(fluxnet_ch4_with_context, crs = crs(era5_ppt_monthly))
 
 era5_ppt_long <- terra::extract(era5_ppt_monthly, vect(fluxnet_ch4_era5), ID = FALSE) %>%
   mutate(SITE_ID = fluxnet_ch4_era5$SITE_ID) %>%
@@ -750,13 +733,11 @@ Save the model-ready table and the ERA5 rasters needed for the spatial projectio
 ```{r}
 #| eval: false
 save(methane_model_data, file = "data/products/methane_model_data.RDATA")
-writeRaster(era5_ppt_monthly, "data/products/era5_ppt_monthly.tif", overwrite = TRUE)
-writeRaster(era5_tmean_monthly, "data/products/era5_tmean_monthly.tif", overwrite = TRUE)
 ```
 
 # Final project data integration plan
 
-For your final methane model, identify:
+For your final methane model, you will need to identify:
 
 1.  Your response variable.
 2.  Your spatial extent.
@@ -770,7 +751,7 @@ For your final methane model, identify:
 
 ::: {.callout-tip}
 ## Course product
-This workshop produces a final project data integration plan. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on source documentation, units, join keys, missingness, and validation checks.
+This workshop produces a final project data integration plan. Use the standard deliverable shape from the Final Project Roadmap, with extra emphasis on source documentation, units, join keys, missingness, and validation checks. Go find additional data you think will help your model make better methane predictions
 :::
 
 ## Assignment
