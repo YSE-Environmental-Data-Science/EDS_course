@@ -407,7 +407,7 @@ flux_model_base %>%
 ```
 ### Extract ERA5 values to tower sites
 
-Download era5_ppt_monthly and era5_tmean_monthl from canvas and add these data to your /data folder.
+Download era5_ppt_monthly and era5_tmean_monthl from canvas and add these data to your "/data/products" folder.
 
 Read the processed monthly ERA5 rasters:
 
