@@ -300,7 +300,6 @@ fluxnet_vi_monthly <- modis_vi %>%
   filter(QAQC > 0 & QAQC != 65535 ) %>%
   distinct(SITE_ID, YearMon, .keep_all = TRUE)
 
-fluxnet_vi_monthly
 ```
 
 Check the keys:
