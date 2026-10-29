@@ -265,7 +265,7 @@
     const s=document.createElement('script');
     window[cb]=function(payload){
       serverEverOk=true;
-      try{ responses=(payload&&payload.responses)?payload.responses.map(normalize):[]; }catch(e){ responses=[]; }
+      try{ responses=(payload&&payload.responses)?payload.responses.filter(r=>!String(r.why||'').startsWith('ENV730_MIDTERM_V1:')).map(normalize):[]; }catch(e){ responses=[]; }
       if(optimistic && responses.some(r=>sameEntry(r,optimistic))){ optimistic=null; awaitingSync=false; }
       updateSyncNote(); render(); delete window[cb]; s.remove();
     };

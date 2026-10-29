@@ -3,6 +3,7 @@ project:
   output-dir: docs
   resources:
     - survey/skills_survey.html
+    - survey/midterm_survey.html
 
 website:
   favicon: images/favicon.png
@@ -22,6 +23,8 @@ website:
         href: setup.qmd
       - text: "Class Survey"
         href: class_survey.qmd
+      - text: "Mid-term Survey"
+        href: midterm_survey.qmd
       - text: "Reporting Standards"
         href: reporting_standards.qmd
       - section: "Introduction to R"

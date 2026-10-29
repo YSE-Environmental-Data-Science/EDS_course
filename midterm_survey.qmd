@@ -1,0 +1,27 @@
+---
+title: "Mid-term Survey — Skills & Methane Projects"
+---
+
+Update your **eight skill ratings (round 2)**, share your interests, and describe **where you want to focus your methane model**. Then open the **Class map** tab to browse classmates’ current skills and project ideas and choose potential group members.
+
+::: {.callout-note appearance="simple"}
+No sign-in needed. Your name and responses are visible to anyone who can access this page. Use a recognizable name so classmates can find you. Submit again with the same name to update your profile; only your latest mid-term response appears here. First-day responses are kept separate.
+:::
+
+```{=html}
+<div id="eds-survey-wrap">
+  <iframe id="eds-survey" src="survey/midterm_survey.html"
+          title="ENV 730 Mid-term Skills and Methane Project Map"
+          style="width:100%;border:0;border-radius:14px;min-height:1500px;overflow:hidden"
+          loading="lazy"></iframe>
+</div>
+<script>
+  // resize the embedded survey to its content so there is no inner scrollbar
+  window.addEventListener('message', function (e) {
+    if (e.source === document.getElementById('eds-survey').contentWindow && e.data && Number.isFinite(e.data.env730Height)) {
+      var f = document.getElementById('eds-survey');
+      if (f) f.style.height = (e.data.env730Height + 24) + 'px';
+    }
+  });
+</script>
+```
