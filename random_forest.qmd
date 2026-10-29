@@ -81,7 +81,7 @@ Before fitting any model, identify:
 Prepare the modeling table:
 
 ```{r}
-model_data <- fluxnet %>%
+model_data_org <- fluxnet %>%
   ungroup() %>%
   select(SITE, YearMon, FCH4_F_gC,
          P_F, TA_F, VPD_F,
@@ -93,21 +93,21 @@ model_data <- fluxnet %>%
 Check the table:
 
 ```{r}
-nrow(model_data)
-n_distinct(model_data$SITE)
-summary(model_data)
+nrow(model_data_org)
+n_distinct(model_data_org$SITE)
+summary(model_data_org)
 ```
 
 Some ecosystem classes occur at only one site. That causes problems for leave-one-site-out prediction: if the held-out site is the only example of an ecosystem class, the training set has never seen that class. Collapse rare classes into `Other`.
 
 ```{r}
-common_igbp <- model_data %>%
+common_igbp <- model_data_org %>%
   distinct(SITE, IGBP) %>%
   count(IGBP, name = "n_sites") %>%
   filter(n_sites >= 3) %>%
   pull(IGBP)
 
-model_data <- model_data %>%
+model_data <- model_data_org %>%
   mutate(IGBP_model = if_else(IGBP %in% common_igbp, IGBP, "Other"),
          IGBP_model = as.factor(IGBP_model))
 ```
