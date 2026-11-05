@@ -6,40 +6,51 @@ editor:
 
 ## From flux density to emissions
 
-In the Random Forest and Sensitivity Analysis workshops, we built and stress-tested a methane flux model. In this final workshop, we will project a model across Connecticut and turn gridded flux predictions into a methane emissions budget.
+In the Random Forest and Sensitivity Analysis workshops, we built and stress-tested a methane flux model. In this final workshop, we project that same model across Connecticut and turn gridded flux predictions into a methane emissions budget.
 
 The key idea is a unit conversion:
 
 > methane flux density x inundated area = methane emissions
 
-Our random forest predicts methane flux as `g C m-2 month-1`. That is a rate per square meter. A map of predicted flux is not yet an emissions budget. To estimate emissions, we need to multiply by the area where methane-producing wetlands are present.
+Our random forest predicts methane flux as `g C m-2 month-1`, a rate per square meter. A map of predicted flux is not yet an emissions budget. To estimate emissions, we multiply by the area where methane-producing wetlands are actually inundated.
 
-That is where the **Wetland Area and Dynamics for Methane Modeling (WAD2M)** product enters. WAD2M provides monthly wetland/inundation fractions on a global 0.25 degree grid. Zhang et al. (2021) describe WAD2M version 1.0 as a monthly product for 2000-2018 built for large-scale methane modeling. The NASA UpCH4 methane emissions product uses WAD2M to weight gridded methane flux predictions by fractional wetland extent before converting them to by-grid-cell emissions.
+That is where the **Wetland Area and Dynamics for Methane Modeling (WAD2M)** product comes in. WAD2M provides monthly inundated-wetland fractions on a global 0.25 degree grid (Zhang et al. 2021). Version 2.0 covers 2000–2020. The NASA UpCH4 methane product uses the same strategy we use here: predict a wetland flux everywhere, then weight it by the WAD2M wetland fraction before converting to emissions.
 
 Useful references:
 
 -   WAD2M paper: [Zhang et al. 2021, Earth System Science Data](https://doi.org/10.5194/essd-13-2001-2021)
--   WAD2M metadata summary: [EPA HERO record](https://hero.epa.gov/reference/8047289/)
+-   WAD2M data: [Zenodo record](https://doi.org/10.5281/zenodo.3998454)
 -   Example methane upscaling product using WAD2M: [NASA Open Data Portal, UpCH4](https://data.nasa.gov/dataset/global-wetland-methane-emissions-derived-from-fluxnet-and-the-upch4-model-2001-2018-c7437)
 
 ::: {.callout-warning}
-## Data dependency
-This workshop reuses the ERA5 climate rasters saved in `data_integration.qmd`: `data/products/era5_ppt_monthly.tif` and `data/products/era5_tmean_monthly.tif`.
+## Data dependencies
+-   `data/products/random_forest_model.RDATA`: the final model saved by `random_forest.qmd` (also created by `sensitivity.qmd`).
+-   `data/products/era5_tmean_monthly.tif`: ERA5 temperature saved in `data_integration.qmd`.
+-   `data/products/modis_evi_ct_2018.tif`: monthly 2018 MODIS EVI for Connecticut.
+-   `data/products/wad2m_fw_ct_2000-2020.tif`: WAD2M v2.0 monthly inundated fraction, cropped to Connecticut.
 
-For WAD2M, this workshop expects a Connecticut-ready 2018 monthly inundation fraction raster at `data/products/wad2m_inundation_fraction_ct_2018.tif`. If that file is not present, the code creates a clearly labeled seasonal classroom proxy from the provided MODIS land-cover raster so the unit-conversion workflow still runs.
+The appendix shows how the last two were made.
+:::
+
+::: {.callout-important}
+## Download from Canvas before class
+Download these two files from Canvas and save them in your `data/products/` folder:
+
+-   `modis_evi_ct_2018.tif`
+-   `wad2m_fw_ct_2000-2020.tif`
+
+The workshop will not run without them.
 :::
 
 By the end of this workshop, you will be able to:
 
-1.  Identify the variables, units, names, and classes needed for spatial prediction.
-2.  Align predictor rasters so they have the same CRS, resolution, extent, and layer names.
-3.  Predict monthly methane flux density in space.
-4.  Explain what WAD2M inundation fraction represents.
-5.  Convert flux density to cell-level monthly and annual emissions.
-6.  Compare budgets with and without inundation-fraction scaling.
+1.  Match model predictors to spatial layers with the right names, units, and classes.
+2.  Align predictor rasters to a common grid.
+3.  Predict monthly wetland methane flux density in space.
+4.  Use WAD2M to find where and when wetlands are inundated.
+5.  Convert flux density to monthly and annual emissions in `g C`, `Tg C`, and `Tg CH4`.
+6.  Compare budgets with and without inundation scaling, and test sensitivity to inundated area.
 7.  Extract predictions and emissions for the Yale-Myers Forest grid cell.
-8.  Test how sensitive the budget is to inundation-area uncertainty.
-9.  Report methane emissions in `g C`, `Tg C`, and `Tg CH4`.
 
 ### Load libraries
 
@@ -50,703 +61,385 @@ library(terra)
 library(tidyverse)
 ```
 
-# 1. List model variables and units
+# 1. Load the model and list its spatial needs
 
-Load the model. This workshop uses the original spatial-projection model because it has three predictors that are available as rasters for Connecticut: precipitation, temperature, and an upland/inundated land-cover indicator.
-
-```{r}
-load(file = "data/final_model.RDATA")
-
-# The saved model object is called FCH4_F_gC.rf; alias it to match this course's naming convention.
-fch4_rf <- FCH4_F_gC.rf
-```
-
-Inspect the model formula and variable classes:
+Load the same final model used in the Sensitivity Analysis workshop:
 
 ```{r}
-formula(fch4_rf)
-fch4_rf
+model_file <- "data/products/random_forest_model.RDATA"
 
-class(train$P_F)
-class(train$TA_F)
-class(train$Upland)
+if (!file.exists(model_file)) {
+  stop("Render random_forest.qmd or sensitivity.qmd first; they save ", model_file)
+}
+
+load(model_file)
+
+final_formula
+levels(train$IGBP_model)
 ```
 
-To project this model in space, the raster stack must contain:
+To project this model in space, every predictor needs a value in every grid cell:
 
 | Model variable | Meaning | Unit or class | Spatial source |
 |---|---|---|---|
-| `P_F` | Monthly total precipitation | mm month-1 | ERA5 |
 | `TA_F` | Monthly mean air temperature | degrees C | ERA5 |
-| `Upland` | Ecosystem indicator | factor with levels `inundated`, `upland` | MODIS land cover |
+| `EVI` | Monthly enhanced vegetation index | unitless (−1 to 1) | MODIS |
+| `IGBP_model` | Ecosystem class | factor: `CRO`, `EBF`, `ENF`, `GRA`, `Other`, `WET` | set to `WET` |
 
-The model prediction has units of `g C m-2 month-1`.
+The prediction has units of `g C m-2 month-1`.
 
 ::: {.callout-note}
-## Which random forest should you project?
-This workshop uses the simple spatial model because its predictors are easy to map for every grid cell in Connecticut. The updated Random Forest workshop may save a stronger model at `data/products/random_forest_model.RDATA`, but that model can only be projected if every selected predictor has a spatial raster with the same name and class expected by the model.
+## Why set every cell to `WET`?
+We are not asking what methane flux a forest or a cornfield produces. We are asking **how much methane the wetlands in each grid cell would emit**. So we predict a wetland flux everywhere (`IGBP_model = "WET"`), then let WAD2M decide how much of each cell is actually inundated wetland. Upland cells end up with an inundated fraction near zero, so they contribute almost nothing to the budget.
 
-For example, a model using `NDVI`, `EVI`, `VPD_F`, or `IGBP_model` requires matching spatial layers for those variables. A good final project model is not only the model with the best test metrics; it is also a model whose predictors can be mapped honestly.
+This is the same logic used in global wetland methane products. It also avoids a mismatch: our model's ecosystem classes come from tower sites, while MODIS land cover is mapped at 5 km and rarely labels Connecticut's small, scattered wetlands as `WET`.
 :::
-
-Check whether the updated random forest exists and inspect its predictors:
-
-```{r}
-if (file.exists("data/products/random_forest_model.RDATA")) {
-  load("data/products/random_forest_model.RDATA")
-  updated_model_predictors <- final_predictors
-} else {
-  updated_model_predictors <- NA_character_
-}
-
-updated_model_predictors
-```
-
-Reload the simple spatial model for the rest of this workshop:
-
-```{r}
-load(file = "data/final_model.RDATA")
-fch4_rf <- FCH4_F_gC.rf
-```
 
 # 2. Build the Connecticut prediction grid
 
-Use the provided Connecticut MODIS raster as the Connecticut template. This gives us an area of interest and a target grid without requiring students to download a state boundary file.
+Use the provided MODIS land-cover raster as the target grid (0.05 degrees, about 5 km). Mask open water (class `0`), where EVI and the model are not meaningful.
 
 ```{r}
-igbp_ct <- terra::rast("data/MODIS_IGBP_2001-2022_CT.tif")
-ct_template <- igbp_ct[[2018 - 2001 + 1]]
-ct_extent <- ext(ct_template)
+ct_grid <- rast("data/MODIS_IGBP_2001-2022_CT.tif")[[2018 - 2001 + 1]]
+crs(ct_grid) <- "EPSG:4326"
+ct_grid[ct_grid == 0] <- NA
+names(ct_grid) <- "land"
 
-terra::plot(ct_template, main = "Connecticut MODIS land-cover template")
+plot(ct_grid, main = "Connecticut land-cover grid (water masked)")
 ```
 
-Load the ERA5 rasters saved in Data Integration, keep only the 2018 layers, then crop and mask them to Connecticut:
+# 3. Prepare the predictor layers
+
+**Temperature.** Keep the 2018 ERA5 layers, crop to the region, and resample from 0.25 degrees to the 0.05 degree grid. Cropping the global file is slow, so save the cropped version the first time and reuse it.
 
 ```{r}
-era5_ppt_all <- terra::rast("data/products/era5_ppt_monthly.tif")
-era5_tmean_all <- terra::rast("data/products/era5_tmean_monthly.tif")
+tmean_ct_file <- "data/products/era5_tmean_ct_2018.tif"
 
-ct_era5_ppt <- era5_ppt_all[[grepl("2018", names(era5_ppt_all))]] %>%
-  crop(ct_extent)
-
-ct_era5_tmean <- era5_tmean_all[[grepl("2018", names(era5_tmean_all))]] %>%
-  crop(ct_extent)
-
-ct_era5_tmean
-```
-
-Save the cropped climate layers if you want to reuse them:
-
-```{r}
-#| eval: false
-writeRaster(ct_era5_tmean, "data/products/era5_tmean_ct_2018.tif", overwrite = TRUE)
-writeRaster(ct_era5_ppt, "data/products/era5_ppt_ct_2018.tif", overwrite = TRUE)
-```
-
-# 3. Build the land-cover predictor
-
-Inspect the MODIS IGBP layer for Connecticut:
-
-```{r}
-igbp_ct
-
-terra::plot(igbp_ct[[1]])
-```
-
-The MODIS IGBP classes include forest, shrubland, savanna, grassland, wetlands, cropland, urban land, snow/ice, barren land, and water. For this model, we simplify those classes into `Upland`.
-
-```{r}
-igbp_ct_r <- igbp_ct
-
-igbp_ct_r[igbp_ct_r == 0] <- NA
-igbp_ct_r[igbp_ct_r == 1] <- 1
-igbp_ct_r[igbp_ct_r == 2] <- 1
-igbp_ct_r[igbp_ct_r == 3] <- 1
-igbp_ct_r[igbp_ct_r == 4] <- 1
-igbp_ct_r[igbp_ct_r == 5] <- 1
-igbp_ct_r[igbp_ct_r == 6] <- 1
-igbp_ct_r[igbp_ct_r == 7] <- 1
-igbp_ct_r[igbp_ct_r == 8] <- 1
-igbp_ct_r[igbp_ct_r == 9] <- 1
-igbp_ct_r[igbp_ct_r == 10] <- 1
-igbp_ct_r[igbp_ct_r == 11] <- 0
-igbp_ct_r[igbp_ct_r == 12] <- NA
-igbp_ct_r[igbp_ct_r == 13] <- NA
-igbp_ct_r[igbp_ct_r == 14] <- NA
-igbp_ct_r[igbp_ct_r == 15] <- 0
-igbp_ct_r[igbp_ct_r == 16] <- 1
-igbp_ct_r[igbp_ct_r == 17] <- 0
-```
-
-Format the `Upland` raster as a factor:
-
-```{r}
-factors_df <- data.frame(id = c(0, 1), cover = c("inundated", "upland"))
-
-for (i in seq_len(nlyr(igbp_ct_r))) {
-  levels(igbp_ct_r[[i]]) <- factors_df
-}
-```
-
-Subset the 2018 layer:
-
-```{r}
-igbp_ct_upland <- igbp_ct_r[[2018 - 2001 + 1]]
-names(igbp_ct_upland) <- "Upland"
-
-terra::plot(igbp_ct_upland)
-```
-
-Use the land-cover grid as the target grid, then resample the climate layers to match it:
-
-```{r}
-igbp_ct_upland <- terra::project(igbp_ct_upland, ct_era5_ppt)
-
-ct_era5_tmean_resample <- resample(ct_era5_tmean, igbp_ct_upland)
-ct_era5_ppt_resample <- resample(ct_era5_ppt, igbp_ct_upland)
-```
-
-Check that the layers now align:
-
-```{r}
-compareGeom(igbp_ct_upland, ct_era5_tmean_resample, ct_era5_ppt_resample)
-```
-
-# 4. Introduce WAD2M inundation fraction
-
-WAD2M is not a model predictor in this simple random forest. It is used after prediction to scale fluxes by wetland or inundated area.
-
-The values should be fractions between 0 and 1:
-
--   `0` means no WAD2M wetland/inundated area in the grid cell.
--   `0.25` means 25% of the grid cell is wetland/inundated area.
--   `1` means the whole grid cell is wetland/inundated area.
-
-## Prepare WAD2M for Connecticut
-
-The exact WAD2M download workflow depends on the format you obtain from the data portal. The key preparation steps are always the same:
-
-1.  Load the global WAD2M inundation-fraction product.
-2.  Select the 12 monthly layers for 2018.
-3.  Crop the product to Connecticut.
-4.  Project and resample it to the same grid as the model predictions.
-5.  Save the prepared raster as `data/products/wad2m_inundation_fraction_ct_2018.tif`.
-
-The following code is a template for preparing a local WAD2M NetCDF or GeoTIFF file after download:
-
-```{r}
-#| eval: false
-wad2m_global <- rast("path/to/WAD2M_monthly_inundation_fraction.nc")
-
-# Replace this pattern with the actual layer names in your WAD2M file.
-wad2m_2018 <- wad2m_global[[grepl("2018", names(wad2m_global))]]
-
-wad2m_ct_2018 <- wad2m_2018 %>%
-  crop(ct_extent) %>%
-  project(igbp_ct_upland) %>%
-  resample(igbp_ct_upland, method = "bilinear") %>%
-  clamp(lower = 0, upper = 1, values = TRUE)
-
-names(wad2m_ct_2018) <- sprintf("wad2m_fraction_m%02d", 1:12)
-
-writeRaster(wad2m_ct_2018,
-            "data/products/wad2m_inundation_fraction_ct_2018.tif",
-            overwrite = TRUE)
-```
-
-## If your target year is not available
-
-WAD2M may not cover the year you want to model. For example, WAD2M version 1.0 covers 2000-2018, but your final project might need a later year. In that case, do not leave inundation fraction out of the budget. Instead, calculate a **mean monthly inundation climatology** from the WAD2M years that are available.
-
-The idea is:
-
--   average all available January layers to create a typical January inundation fraction;
--   average all available February layers to create a typical February inundation fraction;
--   repeat for all 12 months;
--   use those 12 monthly averages to scale the target year's flux predictions.
-
-This preserves seasonal wetland-area dynamics, even though it cannot represent the exact wetland extent of the missing year.
-
-```{r}
-#| eval: false
-target_year <- 2021
-
-wad2m_global <- rast("path/to/WAD2M_monthly_inundation_fraction.nc")
-
-wad2m_dates <- tibble(
-  layer = seq_len(nlyr(wad2m_global)),
-  layer_name = names(wad2m_global)
-) %>%
-  mutate(
-    year = as.integer(str_extract(layer_name, "\\d{4}")),
-    month = as.integer(str_extract(layer_name, "(?<=-)\\d{2}|(?<=_)\\d{2}$"))
-  )
-
-target_layers <- wad2m_dates %>%
-  filter(year == target_year)
-
-if (nrow(target_layers) == 12) {
-  wad2m_target <- wad2m_global[[target_layers$layer]]
-} else {
-  wad2m_monthly_climatology <- map(1:12, function(month_id) {
-    month_layers <- wad2m_dates %>%
-      filter(month == month_id) %>%
-      pull(layer)
-
-    mean(wad2m_global[[month_layers]], na.rm = TRUE)
-  })
-
-  wad2m_target <- rast(wad2m_monthly_climatology)
+if (!file.exists(tmean_ct_file)) {
+  era5_tmean_all <- rast("data/products/era5_tmean_monthly.tif")
+  era5_tmean_all[[grepl("2018", names(era5_tmean_all))]] %>%
+    crop(ext(-75, -70.5, 40, 43)) %>%
+    writeRaster(tmean_ct_file, overwrite = TRUE)
 }
 
-wad2m_target_ct <- wad2m_target %>%
-  crop(ct_extent) %>%
-  project(igbp_ct_upland) %>%
-  resample(igbp_ct_upland, method = "bilinear") %>%
-  clamp(lower = 0, upper = 1, values = TRUE)
+ta_f <- rast(tmean_ct_file) %>%
+  resample(ct_grid, method = "bilinear") %>%
+  mask(ct_grid)
+names(ta_f) <- month.abb
 
-names(wad2m_target_ct) <- sprintf("wad2m_fraction_m%02d", 1:12)
+plot(ta_f[[c(1, 7)]])
+```
 
-writeRaster(wad2m_target_ct,
-            sprintf("data/products/wad2m_inundation_fraction_ct_%s.tif", target_year),
-            overwrite = TRUE)
+**EVI.** The EVI layers are already on the Connecticut grid:
+
+```{r}
+evi <- rast("data/products/modis_evi_ct_2018.tif") %>%
+  resample(ct_grid, method = "bilinear") %>%
+  mask(ct_grid)
+names(evi) <- month.abb
+
+plot(evi[[c(1, 7)]])
+```
+
+Confirm the layers line up:
+
+```{r}
+compareGeom(ct_grid, ta_f, evi)
 ```
 
 ::: {.callout-note}
-## Report this clearly
-If you use a monthly climatology because the target year is unavailable, say so in your methods. Write something like: "Because WAD2M was unavailable for the target year, monthly inundation fractions were estimated using the mean WAD2M fraction for each calendar month across available years."
+## What to look for: predictor layers
+-   **Seasonality.** Temperature and EVI should both peak in summer. January EVI near zero (or slightly negative under snow) is expected.
+-   **Spatial pattern.** Temperature is smooth because ERA5 is coarse (about 25 km). EVI shows more detail: urban areas and the coast are lower, and forested uplands are higher.
+-   **Training domain.** Compare these ranges with the training data in the next chunk. The model can only learn from conditions in the training data.
 :::
 
-Load the Connecticut 2018 WAD2M layer if it exists. The file should have 12 layers, one for each month of 2018. If it has one layer, the workflow will reuse that layer for all months. The fallback proxy below is only for teaching the unit conversion; replace it with real WAD2M before using the results scientifically.
+Check whether the mapped predictors fall inside the model's training range:
 
 ```{r}
-wad2m_path <- "data/products/wad2m_inundation_fraction_ct_2018.tif"
+domain_check <- tibble(
+  predictor = c("TA_F", "EVI"),
+  train_min = c(min(train$TA_F), min(train$EVI)),
+  train_max = c(max(train$TA_F), max(train$EVI)),
+  map_min = c(global(min(ta_f), "min", na.rm = TRUE)[1, 1], global(min(evi), "min", na.rm = TRUE)[1, 1]),
+  map_max = c(global(max(ta_f), "max", na.rm = TRUE)[1, 1], global(max(evi), "max", na.rm = TRUE)[1, 1])
+) %>%
+  mutate(inside_domain = map_min >= train_min & map_max <= train_max)
 
-if (file.exists(wad2m_path)) {
-  wad2m_fraction <- rast(wad2m_path)
-  wad2m_source <- "WAD2M inundation fraction"
-} else {
-  natural_mask <- igbp_ct[[2018 - 2001 + 1]]
-  natural_mask[natural_mask %in% c(0, 12, 13, 14)] <- NA
-  natural_mask[!is.na(natural_mask)] <- 1
+domain_check
+```
 
-  seasonal_fraction <- c(0.04, 0.05, 0.07, 0.10, 0.12, 0.11,
-                         0.09, 0.08, 0.07, 0.06, 0.05, 0.04)
+# 4. Predict monthly flux density
 
-  wad2m_fraction <- rast(lapply(seasonal_fraction, function(x) natural_mask * x))
-  wad2m_source <- "seasonal classroom proxy, not WAD2M"
+Build the predictor stack for one month. `IGBP_model` is passed as a constant with the same factor levels as the training data. `randomForest` refuses to predict if the levels don't match.
+
+```{r}
+wetland_class <- data.frame(
+  IGBP_model = factor("WET", levels = levels(train$IGBP_model))
+)
+
+predict_month <- function(i) {
+  stack <- c(ta_f[[i]], evi[[i]])
+  names(stack) <- c("TA_F", "EVI")
+  terra::predict(stack, fch4_rf, const = wetland_class, na.rm = TRUE)
 }
 
-wad2m_source
-```
-
-Align the inundation fraction layer to the prediction grid:
-
-```{r}
-wad2m_fraction <- terra::project(wad2m_fraction, igbp_ct_upland)
-wad2m_fraction <- terra::resample(wad2m_fraction, igbp_ct_upland, method = "bilinear")
-wad2m_fraction <- terra::clamp(wad2m_fraction, lower = 0, upper = 1, values = TRUE)
-
-if (nlyr(wad2m_fraction) == 1) {
-  wad2m_fraction <- rep(wad2m_fraction, 12)
-}
-
-wad2m_fraction <- wad2m_fraction[[1:12]]
-names(wad2m_fraction) <- sprintf("wad2m_fraction_m%02d", 1:12)
-
-terra::plot(wad2m_fraction[[1]], main = "January inundation fraction")
-```
-
-Check the fraction values:
-
-```{r}
-global(wad2m_fraction, range, na.rm = TRUE)
-global(wad2m_fraction, mean, na.rm = TRUE)
-```
-
-# 5. Make monthly flux predictions
-
-Build a raster stack for January:
-
-```{r}
-model_rasters_m1 <- c(igbp_ct_upland,
-                      ct_era5_tmean_resample[[1]],
-                      ct_era5_ppt_resample[[1]])
-
-names(model_rasters_m1) <- c("Upland", "TA_F", "P_F")
-model_rasters_m1
-```
-
-Check that the raster classes match the training data:
-
-```{r}
-class(train$Upland)
-levels(train$Upland)
-model_rasters_m1$Upland
-```
-
-Predict January methane flux density:
-
-```{r}
-model_rasters_m1_pred <- terra::predict(object = model_rasters_m1, model = fch4_rf)
-names(model_rasters_m1_pred) <- "F_CH4"
-units(model_rasters_m1_pred) <- "g C m-2 month-1"
-
-plot(model_rasters_m1_pred)
+flux_jul <- predict_month(7)
+plot(flux_jul, main = "July wetland methane flux (g C m-2 month-1)")
 ```
 
 Predict all 12 months:
 
 ```{r}
-monthly_predictions <- list()
+flux <- rast(lapply(1:12, predict_month))
+names(flux) <- month.abb
+units(flux) <- "g C m-2 month-1"
 
-for (i in seq_len(12)) {
-  model_rasters <- c(igbp_ct_upland,
-                     ct_era5_tmean_resample[[i]],
-                     ct_era5_ppt_resample[[i]])
-
-  names(model_rasters) <- c("Upland", "TA_F", "P_F")
-
-  pred <- terra::predict(object = model_rasters, model = fch4_rf)
-  names(pred) <- sprintf("F_CH4_m%02d", i)
-  units(pred) <- "g C m-2 month-1"
-
-  monthly_predictions[[i]] <- pred
-}
-
-predictions <- rast(monthly_predictions)
-predictions
+plot(flux)
 ```
 
-Save the monthly prediction rasters if you want to use them later:
+::: {.callout-note}
+## What to look for: flux density maps
+-   These maps show the flux **per square meter of wetland**, not per square meter of land. A high value does not mean a cell emits a lot. It means the wetlands there would emit a lot if present.
+-   Summer months should be highest, driven by temperature and greenness. Compare the seasonal range with the one-at-a-time sensitivity curves from last week.
+-   Spatial differences within a month are small because temperature varies smoothly and EVI has a modest effect. Most of the spatial pattern in emissions will come from WAD2M.
+:::
+
+# 5. Where are wetlands inundated? WAD2M
+
+WAD2M gives the **fraction of each grid cell that is inundated wetland** in each month:
+
+-   `0` means no inundated wetland in the cell.
+-   `0.10` means 10% of the cell is inundated wetland.
+-   `1` means the whole cell is inundated wetland.
+
+WAD2M excludes permanent open water such as lakes, rivers, and the ocean, so it isolates vegetated wetlands, which are the methane source our model describes.
+
+Load the Connecticut WAD2M series. The layer names are `YYYY-MM`.
 
 ```{r}
-#| eval: false
-predictions_dir <- file.path("data", "products", "predictions")
-dir.create(predictions_dir, showWarnings = FALSE, recursive = TRUE)
-
-for (i in seq_len(nlyr(predictions))) {
-  writeRaster(predictions[[i]],
-              file.path(predictions_dir, sprintf("model_pred_m%02d.tif", i)),
-              overwrite = TRUE)
-}
+wad2m_all <- rast("data/products/wad2m_fw_ct_2000-2020.tif")
+range(names(wad2m_all))
 ```
+
+WAD2M leaves some cells empty (`NA`) in winter, where snow and ice prevent mapping inundation. To fill those gaps, first build a **monthly climatology**: the average January across 2000–2020, the average February, and so on, ignoring missing values.
+
+```{r}
+wad2m_month <- as.integer(substr(names(wad2m_all), 6, 7))
+
+wad2m_climatology <- tapp(wad2m_all, index = wad2m_month, fun = mean, na.rm = TRUE)
+names(wad2m_climatology) <- month.abb
+```
+
+Select 2018, fill winter gaps with the climatology (`cover()` replaces `NA` cells only), then put it on the prediction grid:
+
+```{r}
+to_ct_grid <- function(r) {
+  r %>%
+    resample(ct_grid, method = "bilinear") %>%
+    clamp(lower = 0, upper = 1, values = TRUE) %>%
+    mask(ct_grid)
+}
+
+wad2m_2018 <- wad2m_all[[grepl("^2018", names(wad2m_all))]]
+
+wad2m <- cover(wad2m_2018, wad2m_climatology) %>% to_ct_grid()
+climatology_ct <- to_ct_grid(wad2m_climatology)
+names(wad2m) <- names(climatology_ct) <- month.abb
+
+plot(wad2m[[c(1, 4, 7, 10)]])
+
+tibble(month = month.abb,
+       fraction_2018 = global(wad2m, "mean", na.rm = TRUE)[, 1],
+       fraction_climatology = global(climatology_ct, "mean", na.rm = TRUE)[, 1])
+```
+
+::: {.callout-note}
+## What to look for: WAD2M
+-   **Where.** Higher fractions should follow river valleys (for example, the Connecticut River), coastal marshes, and low-lying terrain. Most upland cells are near zero.
+-   **When.** Inundated area is largest in winter and spring, when evapotranspiration is low and snowmelt arrives, and smallest in late summer. That is the **opposite** of the flux-density cycle, so the two partly cancel in the budget.
+-   **2018 vs. average.** Compare `fraction_2018` with `fraction_climatology` to see whether 2018 was a wet or dry year for wetlands.
+-   **Resolution.** WAD2M is 0.25 degrees (about 25 km). Resampling to 5 km makes smoother maps but adds no new information about where individual wetlands are.
+:::
+
+::: {.callout-note}
+## If your target year is not available
+WAD2M v2.0 ends in 2020. If your final project needs a later year, use `climatology_ct` in place of `wad2m`. It keeps the seasonal cycle of wetland area, even though it can't capture the conditions of that specific year. Say so in your methods. For example: "Because WAD2M was unavailable for the target year, monthly inundation fractions were estimated as the mean WAD2M fraction for each calendar month across 2000–2020."
+:::
 
 # 6. Convert flux density to emissions
 
-The model predictions are flux densities:
+Keep units visible as you work:
 
-`g C m-2 month-1`
+| Quantity | Calculation | Unit |
+|---|---|---|
+| flux density | random forest prediction | g C m-2 month-1 |
+| cell area | `cellSize()` | m2 |
+| inundated area | cell area x WAD2M fraction | m2 |
+| monthly emissions | flux density x inundated area | g C month-1 |
+| annual emissions | sum of months / 1e12 | Tg C year-1 |
+| annual emissions | Tg C x 16 / 12 | Tg CH4 year-1 |
 
-To convert each grid cell to monthly emissions, multiply by inundated area:
-
-`g C m-2 month-1 x m2 = g C month-1`
-
-Keep the units visible as you work:
-
-```{r}
-unit_conversion_table <- tibble(
-  quantity = c("predicted flux density",
-               "cell area",
-               "inundation fraction",
-               "inundated area",
-               "monthly emissions",
-               "annual emissions",
-               "annual emissions"),
-  calculation = c("random forest prediction",
-                  "terra::cellSize()",
-                  "WAD2M value",
-                  "cell area x inundation fraction",
-                  "flux density x inundated area",
-                  "sum monthly g C / 1e12",
-                  "Tg C x 16 / 12"),
-  unit = c("g C m-2 month-1",
-           "m2 cell-1",
-           "unitless",
-           "m2 cell-1",
-           "g C cell-1 month-1",
-           "Tg C year-1",
-           "Tg CH4 year-1")
-)
-
-unit_conversion_table
-```
-
-First calculate total cell area in square meters:
+Calculate cell area and monthly inundated area:
 
 ```{r}
-cell_area_m2 <- cellSize(predictions[[1]], unit = "m")
-names(cell_area_m2) <- "cell_area_m2"
+cell_area_m2 <- cellSize(ct_grid, unit = "m") %>% mask(ct_grid)
 
-plot(cell_area_m2)
+inundated_area_m2 <- wad2m * cell_area_m2
+names(inundated_area_m2) <- month.abb
+
+global(inundated_area_m2, "sum", na.rm = TRUE) / 1e6   # km2
 ```
 
-Now calculate monthly inundated area:
+Convert flux density to emissions, then sum to an annual map:
 
 ```{r}
-inundated_area_m2 <- wad2m_fraction * cell_area_m2
-names(inundated_area_m2) <- sprintf("inundated_area_m2_m%02d", 1:12)
+emissions_g_c <- flux * inundated_area_m2
+names(emissions_g_c) <- month.abb
 
-global(inundated_area_m2, sum, na.rm = TRUE)
+annual_tg_ch4 <- sum(emissions_g_c) / 1e12 * (16 / 12)
+names(annual_tg_ch4) <- "annual_tg_ch4"
+
+plot(annual_tg_ch4, main = "Annual wetland methane emissions (Tg CH4 per cell)")
 ```
 
-Convert monthly flux density to monthly emissions:
+`Tg CH4 = Tg C x 16 / 12` because methane has a molecular mass of 16 and carbon has an atomic mass of 12.
 
-```{r}
-monthly_emissions_g_c <- predictions * inundated_area_m2
-names(monthly_emissions_g_c) <- sprintf("emissions_g_c_m%02d", 1:12)
-units(monthly_emissions_g_c) <- "g C month-1"
+::: {.callout-note}
+## What to look for: emissions map
+Compare this map with the flux-density maps. The emission hotspots should follow the WAD2M wetland pattern, not the flux pattern. That shows that **wetland area, not flux density, controls where methane is emitted** at this scale.
+:::
 
-monthly_emissions_g_c
-```
-
-Compute annual emissions per grid cell:
-
-```{r}
-annual_emissions_g_c <- sum(monthly_emissions_g_c)
-names(annual_emissions_g_c) <- "annual_emissions_g_c"
-units(annual_emissions_g_c) <- "g C year-1"
-
-plot(annual_emissions_g_c)
-```
-
-Convert `g C` to larger reporting units:
-
-```{r}
-annual_emissions_tg_c <- annual_emissions_g_c / 1e12
-names(annual_emissions_tg_c) <- "annual_emissions_tg_c"
-units(annual_emissions_tg_c) <- "Tg C year-1"
-
-annual_emissions_tg_ch4 <- annual_emissions_tg_c * (16 / 12)
-names(annual_emissions_tg_ch4) <- "annual_emissions_tg_ch4"
-units(annual_emissions_tg_ch4) <- "Tg CH4 year-1"
-```
-
-The molecular-weight conversion is:
-
-`Tg CH4 = Tg C x 16 / 12`
-
-because methane is `CH4`, with molecular mass 16, and carbon has atomic mass 12.
-
-# 7. Build the Connecticut methane budget
-
-Sum across grid cells:
-
-```{r}
-ct_budget <- tibble(
-  quantity = c("annual emissions", "annual emissions"),
-  unit = c("Tg C year-1", "Tg CH4 year-1"),
-  value = c(
-    global(annual_emissions_tg_c, "sum", na.rm = TRUE)[1, 1],
-    global(annual_emissions_tg_ch4, "sum", na.rm = TRUE)[1, 1]
-  )
-)
-
-ct_budget
-```
-
-Create a monthly budget:
+# 7. Build the Connecticut budget
 
 ```{r}
 monthly_budget <- tibble(
-  month = 1:12,
-  emissions_g_c = as.numeric(global(monthly_emissions_g_c, "sum", na.rm = TRUE)[1, ]),
-  emissions_tg_c = emissions_g_c / 1e12,
-  emissions_tg_ch4 = emissions_tg_c * (16 / 12),
-  inundated_area_km2 = as.numeric(global(inundated_area_m2, "sum", na.rm = TRUE)[1, ]) / 1e6
+  month = factor(month.abb, levels = month.abb),
+  mean_flux_g_c_m2 = global(flux, "mean", na.rm = TRUE)[, 1],
+  inundated_area_km2 = global(inundated_area_m2, "sum", na.rm = TRUE)[, 1] / 1e6,
+  emissions_tg_ch4 = global(emissions_g_c, "sum", na.rm = TRUE)[, 1] / 1e12 * (16 / 12)
 )
 
 monthly_budget
+
+annual_budget_tg_ch4 <- sum(monthly_budget$emissions_tg_ch4)
+annual_budget_tg_ch4
 ```
 
-Plot the seasonal budget:
+Plot the three pieces of the budget together:
 
 ```{r}
 monthly_budget %>%
-  ggplot(aes(x = month, y = emissions_tg_ch4)) +
+  pivot_longer(-month) %>%
+  ggplot(aes(x = month, y = value, group = name)) +
   geom_line() +
   geom_point() +
-  labs(title = "Monthly Connecticut wetland methane emissions",
-       x = "Month",
-       y = "Tg CH4 month-1")
+  facet_wrap(~ name, ncol = 1, scales = "free_y") +
+  labs(title = "Connecticut wetland methane budget, 2018", x = NULL, y = NULL)
 ```
 
-# 8. Extract Yale-Myers Forest
+::: {.callout-note}
+## How to interpret the monthly budget
+-   Emissions = flux density x inundated area, so the emissions curve is a compromise between the two other panels.
+-   If emissions peak in summer, flux density is driving the budget. If the peak shifts toward spring, inundated area matters more.
+-   Ask how much of the annual total comes from the warmest three months. That tells you how much the budget depends on summer temperature, where the sensitivity analysis showed the model is most responsive.
+:::
 
-Now connect the spatial budget back to Yale-Myers Forest. These values represent the coarse model grid cell containing Yale-Myers, not a field-scale measurement of the forest.
+# 8. Why WAD2M scaling matters
 
-```{r}
-yale_myers <- vect(
-  data.frame(
-    site = "Yale-Myers Forest",
-    lon = -72.123859,
-    lat = 41.952909
-  ),
-  geom = c("lon", "lat"),
-  crs = "EPSG:4326"
-)
-
-yale_myers <- project(yale_myers, predictions)
-
-plot(predictions[[7]], main = "July predicted methane flux")
-points(yale_myers, pch = 16, col = "red")
-```
-
-Extract monthly flux density, inundation fraction, inundated area, and emissions for the grid cell containing Yale-Myers:
+Compare the WAD2M-scaled budget with a naive budget that treats every land cell as 100% wetland:
 
 ```{r}
-yale_flux <- terra::extract(predictions, yale_myers) %>%
-  select(-ID) %>%
-  pivot_longer(everything(),
-               names_to = "flux_layer",
-               values_to = "flux_g_c_m2_month")
-
-yale_fraction <- terra::extract(wad2m_fraction, yale_myers) %>%
-  select(-ID) %>%
-  pivot_longer(everything(),
-               names_to = "fraction_layer",
-               values_to = "inundation_fraction")
-
-yale_area <- terra::extract(inundated_area_m2, yale_myers) %>%
-  select(-ID) %>%
-  pivot_longer(everything(),
-               names_to = "area_layer",
-               values_to = "inundated_area_m2")
-
-yale_emissions <- terra::extract(monthly_emissions_g_c, yale_myers) %>%
-  select(-ID) %>%
-  pivot_longer(everything(),
-               names_to = "emissions_layer",
-               values_to = "emissions_g_c_month")
-
-yale_myers_monthly <- tibble(month = 1:12) %>%
-  bind_cols(yale_flux, yale_fraction, yale_area, yale_emissions) %>%
-  mutate(
-    emissions_tg_c_month = emissions_g_c_month / 1e12,
-    emissions_tg_ch4_month = emissions_tg_c_month * (16 / 12)
-  ) %>%
-  select(month,
-         flux_g_c_m2_month,
-         inundation_fraction,
-         inundated_area_m2,
-         emissions_g_c_month,
-         emissions_tg_ch4_month)
-
-yale_myers_monthly
-```
-
-Summarize the Yale-Myers grid cell:
-
-```{r}
-yale_myers_summary <- yale_myers_monthly %>%
-  summarize(
-    mean_flux_g_c_m2_month = mean(flux_g_c_m2_month, na.rm = TRUE),
-    mean_inundation_fraction = mean(inundation_fraction, na.rm = TRUE),
-    max_inundated_area_m2 = max(inundated_area_m2, na.rm = TRUE),
-    annual_emissions_tg_ch4 = sum(emissions_tg_ch4_month, na.rm = TRUE)
-  )
-
-yale_myers_summary
-```
-
-Plot the seasonal signal for the Yale-Myers grid cell:
-
-```{r}
-yale_myers_monthly %>%
-  ggplot(aes(x = month, y = emissions_tg_ch4_month)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Yale-Myers grid-cell methane emissions",
-       x = "Month",
-       y = "Tg CH4 month-1")
-```
-
-# 9. Why WAD2M scaling matters
-
-Compare the WAD2M-scaled budget to a naive budget that assumes every valid cell is 100% emitting wetland area:
-
-```{r}
-naive_monthly_emissions_g_c <- predictions * cell_area_m2
-naive_annual_tg_ch4 <- sum(naive_monthly_emissions_g_c) / 1e12 * (16 / 12)
-names(naive_annual_tg_ch4) <- "naive_annual_tg_ch4"
+naive_tg_ch4 <- global(sum(flux * cell_area_m2), "sum", na.rm = TRUE)[1, 1] / 1e12 * (16 / 12)
 
 comparison_budget <- tibble(
-  method = c("100% of each valid cell", "WAD2M-scaled inundated fraction"),
-  annual_tg_ch4 = c(
-    global(naive_annual_tg_ch4, "sum", na.rm = TRUE)[1, 1],
-    global(annual_emissions_tg_ch4, "sum", na.rm = TRUE)[1, 1]
-  )
+  method = c("100% of each land cell", "WAD2M inundated fraction"),
+  annual_tg_ch4 = c(naive_tg_ch4, annual_budget_tg_ch4)
 ) %>%
   mutate(percent_of_naive = 100 * annual_tg_ch4 / first(annual_tg_ch4))
 
 comparison_budget
 ```
 
-Plot the comparison:
+::: {.callout-note}
+## How to interpret the comparison
+`percent_of_naive` is roughly the average inundated fraction, weighted by flux. A naive budget assumes the whole state is a wetland and overestimates emissions by about 1 / (inundated fraction). This is the most common mistake when scaling tower fluxes to regions.
+:::
+
+# 9. Inundation-area uncertainty
+
+Wetland area is often the largest source of uncertainty in methane budgets. How much does the budget change if inundation is 50% lower or higher than WAD2M, or if we use the 2000–2020 climatology instead of 2018?
 
 ```{r}
-comparison_budget %>%
-  ggplot(aes(x = method, y = annual_tg_ch4)) +
-  geom_col() +
-  coord_flip() +
-  labs(title = "Effect of inundation-fraction scaling",
-       x = NULL,
-       y = "Annual emissions (Tg CH4 year-1)")
-```
+budget_from_fraction <- function(fraction) {
+  fraction <- clamp(fraction, lower = 0, upper = 1, values = TRUE)
+  global(sum(flux * fraction * cell_area_m2), "sum", na.rm = TRUE)[1, 1] / 1e12 * (16 / 12)
+}
 
-# 10. Inundation-area uncertainty
-
-Wetland area is often one of the largest sources of uncertainty in methane budgets. Here we ask how much the annual Connecticut budget changes if inundation fraction is 50% lower or 50% higher than the mapped value.
-
-```{r}
-inundation_uncertainty <- tibble(
-  scenario = c("low inundation", "mapped inundation", "high inundation"),
-  multiplier = c(0.5, 1, 1.5)
+budget_uncertainty <- tibble(
+  scenario = c("WAD2M x 0.5", "WAD2M 2018", "WAD2M climatology", "WAD2M x 1.5"),
+  annual_tg_ch4 = c(budget_from_fraction(wad2m * 0.5),
+                    budget_from_fraction(wad2m),
+                    budget_from_fraction(climatology_ct),
+                    budget_from_fraction(wad2m * 1.5))
 )
 
-budget_uncertainty <- inundation_uncertainty %>%
-  mutate(annual_tg_ch4 = map_dbl(multiplier, function(multiplier_value) {
-    adjusted_fraction <- clamp(wad2m_fraction * multiplier_value,
-                               lower = 0,
-                               upper = 1,
-                               values = TRUE)
-    adjusted_area <- adjusted_fraction * cell_area_m2
-    adjusted_emissions <- predictions * adjusted_area
-    adjusted_annual_tg_ch4 <- sum(adjusted_emissions) / 1e12 * (16 / 12)
-
-    global(adjusted_annual_tg_ch4, "sum", na.rm = TRUE)[1, 1]
-  }))
-
 budget_uncertainty
-```
 
-Plot the uncertainty range:
-
-```{r}
 budget_uncertainty %>%
-  ggplot(aes(x = scenario, y = annual_tg_ch4)) +
+  ggplot(aes(x = fct_inorder(scenario), y = annual_tg_ch4)) +
   geom_col() +
-  labs(title = "Sensitivity of the methane budget to inundation area",
+  labs(title = "Sensitivity of the methane budget to inundated area",
        x = NULL,
        y = "Annual emissions (Tg CH4 year-1)")
 ```
 
-This is not a full uncertainty analysis. It isolates one uncertainty source: the area used to scale flux density into emissions. A final project could also vary the methane model, predictor rasters, or the wetland mask.
+::: {.callout-note}
+## How to interpret the uncertainty test
+-   Because emissions = flux x area, the budget scales linearly with inundated area: ±50% area gives ±50% emissions (unless clamping at 1 matters).
+-   The climatology bar shows how unusual 2018 was compared with an average year. If the difference is small, a climatology is a reasonable substitute for a missing year.
+-   This isolates only one source of uncertainty. A full analysis would also include model error (test RMSE), predictor-raster error, and the choice to treat all inundated area as `WET`.
+:::
+
+# 10. Extract Yale-Myers Forest
+
+These values represent the 5 km grid cell containing Yale-Myers (and WAD2M information from the surrounding 25 km cell), not a field measurement.
+
+```{r}
+yale_myers <- vect(data.frame(lon = -72.123859, lat = 41.952909),
+                   geom = c("lon", "lat"), crs = "EPSG:4326")
+
+plot(annual_tg_ch4, main = "Annual emissions with Yale-Myers")
+points(yale_myers, pch = 16, col = "red")
+
+extract_monthly <- function(r, value_name) {
+  terra::extract(r, yale_myers, ID = FALSE) %>%
+    pivot_longer(everything(), names_to = "month", values_to = value_name)
+}
+
+yale_myers_monthly <- extract_monthly(flux, "flux_g_c_m2") %>%
+  left_join(extract_monthly(wad2m, "inundated_fraction"), by = "month") %>%
+  left_join(extract_monthly(emissions_g_c, "emissions_g_c"), by = "month") %>%
+  mutate(month = factor(month, levels = month.abb))
+
+yale_myers_monthly
+
+sum(yale_myers_monthly$emissions_g_c) / 1e6 * (16 / 12)   # t CH4 per year
+```
+
+::: {.callout-note}
+## What to look for: Yale-Myers
+-   Compare the Yale-Myers inundated fraction with the state average. Is this cell wetter or drier than typical Connecticut?
+-   Small wetlands, beaver ponds, and stream margins at Yale-Myers are much smaller than a WAD2M grid cell. Think about whether the coarse fraction is likely to over- or underestimate wetland area there.
+-   Recall the scenario flags from the Sensitivity workshop. Are the Yale-Myers temperature and EVI conditions inside the training domain?
+:::
 
 # 11. Save products
 
-Save the annual emission maps if you want to use them in a final report:
-
 ```{r}
 #| eval: false
-writeRaster(annual_emissions_tg_c,
-            "data/products/ct_annual_methane_emissions_tg_c_2018.tif",
-            overwrite = TRUE)
-
-writeRaster(annual_emissions_tg_ch4,
-            "data/products/ct_annual_methane_emissions_tg_ch4_2018.tif",
-            overwrite = TRUE)
+writeRaster(flux, "data/products/ct_wetland_flux_g_c_m2_2018.tif", overwrite = TRUE)
+writeRaster(annual_tg_ch4, "data/products/ct_annual_methane_emissions_tg_ch4_2018.tif", overwrite = TRUE)
 ```
 
 ::: {.callout-tip}
@@ -758,18 +451,43 @@ This workshop produces a spatial methane visualization and emissions budget. Use
 
 For your final project, prepare a spatial methane visualization and budget. Include:
 
-1.  Your model formula and the exact raster layer names needed for prediction.
-2.  A table listing each spatial predictor, units, CRS, resolution, and source.
-3.  A map of predicted methane flux density in `g C m-2 month-1`.
-4.  A map or summary of the WAD2M inundation fraction used to scale the model.
-5.  A unit-conversion table showing:
-    -   flux density: `g C m-2 month-1`;
-    -   cell area: `m2`;
-    -   inundated area: `m2 x fraction`;
-    -   monthly emissions: `g C month-1`;
-    -   annual emissions: `Tg C year-1`;
-    -   annual emissions: `Tg CH4 year-1`.
-6.  A comparison between a naive 100% area budget and a WAD2M-scaled budget.
-7.  A Yale-Myers or target-site extraction table.
-8.  A simple inundation-area uncertainty analysis.
-9.  One paragraph explaining why inundation fraction changes the interpretation of a spatial methane flux map.
+1.  Your model formula and a table of each spatial predictor: layer name, units, resolution, and source.
+2.  A training-domain check for the mapped predictors.
+3.  A map of predicted flux density (`g C m-2 month-1`) and a map of WAD2M inundated fraction.
+4.  A unit-conversion table from flux density to `Tg CH4 year-1`.
+5.  A monthly budget showing flux density, inundated area, and emissions.
+6.  A comparison of the naive 100% area budget and the WAD2M-scaled budget.
+7.  A simple inundation-area uncertainty analysis.
+8.  A Yale-Myers or target-site extraction table.
+9.  One paragraph explaining why inundated area changes the interpretation of a spatial methane flux map.
+
+# Appendix: how the provided layers were made
+
+These steps were run once to create the provided files. You only need them if you want a different region or year.
+
+**WAD2M.** Download `WAD2M_wetlands_2000-2020_025deg_Ver2.0.nc.zip` from the [Zenodo record](https://doi.org/10.5281/zenodo.3998454) (about 275 MB, 1.9 GB unzipped), then:
+
+```{r}
+#| eval: false
+wad2m_global <- rast("WAD2M_wetlands_2000-2020_025deg_Ver2.0.nc")   # variable Fw
+wad2m_ct <- crop(wad2m_global, ext(-75, -70.5, 40, 43))
+names(wad2m_ct) <- format(time(wad2m_ct), "%Y-%m")
+writeRaster(wad2m_ct, "data/products/wad2m_fw_ct_2000-2020.tif", overwrite = TRUE)
+```
+
+**EVI.** The model was trained on MODIS EVI (scaled −1 to 1). The Connecticut layers were built from MODIS Terra MOD13A1 v061 (500 m, 16-day) for tile h12v04, 2018. Composites were assigned to the month of their midpoint, averaged within each month after removing fill values (−3000) and applying the 0.0001 scale factor, then aggregated to the 0.05 degree grid. An AppEEARS area request for MOD13A3 (monthly, 1 km) over your region is an equivalent and simpler route:
+
+```{r}
+#| eval: false
+evi_files <- list.files("path/to/MOD13A1_EVI_2018", pattern = "EVI.tif$", full.names = TRUE)
+doy <- as.integer(str_extract(basename(evi_files), "(?<=A2018)\\d{3}"))
+evi_month <- as.integer(format(as.Date(doy + 7, origin = "2017-12-31"), "%m"))
+
+evi_ct <- rast(lapply(1:12, function(m) {
+  r <- rast(evi_files[evi_month == m])
+  r[r == -3000] <- NA
+  project(mean(r * 0.0001, na.rm = TRUE), ct_grid, method = "average")
+}))
+names(evi_ct) <- sprintf("EVI_m%02d", 1:12)
+writeRaster(evi_ct, "data/products/modis_evi_ct_2018.tif", overwrite = TRUE)
+```

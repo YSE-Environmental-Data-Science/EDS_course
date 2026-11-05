@@ -251,7 +251,7 @@ scenario_table %>%
 -   **Direction.** Do the scenarios rank the way you would expect from methane biology? For example, warm, green wetlands should usually produce more methane than cool, low-greenness ones. If they don't, ask why before trusting the model.
 -   **Size of the differences.** Compare the gaps between scenarios with the model's test RMSE from the Random Forest workshop. Differences smaller than the RMSE are not meaningful.
 -   **Ecosystem effect.** Compare the wetland and cropland scenarios to see how much of the prediction comes from the ecosystem class rather than climate or vegetation.
--   **Stress test.** Watch how little the stress-test prediction differs from the warm wetland scenario. The model quietly reuses its edge prediction, so the number looks reasonable even though the model has no data for those conditions.
+-   **Stress test.** This scenario is 3 °C hotter than any training month, yet its prediction is exactly what the model gives at the hottest training month. The random forest silently reuses its edge prediction, so the number looks reasonable even though the model has no data for those conditions. Try changing `temp_shift` to 10 and confirm the prediction doesn't move.
 :::
 
 # Training-range flags
