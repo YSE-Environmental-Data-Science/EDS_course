@@ -508,7 +508,7 @@ varImpPlot(fch4_rf)
 Save the final model and associated objects for sensitivity analysis and spatial projection. The object is named `fch4_rf` so later workshops can use it.
 
 ```{r}
-#| eval: false
+dir.create("data/products", showWarnings = FALSE)
 save(fch4_rf, train, test, final_formula, final_predictors,
      final_metrics, predictor_screen, loso_metrics,
      file = "data/products/random_forest_model.RDATA")

@@ -6,7 +6,7 @@ editor:
 
 ## From prediction to model trust
 
-In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where the model is being asked to extrapolate beyond the data it learned from.
+In the Random Forest workshop, we built a model to predict monthly methane flux. A prediction is only useful if we understand how the model responds to changing inputs and where it is being asked to extrapolate beyond the data it learned from.
 
 In this workshop, we will ask:
 
@@ -14,23 +14,12 @@ In this workshop, we will ask:
 
 By the end of this workshop, you will be able to:
 
-1.  Identify which predictors are used by a fitted random forest model.
-2.  Summarize the training conditions used to fit the model.
-3.  Build one-at-a-time sensitivity curves.
-4.  Compare realistic methane flux scenarios.
-5.  Flag scenarios that fall outside the model's training range.
-6.  Build two-way sensitivity heatmaps to explore interactions.
-7.  Compare sensitivity results with random forest variable importance.
-8.  Write a short model-risk interpretation for final project reporting.
-
-### Install packages
-
-```{r}
-#| eval: false
-install.packages("randomForest")
-install.packages("tidyverse")
-install.packages("ggplot2")
-```
+1.  Summarize the training domain of a fitted random forest model.
+2.  Build one-at-a-time sensitivity curves.
+3.  Compare realistic methane flux scenarios and flag those outside the training domain.
+4.  Build two-way sensitivity heatmaps to explore interactions.
+5.  Compare sensitivity results with random forest variable importance.
+6.  Write a short model-risk interpretation for final project reporting.
 
 ### Load libraries
 
@@ -38,185 +27,157 @@ install.packages("ggplot2")
 #| output: false
 library(randomForest)
 library(tidyverse)
-library(ggplot2)
 ```
 
 # Load the model
 
-This workshop first looks for the model saved by the updated Random Forest workshop. If that file has not been created yet, it uses the original course sensitivity model.
+This workshop uses the final model saved at the end of the Random Forest workshop (`data/products/random_forest_model.RDATA`). If that file doesn't exist yet, the chunk below rebuilds the same final model with the same data preparation, train/test split, seed, and settings, then saves it.
 
 ```{r}
-if (file.exists("data/products/random_forest_model.RDATA")) {
-  load("data/products/random_forest_model.RDATA")
-  sensitivity_source <- "data/products/random_forest_model.RDATA"
+model_file <- "data/products/random_forest_model.RDATA"
+
+if (file.exists(model_file)) {
+  load(model_file)
 } else {
-  load("data/SensitivityProducts.RDATA")
-  fch4_rf <- FCH4_F_gC.rf
-  final_formula <- formula(fch4_rf)
-  final_predictors <- attr(terms(fch4_rf), "term.labels")
-  sensitivity_source <- "data/SensitivityProducts.RDATA"
+  message("Saved model not found; rebuilding the final model from the Random Forest workshop.")
+
+  load("data/RANDOMFOREST_DATASET.RDATA")
+
+  model_data_org <- fluxnet %>%
+    ungroup() %>%
+    select(SITE, YearMon, FCH4_F_gC, P_F, TA_F, VPD_F, NDVI, EVI, IGBP) %>%
+    drop_na()
+
+  common_igbp <- model_data_org %>%
+    distinct(SITE, IGBP) %>%
+    count(IGBP, name = "n_sites") %>%
+    filter(n_sites >= 3) %>%
+    pull(IGBP)
+
+  model_data <- model_data_org %>%
+    mutate(IGBP_model = as.factor(if_else(IGBP %in% common_igbp, IGBP, "Other")))
+
+  set.seed(111)
+  model_data <- model_data %>% mutate(row_id = row_number())
+  train <- model_data %>% sample_frac(0.80)
+  test <- model_data %>% anti_join(train %>% select(row_id), by = "row_id")
+
+  final_predictors <- c("TA_F", "IGBP_model", "EVI")
+  final_formula <- reformulate(final_predictors, response = "FCH4_F_gC")
+
+  set.seed(111)
+  fch4_rf <- randomForest(final_formula,
+                          data = train,
+                          keep.forest = TRUE,
+                          importance = TRUE,
+                          mtry = max(1, floor(length(final_predictors) / 3)),
+                          ntree = 500,
+                          keep.inbag = TRUE)
+
+  dir.create("data/products", showWarnings = FALSE)
+  save(fch4_rf, train, test, final_formula, final_predictors, file = model_file)
 }
 
-sensitivity_source
-```
-
-Inspect the model without printing the full forest object:
-
-```{r}
 final_formula
 final_predictors
-fch4_rf$ntree
-fch4_rf$mtry
 ```
 
-Prepare the training data as a regular data frame:
+`final_formula` should be `FCH4_F_gC ~ TA_F + IGBP_model + EVI`: one climate, one ecosystem, and one vegetation predictor.
+
+Prepare the training data:
 
 ```{r}
 train_data <- train %>%
   as.data.frame() %>%
   drop_na(FCH4_F_gC, all_of(final_predictors))
 
-nrow(train_data)
-n_distinct(train_data$SITE)
+numeric_predictors <- final_predictors[map_lgl(train_data[final_predictors], is.numeric)]
+categorical_predictors <- setdiff(final_predictors, numeric_predictors)
+
+numeric_predictors
+categorical_predictors
 ```
 
 # Training domain
 
-Sensitivity analysis should begin with the range of conditions the model actually saw. These ranges define the training domain. Predictions outside these ranges are extrapolations.
+Sensitivity analysis should begin with the range of conditions the model actually saw. Predictions outside these ranges are extrapolations.
 
 ```{r}
-numeric_predictors <- final_predictors[
-  map_lgl(train_data[final_predictors], is.numeric)
-]
-
-categorical_predictors <- setdiff(final_predictors, numeric_predictors)
-
 numeric_domain <- train_data %>%
-  summarize(across(all_of(numeric_predictors),
-                   list(min = min,
-                        q25 = ~ quantile(.x, 0.25),
-                        median = median,
-                        q75 = ~ quantile(.x, 0.75),
-                        max = max),
-                   .names = "{.col}_{.fn}")) %>%
-  pivot_longer(everything(),
-               names_to = c("predictor", "summary"),
-               names_pattern = "(.+)_(min|q25|median|q75|max)",
-               values_to = "value") %>%
-  pivot_wider(names_from = summary, values_from = value)
+  select(all_of(numeric_predictors)) %>%
+  pivot_longer(everything(), names_to = "predictor") %>%
+  group_by(predictor) %>%
+  summarize(min = min(value),
+            q25 = quantile(value, 0.25),
+            median = median(value),
+            q75 = quantile(value, 0.75),
+            max = max(value))
 
 numeric_domain
 ```
 
-For categorical predictors, list the levels represented in training:
+For categorical predictors, count how many training rows fall in each level:
 
 ```{r}
-categorical_domain <- map_dfr(categorical_predictors, function(predictor) {
-  tibble(
-    predictor = predictor,
-    level = as.character(sort(unique(train_data[[predictor]])))
-  )
-})
-
-categorical_domain
+map(categorical_predictors, ~ count(train_data, .data[[.x]]))
 ```
 
-Visualize the numeric training domain:
-
-```{r}
-numeric_domain %>%
-  pivot_longer(c(min, q25, median, q75, max),
-               names_to = "summary",
-               values_to = "value") %>%
-  mutate(summary = factor(summary, levels = c("min", "q25", "median", "q75", "max"))) %>%
-  ggplot(aes(x = summary, y = value, group = predictor)) +
-  geom_line() +
-  geom_point() +
-  facet_wrap(~ predictor, scales = "free_y") +
-  labs(title = "Training domain for model predictors",
-       x = "Summary statistic",
-       y = "Value")
-```
+::: {.callout-note}
+## What to look for: training domain
+-   **Spread.** Compare `min`–`max` with `q25`–`q75`. A wide total range but a narrow middle means the model saw the extremes only a few times, so predictions near the edges rest on little data.
+-   **Skew.** If the median sits close to `min` or `max`, the data are lopsided and one end of the range is thinly sampled.
+-   **Rare classes.** Ecosystem classes with few rows (or few sites) give the model little to learn from. Treat predictions for those classes with more caution.
+-   **Your target site.** Ask whether Yale-Myers temperature and EVI values fall inside these ranges. If they don't, every prediction for that site is an extrapolation.
+:::
 
 # A reference condition
 
-We need a baseline row that contains one value for every predictor in the model. Numeric predictors are set to their median training value. Categorical predictors are set to their most common training level.
+We need a baseline row with one value for every predictor. Numeric predictors are set to their median training value. Categorical predictors are set to their most common training level.
 
 ```{r}
-mode_value <- function(x) {
-  tab <- sort(table(x), decreasing = TRUE)
-  names(tab)[1]
-}
-
-make_reference_row <- function(data, predictors) {
-  reference <- map(predictors, function(predictor) {
-    x <- data[[predictor]]
-    if (is.numeric(x)) {
-      median(x, na.rm = TRUE)
-    } else {
-      mode_value(x)
-    }
-  })
-
-  names(reference) <- predictors
-  as_tibble(reference)
-}
-
-reference_row <- make_reference_row(train_data, final_predictors)
-
-reference_row <- reference_row %>%
-  mutate(across(all_of(categorical_predictors), ~ factor(.x, levels = levels(train_data[[cur_column()]]))))
+reference_row <- map(final_predictors, function(predictor) {
+  x <- train_data[[predictor]]
+  if (is.numeric(x)) {
+    median(x)
+  } else {
+    factor(names(which.max(table(x))), levels = levels(x))
+  }
+}) %>%
+  set_names(final_predictors) %>%
+  as_tibble()
 
 reference_row
+predict(fch4_rf, newdata = reference_row)
 ```
 
-Predict methane flux for the reference condition:
+::: {.callout-note}
+## What to look for: reference condition
+The reference row is a typical training month: median temperature, median EVI, and the most common ecosystem class. Its predicted flux is the baseline for everything that follows.
 
-```{r}
-reference_row$predicted_flux <- predict(fch4_rf, newdata = reference_row)
-reference_row
-```
+Every sensitivity result below is conditional on this baseline. If the reference were a cropland instead of a wetland, the curves could look quite different.
+:::
 
 # One-at-a-time sensitivity
 
-One-at-a-time sensitivity varies one predictor across its observed training range while holding the other predictors constant. This is a simple way to ask how strongly the model responds to each variable.
+One-at-a-time sensitivity varies one numeric predictor across its training range while holding the others at their reference values.
 
 ```{r}
-make_oat_grid <- function(predictor, data, reference, n = 60) {
-  x <- data[[predictor]]
+make_oat_grid <- function(predictor, n = 60) {
+  x <- train_data[[predictor]]
 
-  if (!is.numeric(x)) {
-    return(NULL)
-  }
-
-  varied_values <- tibble(
-    !!predictor := seq(min(x, na.rm = TRUE),
-                       max(x, na.rm = TRUE),
-                       length.out = n)
-  )
-
-  reference %>%
+  reference_row %>%
     select(-all_of(predictor)) %>%
     slice(rep(1, n)) %>%
-    bind_cols(varied_values)
+    mutate(!!predictor := seq(min(x), max(x), length.out = n))
 }
 
 oat_predictions <- map_dfr(numeric_predictors, function(predictor) {
-  grid <- make_oat_grid(predictor, train_data, reference_row)
-  grid$predicted_flux <- predict(fch4_rf, newdata = grid)
-  grid$varied_predictor <- predictor
-  grid$varied_value <- grid[[predictor]]
-  grid
+  grid <- make_oat_grid(predictor)
+  tibble(varied_predictor = predictor,
+         varied_value = grid[[predictor]],
+         predicted_flux = predict(fch4_rf, newdata = grid))
 })
 
-oat_predictions %>%
-  select(varied_predictor, varied_value, predicted_flux) %>%
-  head()
-```
-
-Plot the one-at-a-time sensitivity curves:
-
-```{r}
 ggplot(oat_predictions, aes(x = varied_value, y = predicted_flux)) +
   geom_line(linewidth = 1) +
   facet_wrap(~ varied_predictor, scales = "free_x") +
@@ -230,65 +191,51 @@ Summarize how much predictions changed as each variable was varied:
 ```{r}
 oat_sensitivity_summary <- oat_predictions %>%
   group_by(varied_predictor) %>%
-  summarize(
-    min_pred = min(predicted_flux),
-    max_pred = max(predicted_flux),
-    sensitivity_range = max_pred - min_pred,
-    .groups = "drop"
-  ) %>%
+  summarize(sensitivity_range = max(predicted_flux) - min(predicted_flux)) %>%
   arrange(desc(sensitivity_range))
 
 oat_sensitivity_summary
 ```
 
+::: {.callout-note}
+## How to interpret one-at-a-time curves
+-   **Steep sections** show where the model's prediction changes most for a given change in that predictor.
+-   **Flat sections** mean the model is insensitive there. That can be because the predictor doesn't matter in that range, or because the data are too sparse for the trees to split there.
+-   **Steps, not smooth lines.** Random forests average many trees made of split points, so curves look like staircases. Small wiggles are not meaningful. Look at the overall shape.
+-   **Flat ends.** A random forest cannot extrapolate. Beyond the most extreme training values it repeats the edge prediction. A flat tail is a model limitation, not evidence that flux levels off.
+-   **`sensitivity_range`** is the prediction swing across the full training range. A larger value means the model responds more strongly to that predictor, but only with the other predictors held at the reference values.
+:::
+
 # Yale-Myers-style scenarios
 
-Scenario analysis asks how the model responds to meaningful combinations of conditions. The exact Yale-Myers methane flux is unknown here, so these are modeling scenarios, not field observations.
+Scenario analysis asks how the model responds to meaningful combinations of conditions. The true Yale-Myers methane flux is unknown here, so these are modeling scenarios, not field observations.
+
+Each scenario sets temperature and EVI to a training quantile and chooses an ecosystem class. `temp_shift` adds degrees beyond that quantile so we can push a scenario outside the training domain on purpose.
 
 ```{r}
 q_value <- function(predictor, probability) {
-  quantile(train_data[[predictor]], probability, na.rm = TRUE)
+  quantile(train_data[[predictor]], probability, names = FALSE)
 }
 
-set_if_present <- function(data, predictor, value) {
-  if (predictor %in% names(data)) {
-    data[[predictor]] <- value
-  }
-  data
-}
-
-scenario_row <- function(name, temperature_q, precipitation_q, vpd_q = 0.5,
-                         ndvi_q = 0.5, evi_q = 0.5) {
-  row <- reference_row %>%
-    select(all_of(final_predictors))
-
-  row <- set_if_present(row, "TA_F", q_value("TA_F", temperature_q))
-  row <- set_if_present(row, "P_F", q_value("P_F", precipitation_q))
-  row <- set_if_present(row, "VPD_F", q_value("VPD_F", vpd_q))
-  row <- set_if_present(row, "NDVI", q_value("NDVI", ndvi_q))
-  row <- set_if_present(row, "EVI", q_value("EVI", evi_q))
-
-  row %>%
-    mutate(scenario = name, .before = 1)
+scenario_row <- function(name, temperature_q, evi_q, ecosystem, temp_shift = 0) {
+  reference_row %>%
+    mutate(scenario = name,
+           TA_F = q_value("TA_F", temperature_q) + temp_shift,
+           EVI = q_value("EVI", evi_q),
+           IGBP_model = factor(ecosystem, levels = levels(train_data$IGBP_model)),
+           .before = 1)
 }
 
 scenario_table <- bind_rows(
-  scenario_row("cool wet spring", temperature_q = 0.25, precipitation_q = 0.75, vpd_q = 0.25),
-  scenario_row("hot dry summer", temperature_q = 0.90, precipitation_q = 0.10, vpd_q = 0.90),
-  scenario_row("warm wet summer", temperature_q = 0.75, precipitation_q = 0.75, vpd_q = 0.50),
-  scenario_row("Yale-Myers-like wetland month", temperature_q = 0.60, precipitation_q = 0.70, vpd_q = 0.40,
-               ndvi_q = 0.75, evi_q = 0.75),
-  scenario_row("outside training stress test", temperature_q = 1.00, precipitation_q = 1.00, vpd_q = 1.00)
+  scenario_row("cool, low-greenness wetland", 0.25, 0.25, "WET"),
+  scenario_row("warm, high-greenness wetland", 0.75, 0.75, "WET"),
+  scenario_row("Yale-Myers-like wetland month", 0.60, 0.75, "WET"),
+  scenario_row("warm cropland", 0.75, 0.50, "CRO"),
+  scenario_row("outside training stress test", 1.00, 1.00, "WET", temp_shift = 3)
 )
 
 scenario_table$predicted_flux <- predict(fch4_rf, newdata = scenario_table)
 
-scenario_table
-```
-
-Compare the scenario predictions:
-
-```{r}
 scenario_table %>%
   mutate(scenario = reorder(scenario, predicted_flux)) %>%
   ggplot(aes(x = scenario, y = predicted_flux)) +
@@ -299,169 +246,136 @@ scenario_table %>%
        y = "Predicted methane flux")
 ```
 
+::: {.callout-note}
+## What to look for: scenarios
+-   **Direction.** Do the scenarios rank the way you would expect from methane biology? For example, warm, green wetlands should usually produce more methane than cool, low-greenness ones. If they don't, ask why before trusting the model.
+-   **Size of the differences.** Compare the gaps between scenarios with the model's test RMSE from the Random Forest workshop. Differences smaller than the RMSE are not meaningful.
+-   **Ecosystem effect.** Compare the wetland and cropland scenarios to see how much of the prediction comes from the ecosystem class rather than climate or vegetation.
+-   **Stress test.** Watch how little the stress-test prediction differs from the warm wetland scenario. The model quietly reuses its edge prediction, so the number looks reasonable even though the model has no data for those conditions.
+:::
+
 # Training-range flags
 
-A scenario can look precise while still being outside the model's experience. This helper checks whether scenario values are inside the numeric range of the training data and whether categorical levels were observed during training.
+A scenario can look precise while still being outside the model's experience. Check whether each numeric value falls inside the training range and whether each categorical level was observed during training.
 
 ```{r}
-flag_training_range <- function(scenarios, training_data, predictors) {
-  numeric_flags <- map_dfr(intersect(predictors, numeric_predictors), function(predictor) {
-    min_value <- min(training_data[[predictor]], na.rm = TRUE)
-    max_value <- max(training_data[[predictor]], na.rm = TRUE)
-
-    scenarios %>%
-      transmute(
-        scenario,
-        predictor = predictor,
-        value = as.character(.data[[predictor]]),
-        inside_training_domain = .data[[predictor]] >= min_value & .data[[predictor]] <= max_value
-      )
-  })
-
-  categorical_flags <- map_dfr(intersect(predictors, categorical_predictors), function(predictor) {
-    observed_levels <- unique(as.character(training_data[[predictor]]))
-
-    scenarios %>%
-      transmute(
-        scenario,
-        predictor = predictor,
-        value = as.character(.data[[predictor]]),
-        inside_training_domain = as.character(.data[[predictor]]) %in% observed_levels
-      )
-  })
-
-  bind_rows(numeric_flags, categorical_flags)
+inside_domain <- function(predictor, values) {
+  x <- train_data[[predictor]]
+  if (is.numeric(x)) {
+    values >= min(x) & values <= max(x)
+  } else {
+    as.character(values) %in% unique(as.character(x))
+  }
 }
 
-scenario_range_flags <- flag_training_range(scenario_table, train_data, final_predictors)
+scenario_range_flags <- scenario_table %>%
+  mutate(across(all_of(final_predictors),
+                ~ inside_domain(cur_column(), .x),
+                .names = "{.col}_ok")) %>%
+  mutate(fully_inside_domain = if_all(ends_with("_ok"))) %>%
+  select(scenario, predicted_flux, ends_with("_ok"), fully_inside_domain)
 
 scenario_range_flags
 ```
 
-Summarize whether each scenario stays inside the model's training domain:
-
-```{r}
-scenario_domain_summary <- scenario_range_flags %>%
-  group_by(scenario) %>%
-  summarize(
-    predictors_inside_domain = sum(inside_training_domain),
-    predictors_checked = n(),
-    fully_inside_domain = all(inside_training_domain),
-    .groups = "drop"
-  ) %>%
-  left_join(scenario_table %>% select(scenario, predicted_flux), by = "scenario") %>%
-  arrange(desc(predicted_flux))
-
-scenario_domain_summary
-```
+::: {.callout-note}
+## How to interpret training-range flags
+-   `TRUE` means the value falls inside what the model saw. `FALSE` marks an extrapolation, and that scenario's prediction should not be reported as reliable.
+-   `fully_inside_domain = TRUE` is necessary but not sufficient. These checks test each predictor separately. A combination can pass every check but still be unusual, such as very high EVI in a very cold month. If the training data contain few or no months like that, the model is still guessing.
+-   For your final project, report any `FALSE` flags next to the prediction they affect rather than dropping the scenario.
+:::
 
 # Two-way sensitivity
 
-Methane flux can respond to combinations of conditions. Two-way sensitivity varies two predictors at the same time while holding the others at their reference values.
+Methane flux can respond to combinations of conditions. Two-way sensitivity varies two numeric predictors at the same time while holding the others at their reference values.
+
+Our final model has only two numeric predictors (`TA_F` and `EVI`) plus one categorical predictor (`IGBP_model`). So we build one temperature × EVI surface and repeat it for every ecosystem class. This shows the numeric interaction and how it shifts across ecosystems.
 
 ```{r}
-make_two_way_grid <- function(x_predictor, y_predictor, data, reference, n = 45) {
-  x_values <- seq(min(data[[x_predictor]], na.rm = TRUE),
-                  max(data[[x_predictor]], na.rm = TRUE),
-                  length.out = n)
+two_way_pair <- numeric_predictors[1:2]
+facet_predictor <- categorical_predictors[1]
 
-  y_values <- seq(min(data[[y_predictor]], na.rm = TRUE),
-                  max(data[[y_predictor]], na.rm = TRUE),
-                  length.out = n)
+make_two_way_grid <- function(x_predictor, y_predictor, facet_predictor, n = 40) {
+  x <- train_data[[x_predictor]]
+  y <- train_data[[y_predictor]]
 
   varied_grid <- crossing(
-    !!x_predictor := x_values,
-    !!y_predictor := y_values
-  )
+    !!x_predictor := seq(min(x), max(x), length.out = n),
+    !!y_predictor := seq(min(y), max(y), length.out = n),
+    !!facet_predictor := levels(train_data[[facet_predictor]])
+  ) %>%
+    mutate(!!facet_predictor := factor(.data[[facet_predictor]],
+                                       levels = levels(train_data[[facet_predictor]])))
 
-  reference %>%
-    select(-all_of(c(x_predictor, y_predictor))) %>%
+  reference_row %>%
+    select(-all_of(c(x_predictor, y_predictor, facet_predictor))) %>%
     slice(rep(1, nrow(varied_grid))) %>%
     bind_cols(varied_grid)
 }
 
-two_way_pairs <- list(
-  c("TA_F", "P_F"),
-  c("TA_F", "VPD_F"),
-  c("TA_F", "NDVI")
-) %>%
-  keep(~ all(.x %in% numeric_predictors))
+two_way_predictions <- make_two_way_grid(two_way_pair[1], two_way_pair[2], facet_predictor)
+two_way_predictions$predicted_flux <- predict(fch4_rf, newdata = two_way_predictions)
 
-two_way_predictions <- imap_dfr(two_way_pairs, function(pair, pair_id) {
-  grid <- make_two_way_grid(pair[1], pair[2], train_data, reference_row)
-  grid$predicted_flux <- predict(fch4_rf, newdata = grid)
-  grid$x_predictor <- pair[1]
-  grid$y_predictor <- pair[2]
-  grid$x_value <- grid[[pair[1]]]
-  grid$y_value <- grid[[pair[2]]]
-  grid$pair <- paste(pair, collapse = " x ")
-  grid
-})
-
-two_way_predictions %>%
-  select(pair, x_value, y_value, predicted_flux) %>%
-  head()
-```
-
-Plot the two-way sensitivity surfaces:
-
-```{r}
-ggplot(two_way_predictions, aes(x = x_value, y = y_value, fill = predicted_flux)) +
+ggplot(two_way_predictions,
+       aes(x = .data[[two_way_pair[1]]], y = .data[[two_way_pair[2]]], fill = predicted_flux)) +
   geom_raster() +
-  facet_wrap(~ pair, scales = "free") +
+  facet_wrap(vars(.data[[facet_predictor]])) +
   scale_fill_viridis_c() +
   labs(title = "Two-way sensitivity of predicted methane flux",
-       x = "First predictor value",
-       y = "Second predictor value",
+       subtitle = paste(two_way_pair, collapse = " × "),
        fill = "Predicted flux")
 ```
 
+::: {.callout-note}
+If your own final model has three or more numeric predictors, list several pairs with `combn(numeric_predictors, 2, simplify = FALSE)` and loop over them. If it has no categorical predictor, drop `facet_predictor` from the grid and the plot.
+:::
+
+::: {.callout-note}
+## How to interpret two-way heatmaps
+-   **Vertical or horizontal bands** mean only one predictor is driving the prediction: changing the other one does nothing.
+-   **Diagonal or curved color bands** mean the two predictors interact: the effect of temperature depends on EVI (and vice versa).
+-   **Comparing panels.** If all ecosystem panels look the same apart from overall brightness, the ecosystem class shifts flux up or down without changing how it responds to temperature and EVI. If the patterns differ between panels, the climate and vegetation response depends on ecosystem type.
+-   **Corners.** The grid covers the full range of both predictors, so some corners (for example, hot with very low EVI) may never occur in the training data. Those corners are extrapolations even though each axis is in range. Cross-check with a scatter plot of the two predictors in `train_data`.
+:::
+
 # Compare sensitivity with importance
 
-Variable importance ranks predictors by how much they contributed to model performance. Sensitivity curves ask how much predictions change when a predictor is varied across its training range. They are related, but they are not the same.
+Variable importance ranks predictors by how much they improve model performance. Sensitivity asks how much predictions change when a predictor is varied. The two are related, but they are not the same. One-at-a-time curves only cover numeric predictors, so `IGBP_model` appears only in the importance table.
 
 ```{r}
 importance_table <- importance(fch4_rf) %>%
   as.data.frame() %>%
-  rownames_to_column("predictor") %>%
-  as_tibble()
+  rownames_to_column("predictor")
 
 importance_table
-```
 
-Join importance to the sensitivity summary:
-
-```{r}
-importance_sensitivity <- oat_sensitivity_summary %>%
+oat_sensitivity_summary %>%
   left_join(importance_table, by = c("varied_predictor" = "predictor")) %>%
-  arrange(desc(sensitivity_range))
-
-importance_sensitivity
-```
-
-Plot the comparison when an importance column is available:
-
-```{r}
-importance_column <- names(importance_table)[2]
-
-importance_sensitivity %>%
-  ggplot(aes(x = sensitivity_range, y = .data[[importance_column]], label = varied_predictor)) +
+  ggplot(aes(x = sensitivity_range, y = `%IncMSE`, label = varied_predictor)) +
   geom_point(size = 3) +
-  geom_text(nudge_y = 0.02, check_overlap = TRUE) +
+  geom_text(vjust = -1, check_overlap = TRUE) +
   labs(title = "Sensitivity range compared with random forest importance",
        x = "Prediction range across one-at-a-time sensitivity curve",
-       y = importance_column)
+       y = "%IncMSE")
 ```
+
+::: {.callout-note}
+## How to interpret importance vs. sensitivity
+`%IncMSE` is how much prediction error increases when a predictor's values are shuffled. Higher means the model relies on it more.
+
+-   **They agree** (high importance and a large sensitivity range): strong evidence that this predictor drives the model.
+-   **High importance, small sensitivity range:** the predictor probably matters mainly through interactions or under other conditions. The one-at-a-time curve only shows its effect at the reference condition.
+-   **Low importance, large sensitivity range:** the model responds strongly but rarely needs that predictor to fit the data. Often this happens in sparsely sampled extremes, so be cautious.
+-   `IGBP_model` has importance but no curve. Use the scenarios and the faceted heatmap to judge its effect.
+:::
 
 # Model-risk memo
 
-Sensitivity analysis is not just a plot-making step. It is part of model interpretation. For Yale-Myers wetlands, we especially care about whether high-methane scenarios are supported by the training data.
-
-Use the objects created above to answer:
+Sensitivity analysis is part of model interpretation, not just a plotting step. For Yale-Myers wetlands, we especially care about whether high-methane scenarios are supported by the training data. Use the objects created above to answer:
 
 1.  Which predictor produced the largest one-at-a-time change in predicted methane flux?
-2.  Which scenario produced the highest predicted methane flux?
-3.  Did the Yale-Myers-like wetland scenario stay inside the model's training domain?
+2.  Which scenario produced the highest predicted methane flux, and was it inside the training domain?
+3.  How does the temperature × EVI response differ between `WET` and the other ecosystem classes?
 4.  Do variable importance and sensitivity tell the same story?
 5.  What would make you cautious about using this model to estimate methane flux for Yale-Myers wetlands?
 
@@ -474,11 +388,9 @@ This workshop produces a sensitivity report and model-risk memo. Use the standar
 
 Prepare a short sensitivity analysis report for your final methane flux model. Include:
 
-1.  The final model formula and a list of predictors.
-2.  A training-domain summary table.
-3.  One-at-a-time sensitivity curves for all numeric predictors in your model.
-4.  At least three realistic scenarios, including one that represents your target study site.
-5.  A training-range flag table for the scenarios.
-6.  One two-way sensitivity plot.
-7.  A comparison of sensitivity results and random forest variable importance.
-8.  A short model-risk memo explaining where you trust the model and where you do not.
+1.  The final model formula and a training-domain summary table.
+2.  One-at-a-time sensitivity curves for all numeric predictors in your model.
+3.  At least three realistic scenarios, including one for your target study site, with training-range flags.
+4.  One two-way sensitivity plot.
+5.  A comparison of sensitivity results and random forest variable importance.
+6.  A short model-risk memo explaining where you trust the model and where you do not.
