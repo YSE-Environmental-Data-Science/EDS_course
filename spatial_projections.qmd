@@ -28,6 +28,7 @@ Useful references:
 -   `data/products/era5_tmean_monthly.tif`: ERA5 temperature saved in `data_integration.qmd`.
 -   `data/products/modis_evi_ct_2018.tif`: monthly 2018 MODIS EVI for Connecticut.
 -   `data/products/wad2m_fw_ct_2000-2020.tif`: WAD2M v2.0 monthly inundated fraction, cropped to Connecticut.
+-   `data/products/ct_boundary.shp`: Connecticut state boundary. Section 2 creates it the first time you render, using `rnaturalearth` (requires an internet connection).
 
 The appendix shows how the last two were made.
 :::
@@ -45,12 +46,22 @@ The workshop will not run without them.
 By the end of this workshop, you will be able to:
 
 1.  Match model predictors to spatial layers with the right names, units, and classes.
-2.  Align predictor rasters to a common grid.
+2.  Align predictor rasters to a common grid and mask them to the Connecticut state boundary.
 3.  Predict monthly wetland methane flux density in space.
 4.  Use WAD2M to find where and when wetlands are inundated.
 5.  Convert flux density to monthly and annual emissions in `g C`, `Tg C`, and `Tg CH4`.
 6.  Compare budgets with and without inundation scaling, and test sensitivity to inundated area.
 7.  Extract predictions and emissions for the Yale-Myers Forest grid cell.
+
+### Install libraries for this workshop
+
+```{r}
+#| eval: false
+install.packages("randomForest")
+install.packages("terra")
+install.packages("tidyverse")
+install.packages("rnaturalearth")
+```
 
 ### Load libraries
 
@@ -69,7 +80,8 @@ Load the same final model used in the Sensitivity Analysis workshop:
 model_file <- "data/products/random_forest_model.RDATA"
 
 if (!file.exists(model_file)) {
-  stop("Render random_forest.qmd or sensitivity.qmd first; they save ", model_file)
+  stop("Model file not found: ", model_file,
+       ". Finish the Random Forest workshop first; its last step saves the final model to this path.")
 }
 
 load(model_file)
@@ -97,16 +109,59 @@ This is the same logic used in global wetland methane products. It also avoids a
 
 # 2. Build the Connecticut prediction grid
 
-Use the provided MODIS land-cover raster as the target grid (0.05 degrees, about 5 km). Mask open water (class `0`), where EVI and the model are not meaningful.
+The provided rasters cover a rectangle around Connecticut, which also includes parts of New York, Massachusetts, Rhode Island, Long Island, and Long Island Sound. A Connecticut budget should only count cells inside the state, so we need the state boundary.
+
+**State boundary.** We used `rnaturalearth` for country polygons in the `sf` and `terra` workshops. Natural Earth also has state and province boundaries ("admin 1"). The boundary follows the shoreline, so Long Island Sound is not counted as Connecticut. Download it once, keep Connecticut, and save a shapefile. As with the ERA5 crop below, this only runs the first time.
+
+```{r}
+ct_boundary_file <- "data/products/ct_boundary.shp"
+
+if (!file.exists(ct_boundary_file)) {
+  states <- rnaturalearth::ne_download(scale = 10,
+                                       type = "admin_1_states_provinces",
+                                       category = "cultural")
+  ct <- vect(states[states$name == "Connecticut" & states$admin == "United States of America", ])
+  ct <- project(ct, "EPSG:4326")
+  writeVector(ct, ct_boundary_file, overwrite = TRUE)
+}
+
+ct_boundary <- vect(ct_boundary_file)
+ct_boundary
+```
+
+::: {.callout-note}
+## Notes on the boundary download
+-   **Why `ne_download()` and not `ne_states()`?** `rnaturalearth` has a shortcut, `ne_states()`, but it stops with an error unless the `rnaturalearthhires` package is installed, and that package is not on CRAN. `ne_download()` downloads the same Natural Earth state boundaries directly, without the extra package.
+-   **Why `scale = 10`?** Natural Earth comes in three scales: 1:10m (`10`), 1:50m (`50`), and 1:110m (`110`). The coarser scales simplify the coastline by several kilometers, which is about the size of our 5 km grid cells, so they would add or drop coastal cells. The 1:10m file is larger (roughly 10–20 MB) but is only downloaded once.
+-   **Internet required the first time.** The download runs only if `data/products/ct_boundary.shp` does not exist. After that, the saved file is used and no connection is needed. A shapefile is several files that must stay together (`ct_boundary.shp`, `.shx`, `.dbf`, `.prj`), so if you move it, move all of them.
+:::
+
+**Prediction grid.** Use the provided MODIS land-cover raster as the target grid (0.05 degrees, about 5 km). Mask open water (class `0`), where EVI and the model are not meaningful, then mask to the state boundary.
+
+A 5 km cell on the state line is partly in Connecticut and partly in a neighboring state. `rasterize(..., cover = TRUE)` returns the **fraction of each cell inside the polygon** (0–1, `NA` outside). We use it twice: as the mask, and later to count only the in-state part of each border cell's area.
 
 ```{r}
 ct_grid <- rast("data/MODIS_IGBP_2001-2022_CT.tif")[[2018 - 2001 + 1]]
 crs(ct_grid) <- "EPSG:4326"
 ct_grid[ct_grid == 0] <- NA
-names(ct_grid) <- "land"
 
-plot(ct_grid, main = "Connecticut land-cover grid (water masked)")
+ct_fraction <- rasterize(ct_boundary, ct_grid, cover = TRUE)
+ct_grid <- mask(ct_grid, ct_fraction)
+ct_fraction <- mask(ct_fraction, ct_grid)
+names(ct_grid) <- "land"
+names(ct_fraction) <- "ct_fraction"
+
+plot(ct_grid, main = "Connecticut land-cover grid (water and out-of-state masked)")
+lines(ct_boundary)
+
+plot(ct_fraction, main = "Fraction of each cell inside Connecticut")
+lines(ct_boundary)
 ```
+
+::: {.callout-note}
+## Why not just crop to a rectangle?
+Cropping to a rectangle (`crop(ext(...))`) is fine for cutting a large file down to size, and we still do that for ERA5 and WAD2M. But a rectangle around Connecticut includes many cells from neighboring states and Long Island. Summing emissions over those cells would produce a regional budget labeled as a Connecticut budget. **Crop to make files smaller; mask to define the area you report.**
+:::
 
 # 3. Prepare the predictor layers
 
@@ -274,22 +329,28 @@ Keep units visible as you work:
 | Quantity | Calculation | Unit |
 |---|---|---|
 | flux density | random forest prediction | g C m-2 month-1 |
-| cell area | `cellSize()` | m2 |
-| inundated area | cell area x WAD2M fraction | m2 |
+| cell area in CT | `cellSize()` x fraction of cell inside CT | m2 |
+| inundated area | cell area in CT x WAD2M fraction | m2 |
 | monthly emissions | flux density x inundated area | g C month-1 |
 | annual emissions | sum of months / 1e12 | Tg C year-1 |
 | annual emissions | Tg C x 16 / 12 | Tg CH4 year-1 |
 
-Calculate cell area and monthly inundated area:
+Calculate the in-state area of each cell and the monthly inundated area. Multiplying by `ct_fraction` means a border cell that is 40% in Connecticut contributes 40% of its area:
 
 ```{r}
-cell_area_m2 <- cellSize(ct_grid, unit = "m") %>% mask(ct_grid)
+cell_area_m2 <- (cellSize(ct_grid, unit = "m") * ct_fraction) %>% mask(ct_grid)
+
+# Check: compare the grid's in-state area with the area of the boundary polygon (km2)
+c(grid_km2 = global(cell_area_m2, "sum", na.rm = TRUE)[1, 1] / 1e6,
+  boundary_km2 = expanse(ct_boundary, unit = "km"))
 
 inundated_area_m2 <- wad2m * cell_area_m2
 names(inundated_area_m2) <- month.abb
 
 global(inundated_area_m2, "sum", na.rm = TRUE) / 1e6   # km2
 ```
+
+The grid area should be close to the boundary area, but a little smaller because cells mapped as open water were masked.
 
 Convert flux density to emissions, then sum to an annual map:
 
@@ -301,6 +362,7 @@ annual_tg_ch4 <- sum(emissions_g_c) / 1e12 * (16 / 12)
 names(annual_tg_ch4) <- "annual_tg_ch4"
 
 plot(annual_tg_ch4, main = "Annual wetland methane emissions (Tg CH4 per cell)")
+lines(ct_boundary)
 ```
 
 `Tg CH4 = Tg C x 16 / 12` because methane has a molecular mass of 16 and carbon has an atomic mass of 12.
@@ -410,6 +472,7 @@ yale_myers <- vect(data.frame(lon = -72.123859, lat = 41.952909),
                    geom = c("lon", "lat"), crs = "EPSG:4326")
 
 plot(annual_tg_ch4, main = "Annual emissions with Yale-Myers")
+lines(ct_boundary)
 points(yale_myers, pch = 16, col = "red")
 
 extract_monthly <- function(r, value_name) {
